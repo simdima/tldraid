@@ -12,11 +12,17 @@
   position: relative;
 }
 
+input:focus,
+div:focus {
+  outline: none;
+  border-color: #ebebeb4d;
+}
+
 input {
   width: 100%;
   height: 50px;
   padding: 10px 28px;
-  border: 1px solid #252345;
+  border: 2px solid #252345;
   border-radius: 5px;
   background: #252345;
   color: #ebebeba3;
@@ -38,12 +44,6 @@ input {
   }
 }
 
-input:focus,
-div:focus {
-  outline: none;
-  border-color: #ebebeba3;
-}
-
 .searchList {
   width: 100%;
   background: #252345;
@@ -52,7 +52,7 @@ div:focus {
   overflow: scroll;
   max-height: 250px;
   margin-top: 5px;
-
+  z-index: 999999;
   position: absolute;
   top: 50px;
   left: 0;
@@ -64,8 +64,8 @@ div:focus {
   border: 1px solid #252345;
   border-radius: 5px;
   margin: 8px 8px;
-}
 
-.searchOption:hover {
-  background: #020024;
+  &:hover {
+    background: #020024;
+  }
 }

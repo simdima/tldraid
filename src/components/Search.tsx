@@ -1,25 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
-import { sendApiRequest } from '../api';
-import { UtilitesResponse, QueryParams } from '../@types';
-import './Search.css';
-import { sortUtilities } from '../helpers';
 import OutsideClicker from '../hooks/OutsideClicker';
+import { sendApiRequest } from '../api';
+import { sortUtilities } from '../helpers';
+import { UtilitesResponse, QueryParams } from '../@types';
+import './Search.scss';
 
-const Search = () => {
-  const [lang, setLang] = useState('en');
-  const [platform, setPlatform] = useState('common');
+type Props = {
+  lang: string;
+  platform: string;
+  setSelectedUtil: React.Dispatch<React.SetStateAction<string>>;
+};
 
+const Search: React.FC<Props> = ({ lang, platform, setSelectedUtil }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [utils, setUtils] = useState<string[]>([]);
-  const [selectedUtil, setSelectedUtil] = useState('');
 
   const [showSearchList, setShowSearchList] = useState(false);
   const searchListRef = useRef(null);
-
-  // watcher (test-only)
-  useEffect(() => {
-    console.log('New util was selected', selectedUtil);
-  }, [selectedUtil]);
 
   useEffect(() => {
     setShowSearchList(!!searchTerm);
@@ -39,8 +36,8 @@ const Search = () => {
   }, [lang, platform]);
 
   const sortedAndFilteredUtils = sortUtilities(
-    utils.filter(util => util.indexOf(searchTerm) > -1),
-    searchTerm
+    utils.filter(util => util.indexOf(searchTerm.toLowerCase()) > -1),
+    searchTerm.toLowerCase()
   );
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -55,6 +52,7 @@ const Search = () => {
   function handleEnterKey(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === 'Enter' && showSearchList) {
       setSelectedUtil(sortedAndFilteredUtils[0]);
+      setShowSearchList(false);
     }
   }
 

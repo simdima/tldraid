@@ -3,8 +3,9 @@ import { AxiosResponse } from 'axios';
 export type QueryParams = {
   lang: string;
   platform: string;
+  utility?: string;
 };
 export type UtilitesResponse = AxiosResponse<string[]>;
 export type LanguageResponse = UtilitesResponse;
 export type PlatformResponse = UtilitesResponse;
-// export type UtilityPageResponse = AxiosResponse<string>;
+export type UtilityPageResponse = AxiosResponse<string>;
