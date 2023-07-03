@@ -1,9 +1,26 @@
 .title {
+  display: inline-block;
   font-weight: 400;
   font-size: 50px;
   position: relative;
-  margin: 5px 10px;
+  margin: 10px 0 5px 10px;
+
+  // border: 4px solid #020024; /* Initial border style */
+  // animation: border-animation 1s linear forwards 2s; /* Animation with a delay of 3 seconds */
+  // border-radius: 5px;
+  // padding: 0 10px;
+
+  // animation: title-border-appear 1s ease-in-out forwards;
 }
+
+// @keyframes border-animation {
+//   0% {
+//     border: 4px solid #020024;
+//   }
+//   100% {
+//     border: 4px solid #252345;
+//   }
+// }
 
 .title-fade-in {
   font-weight: 700;

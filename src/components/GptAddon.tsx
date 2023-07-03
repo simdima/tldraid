@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import './GptAddon.scss';
 import axios from 'axios';
-import { GptResponse } from '../@types';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import { GptResponse } from '../@types';
+import './GptAddon.scss';
 
 type Props = {
   selectedPlatform: string;
@@ -12,12 +12,12 @@ type Props = {
 const GptAddon = ({ selectedPlatform, utility }: Props): JSX.Element => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [isFetching, setIsFetching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setQuestion('');
     setAnswer('');
-    setIsFetching(false);
+    setIsLoading(false);
   }, [selectedPlatform, utility]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -41,53 +41,57 @@ const GptAddon = ({ selectedPlatform, utility }: Props): JSX.Element => {
             },
             data: {
               model: 'gpt-3.5-turbo',
+              n: 1,
+              temperature: 0.3,
               messages: [
                 {
                   role: 'user',
-                  content: `'${utility}' utility in ${selectedPlatform}. ${question}; provide only code snippets and minimal description text.`,
+                  content: `Using '${utility}' utility ${
+                    selectedPlatform === 'common' ? '' : `on a ${selectedPlatform} system`
+                  }. ${question}; please provide only code snippets and minimal description text for said snippets.`,
                 },
               ],
             },
           };
 
-          setIsFetching(true);
+          setIsLoading(true);
           console.log('🏷️', utility, question);
           const response = await axios.request<GptResponse>(options);
           if (response.status === 200) {
             const [firstRespone] = response.data.choices;
             setAnswer(a => a + '\n\n' + firstRespone.message.content);
-            setIsFetching(false);
+            setIsLoading(false);
           }
         }
       }
     } catch (error) {
       console.error(error);
-      setIsFetching(false);
+      setIsLoading(false);
     }
   }
 
-  /**
-   * @todo start a conversation for context; drop conversation on unmount
-   */
-
   return (
-    <div
-      onKeyUp={handleEnterPress}
-      className='gptaddon-container'>
+    <>
       {utility && (
-        <input
-          id='gpt_input'
-          type='text'
-          placeholder='Ask a bot to help with this utility...'
-          disabled={isFetching}
-          value={question}
-          onChange={handleChange}
-        />
+        <div
+          onKeyUp={handleEnterPress}
+          className='gptaddon-container'>
+          {utility && (
+            <input
+              id='gpt_input'
+              type='text'
+              placeholder='Try asking a bot for help with this utility...'
+              disabled={isLoading}
+              value={question}
+              onChange={handleChange}
+            />
+          )}
+          <div>
+            <ReactMarkdown>{answer}</ReactMarkdown>
+          </div>
+        </div>
       )}
-      <div>
-        <ReactMarkdown>{answer}</ReactMarkdown>
-      </div>
-    </div>
+    </>
   );
 };
 

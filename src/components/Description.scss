@@ -1,16 +1,16 @@
-.utility-description-container {
+.description-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 70%;
+  width: 50%;
   /* height: 80vh; */
-  margin: 10px auto;
+  margin: 10px 0 10px 20px;
   padding: 20px;
-  /* border: 1px solid #ebebeba3; */
+  // border: 1px solid red;
   border-radius: 5px;
 }
 
-.utility-description-container a,
+.description-container a,
 a:visited,
 a:focus,
 a:link {
@@ -18,24 +18,24 @@ a:link {
   font-style: italic;
 }
 
-.utility-description-container a:hover {
+.description-container a:hover {
   color: #3f3b74;
 }
 
-.utility-description-container > h1 {
+.description-container > h1 {
   color: #252345;
   // font-size: 3.5rem;
   font-size: 45px;
   font-weight: bold;
 }
 
-.utility-description-container > blockquote {
+.description-container > blockquote {
   margin-bottom: 20px;
   position: relative;
 
   & > p {
     opacity: 0;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     text-align: center;
     animation-name: standup;
     animation-duration: 1s;
@@ -55,20 +55,21 @@ a:link {
   }
 }
 
-.utility-description-container ul,
-.utility-description-container ul ~ p {
+.description-container ul,
+.description-container ul ~ p {
   align-self: flex-start;
   list-style: none;
+  font-size: 1.1rem;
 }
 
-.utility-description-container ul > li {
+.description-container ul > li {
   opacity: 0;
   animation-name: fadein;
   animation-duration: 1s;
   animation-delay: 0.5s;
   animation-fill-mode: forwards;
 
-  font-size: 1.1rem;
+  // font-size: 1.1rem;
 
   &::before {
     content: '\276F';
@@ -89,7 +90,7 @@ a:link {
   }
 }
 
-.utility-description-container ul ~ p {
+.description-container ul ~ p {
   opacity: 0;
   margin: 10px 0;
 

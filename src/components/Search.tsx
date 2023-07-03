@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import OutsideClicker from '../hooks/OutsideClicker';
 import { sendApiRequest } from '../api';
 import { sortUtilities } from '../helpers';
@@ -13,35 +13,34 @@ type Props = {
 
 const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Props): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [showSearchList, setShowSearchList] = useState(false);
   const [utils, setUtils] = useState<string[]>([]);
 
-  const [showSearchList, setShowSearchList] = useState(false);
-  const searchListRef = useRef(null);
+  useEffect(() => {
+    console.log('🔍 Search term has been changed to "', searchTerm, '"');
+    setShowSearchList(!!searchTerm);
+  }, [searchTerm]);
 
   useEffect(() => {
-    console.log('>> Selected Platform: ', selectedPlatform);
+    (async () => {
+      try {
+        if (selectedPlatform) {
+          const response = await sendApiRequest<UtilitesResponse, QueryParams>('/utilities', {
+            platform: selectedPlatform,
+          });
+
+          if (response) {
+            setUtils(response.data);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
   }, [selectedPlatform]);
 
   // get it from API?
   const platforms: Platforms[] = ['common', 'linux', 'osx', 'windows', 'android'];
-
-  useEffect(() => {
-    setShowSearchList(!!searchTerm);
-  }, [searchTerm]);
-
-  // fetch utils with common params on component load
-  useEffect(() => {
-    (async () => {
-      const response = await sendApiRequest<UtilitesResponse, QueryParams>('/utilities', {
-        platform: selectedPlatform,
-      });
-
-      if (response) {
-        console.log('🟢', response.data);
-        setUtils(response.data);
-      }
-    })();
-  }, [selectedPlatform]);
 
   const sortedAndFilteredUtils = sortUtilities(
     utils.filter(util => util.indexOf(searchTerm.toLowerCase()) > -1),
@@ -49,7 +48,11 @@ const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Prop
   );
 
   function handleSelectPlatform(p: Platforms) {
+    console.log('🔥 handleSelectPlatform()');
     setSelectedPlatform(p);
+    setSelectedUtil('');
+    setSearchTerm('');
+    setShowSearchList(false);
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -57,37 +60,37 @@ const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Prop
   }
 
   function handleSelectUtility(utility: string) {
+    console.log('🔥 handleSelectUtility(utility), which is => ', utility);
     setSelectedUtil(utility);
     setShowSearchList(false);
   }
 
   function handleEnterKey(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === 'Enter' && showSearchList) {
-      setSelectedUtil(sortedAndFilteredUtils[0]);
-      setShowSearchList(false);
+      handleSelectUtility(sortedAndFilteredUtils[0]);
     }
   }
 
   return (
     <div className='search-container'>
-      <OutsideClicker onShowSearchList={setShowSearchList}>
-        <div
-          className='wrapper'
-          onKeyUp={handleEnterKey}>
-          <div id='searchTools'>
-            <div id='util_platforms'>
-              {platforms.map(id => (
-                <div
-                  key={id}
-                  id={id}
-                  style={{ opacity: '0' }}
-                  className={`platform ${id == selectedPlatform ? 'selected-platform' : ''}`}
-                  onClick={() => handleSelectPlatform(id)}>
-                  <div className='platform-icon'></div>
-                </div>
-              ))}
-            </div>
+      <div
+        className='wrapper'
+        onKeyUp={handleEnterKey}>
+        <div id='searchTools'>
+          <div id='util_platforms'>
+            {platforms.map(id => (
+              <div
+                key={id}
+                id={id}
+                style={{ opacity: '0' }}
+                className={`platform ${id === selectedPlatform ? 'selected-platform' : ''}`}
+                onClick={() => handleSelectPlatform(id)}>
+                <div className='platform-icon'></div>
+              </div>
+            ))}
+          </div>
 
+          <OutsideClicker onShowSearchList={setShowSearchList}>
             <input
               id='util_search'
               type='text'
@@ -95,24 +98,21 @@ const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Prop
               value={searchTerm}
               onChange={handleChange}
             />
-          </div>
-
-          {showSearchList && (
-            <div
-              className='searchList'
-              ref={searchListRef}>
-              {sortedAndFilteredUtils.map(util => (
-                <div
-                  key={util}
-                  className='searchOption'
-                  onClick={() => handleSelectUtility(util)}>
-                  {util}
-                </div>
-              ))}
-            </div>
-          )}
+            {showSearchList && (
+              <div className='searchList'>
+                {sortedAndFilteredUtils.map(util => (
+                  <div
+                    key={util}
+                    className='searchOption'
+                    onClick={() => handleSelectUtility(util)}>
+                    {util}
+                  </div>
+                ))}
+              </div>
+            )}
+          </OutsideClicker>
         </div>
-      </OutsideClicker>
+      </div>
     </div>
   );
 };

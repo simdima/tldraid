@@ -7,23 +7,24 @@ export type QueryParams = {
   utility?: string;
 };
 export type UtilitesResponse = AxiosResponse<string[]>;
-export type LanguageResponse = UtilitesResponse;
-export type PlatformResponse = UtilitesResponse;
-export type UtilityPageResponse = AxiosResponse<string>;
+export type UtilityResponse = AxiosResponse<string>;
 
 export type GptResponse = {
   id: string;
   object: string;
   created: number;
-  model: string; // set to const later
-  choices: {
-    index: number;
-    message: {
-      role: string;
-      content: string;
-    };
-    finish_reason: string;
-  }[];
+  model: 'gpt-4' | 'gpt-3.5-turbo';
+  // typed as tuple since request is sent with n=1 parameter
+  choices: [
+    {
+      index: number;
+      message: {
+        role: string;
+        content: string;
+      };
+      finish_reason: string;
+    }
+  ];
   usage: {
     prompt_tokens: number;
     completion_tokens: number;

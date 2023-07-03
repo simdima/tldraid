@@ -30,7 +30,15 @@ const OutsideClicker = ({ children, onShowSearchList }: Props): JSX.Element => {
   const wrapperRef = useRef(null);
   useOutsideClicker(wrapperRef, onShowSearchList);
 
-  return <div ref={wrapperRef}>{children}</div>;
+  // console.log('OUTSIDE CLICK!!!!');
+
+  return (
+    <div
+      className='outside-click-container'
+      ref={wrapperRef}>
+      {children}
+    </div>
+  );
 };
 
 export default OutsideClicker;

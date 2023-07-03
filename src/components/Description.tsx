@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import './Description.scss';
-import { sendApiRequest } from '../api';
-import { QueryParams, UtilityPageResponse } from '../@types';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import { sendApiRequest } from '../api';
+import { QueryParams, UtilityResponse } from '../@types';
+import './Description.scss';
 
 type Props = {
   selectedPlatform: string;
@@ -12,25 +12,36 @@ type Props = {
 const Description = ({ selectedPlatform, utility }: Props): JSX.Element => {
   const [utilDescription, setUtilDescription] = useState('');
 
+  // console.log('⚠️ Description component re-rendered ⚠️');
+
   useEffect(() => {
     (async () => {
-      if (utility) {
-        const response = await sendApiRequest<UtilityPageResponse, QueryParams>('/page', {
-          platform: selectedPlatform,
-          utility,
-        });
-        if (response) {
-          setUtilDescription(response.data);
+      try {
+        if (utility) {
+          console.log('🚀', utility, selectedPlatform);
+          const response = await sendApiRequest<UtilityResponse, QueryParams>('/page', {
+            platform: selectedPlatform,
+            utility,
+          });
+          if (response) {
+            setUtilDescription(response.data);
+          }
         }
+      } catch (error) {
+        console.error(error);
       }
     })();
   }, [utility, selectedPlatform]);
 
   /** @todo try and add syntax hightlight for {{XXX}} */
   return (
-    <div className='utility-description-container'>
-      <ReactMarkdown key={utility}>{utilDescription}</ReactMarkdown>
-    </div>
+    <>
+      {utility && (
+        <div className='description-container'>
+          <ReactMarkdown key={utility}>{utilDescription}</ReactMarkdown>
+        </div>
+      )}
+    </>
   );
 };
 
