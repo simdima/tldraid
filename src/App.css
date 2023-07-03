@@ -1,7 +1,16 @@
-.container {
+input:focus,
+div:focus {
+  outline: none;
+  border-color: #ebebeb4d;
+}
+
+.app {
   position: relative;
 }
 
-.title {
-  margin: 5px 10px;
+.description {
+  margin: 0 auto;
+  width: 95vw;
+  display: flex;
+  flex-direction: row;
 }

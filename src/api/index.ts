@@ -10,7 +10,10 @@ export async function sendApiRequest<Response, Params>(
 ): Promise<Response | null> {
   try {
     const { data: response } = await api.get<Response>(endpoint, {
-      params,
+      params: {
+        ...params,
+        lang: 'en', // implement for other languages later
+      },
     });
 
     return response;

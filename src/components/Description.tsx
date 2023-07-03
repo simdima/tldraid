@@ -5,20 +5,18 @@ import { QueryParams, UtilityPageResponse } from '../@types';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 type Props = {
-  lang: string;
-  platform: string;
+  selectedPlatform: string;
   utility: string;
 };
 
-const Description: React.FC<Props> = ({ lang, platform, utility }) => {
+const Description = ({ selectedPlatform, utility }: Props): JSX.Element => {
   const [utilDescription, setUtilDescription] = useState('');
 
   useEffect(() => {
     (async () => {
       if (utility) {
         const response = await sendApiRequest<UtilityPageResponse, QueryParams>('/page', {
-          lang,
-          platform,
+          platform: selectedPlatform,
           utility,
         });
         if (response) {
@@ -26,7 +24,7 @@ const Description: React.FC<Props> = ({ lang, platform, utility }) => {
         }
       }
     })();
-  }, [utility, lang, platform]);
+  }, [utility, selectedPlatform]);
 
   /** @todo try and add syntax hightlight for {{XXX}} */
   return (

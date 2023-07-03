@@ -26,7 +26,7 @@ type Props = {
   children: React.ReactNode;
   onShowSearchList: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const OutsideClicker: React.FC<Props> = ({ children, onShowSearchList }) => {
+const OutsideClicker = ({ children, onShowSearchList }: Props): JSX.Element => {
   const wrapperRef = useRef(null);
   useOutsideClicker(wrapperRef, onShowSearchList);
 
