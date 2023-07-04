@@ -5,14 +5,15 @@ import { QueryParams, UtilityResponse } from '../@types';
 import './Description.scss';
 
 type Props = {
+  setShowIntroduction: React.Dispatch<React.SetStateAction<boolean>>;
   selectedPlatform: string;
   utility: string;
 };
 
-const Description = ({ selectedPlatform, utility }: Props): JSX.Element => {
+const Description = ({ setShowIntroduction, selectedPlatform, utility }: Props): JSX.Element => {
   const [utilDescription, setUtilDescription] = useState('');
 
-  // console.log('⚠️ Description component re-rendered ⚠️');
+  console.log('⚠️ Description component re-rendered ⚠️');
 
   useEffect(() => {
     (async () => {
@@ -24,6 +25,7 @@ const Description = ({ selectedPlatform, utility }: Props): JSX.Element => {
             utility,
           });
           if (response) {
+            setShowIntroduction(false);
             setUtilDescription(response.data);
           }
         }
@@ -31,7 +33,7 @@ const Description = ({ selectedPlatform, utility }: Props): JSX.Element => {
         console.error(error);
       }
     })();
-  }, [utility, selectedPlatform]);
+  }, [setShowIntroduction, utility, selectedPlatform]);
 
   /** @todo try and add syntax hightlight for {{XXX}} */
   return (

@@ -5,8 +5,10 @@ import Description from './components/Description';
 import GptAddon from './components/GptAddon';
 import { Platforms } from './@types';
 import './App.css';
+import Introduction from './components/Introduction';
 
 function App() {
+  const [showIntroduction, setShowIntroduction] = useState(true);
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>('common');
   const [selectedUtil, setSelectedUtil] = useState('');
 
@@ -23,8 +25,10 @@ function App() {
           setSelectedPlatform={setSelectedPlatform}
           setSelectedUtil={setSelectedUtil}
         />
+        {showIntroduction && <Introduction />}
         <div className='content-container'>
           <Description
+            setShowIntroduction={setShowIntroduction}
             selectedPlatform={selectedPlatform}
             utility={selectedUtil}
           />

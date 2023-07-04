@@ -1,0 +1,35 @@
+.introduction {
+  display: flex;
+  width: 500px;
+  margin: 10px auto;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.introduction > p {
+  color: #252345;
+  font-weight: 700;
+  opacity: 0;
+  animation: fade-in 0.5s;
+  animation-delay: 1.5s;
+  animation-fill-mode: forwards;
+}
+
+.introduction-non-keywords {
+  color: #ebebeba3;
+  font-weight: normal;
+  opacity: 0;
+  animation: fade-in 2s;
+  animation-delay: 2.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
