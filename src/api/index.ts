@@ -1,18 +1,19 @@
 import axios from 'axios';
+import { QueryParams } from '../@types';
 
 const api = axios.create({
   baseURL: 'http://localhost:5510',
 });
 
-export async function sendApiRequest<Response, Params>(
+export async function sendApiRequest<Response>(
   endpoint: string,
-  params: Params
+  params?: QueryParams
 ): Promise<Response | null> {
   try {
     const { data: response } = await api.get<Response>(endpoint, {
       params: {
         ...params,
-        lang: 'en', // implement for other languages later
+        lang: params ? params.lang : 'en',
       },
     });
 

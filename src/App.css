@@ -1,13 +1,10 @@
-input:focus,
-div:focus {
-  outline: none;
-  border-color: #ebebeb4d;
-}
-
 .app {
   position: relative;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .content-container {
   display: flex;
+  height: 65%;
 }

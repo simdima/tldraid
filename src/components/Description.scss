@@ -3,28 +3,26 @@
   flex-direction: column;
   align-items: center;
   width: 50%;
-  /* height: 80vh; */
   margin: 10px 0 10px 20px;
   padding: 20px;
-  // border: 1px solid red;
-  border-radius: 5px;
+  border-right: 1px solid var(--primary-color);
+  height: 100%;
+  overflow: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 }
 
-.description-container a,
-a:visited,
-a:focus,
-a:link {
-  color: #494489;
-  font-style: italic;
-}
+.description-container a {
+  color: var(--link-color) !important;
+  text-decoration: underline !important;
 
-.description-container a:hover {
-  color: #3f3b74;
+  &:hover {
+    color: var(--link-secondary-color) !important;
+  }
 }
 
 .description-container > h1 {
-  color: #252345;
-  // font-size: 3.5rem;
+  color: var(--primary-color);
   font-size: 45px;
   font-weight: bold;
 }
@@ -33,18 +31,17 @@ a:link {
   margin-bottom: 20px;
   position: relative;
 
-  & > p {
+  > p {
     opacity: 0;
     font-size: 1.3rem;
     text-align: center;
-    animation-name: standup;
+    animation-name: stand-up;
     animation-duration: 1s;
-    /* animation-delay: 0.2s; */
     animation-fill-mode: forwards;
   }
 }
 
-@keyframes standup {
+@keyframes stand-up {
   0% {
     transform: translateY(100%);
     opacity: 0;
@@ -69,15 +66,30 @@ a:link {
   animation-delay: 0.5s;
   animation-fill-mode: forwards;
 
-  // font-size: 1.1rem;
-
   &::before {
     content: '\276F';
-    color: #252345;
+    color: var(--primary-color);
     font-weight: bold;
     display: inline-block;
     width: 1em;
     margin-left: -1em;
+  }
+}
+
+.description-container ul ~ p {
+  margin: 10px 0;
+
+  > code {
+    background: var(--primary-color);
+    padding: 5px 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
   }
 }
 
@@ -90,35 +102,16 @@ a:link {
   }
 }
 
-.description-container ul ~ p {
-  opacity: 0;
-  margin: 10px 0;
-
-  overflow: hidden;
-  white-space: nowrap;
-  animation-name: typing;
-  animation-duration: 3s;
-  animation-timing-function: steps(100, end);
-  animation-delay: 1s;
-  animation-fill-mode: forwards;
-
-  & > code {
-    background: #252345;
-    padding: 5px 10px;
-    border-radius: 5px;
-  }
-}
-
-@keyframes typing {
-  0% {
-    opacity: 0;
-    width: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-    width: 100%;
-  }
-}
+// @keyframes typing {
+//   0% {
+//     opacity: 0;
+//     width: 0;
+//   }
+//   10% {
+//     opacity: 1;
+//   }
+//   100% {
+//     opacity: 1;
+//     width: 100%;
+//   }
+// }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import OutsideClicker from '../hooks/OutsideClicker';
 import { sendApiRequest } from '../api';
 import { sortUtilities } from '../helpers';
-import { UtilitesResponse, QueryParams, Platforms } from '../@types';
+import { UtilitesResponse, Platforms } from '../@types';
 import './Search.scss';
 
 type Props = {
@@ -25,7 +25,7 @@ const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Prop
     (async () => {
       try {
         if (selectedPlatform) {
-          const response = await sendApiRequest<UtilitesResponse, QueryParams>('/utilities', {
+          const response = await sendApiRequest<UtilitesResponse>('/utilities', {
             platform: selectedPlatform,
           });
 
@@ -43,8 +43,8 @@ const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Prop
   const platforms: Platforms[] = ['common', 'linux', 'osx', 'windows', 'android'];
 
   const sortedAndFilteredUtils = sortUtilities(
-    utils.filter(util => util.indexOf(searchTerm.toLowerCase()) > -1),
-    searchTerm.toLowerCase()
+    utils.filter(util => util.indexOf(searchTerm.trim().toLowerCase()) > -1),
+    searchTerm.trim().toLowerCase()
   );
 
   function handleSelectPlatform(p: Platforms) {
