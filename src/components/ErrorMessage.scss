@@ -1,5 +1,5 @@
 .error-popup {
-  max-width: 300px;
+  width: 300px;
   max-height: 150px;
 
   border: 1px solid var(--primary-color);
@@ -23,6 +23,10 @@
   > div {
     padding: 10px;
     overflow: scroll;
+  }
+  > div:first-child {
+    padding-bottom: 0;
+    font-weight: 700;
   }
 }
 

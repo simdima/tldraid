@@ -10,7 +10,7 @@ const Introduction = (): JSX.Element => {
           target='_blank'>
           tldr pages
         </a>
-        <span className='introduction-non-keywords'> that are supercharged </span>
+        <span className='introduction-non-keywords'> and supercharge your learning </span>
         <a
           href='https://chat.openai.com/'
           target='_blank'>

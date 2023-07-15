@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ISO6391 from 'iso-639-1';
 import { sendApiRequest } from '../api';
-import { GptEngine, LanguagesResponse } from '../@types';
+import { GptEngine, GptEngineNames, LanguagesResponse } from '../@types';
 import './Modal.scss';
 
 type Props = {
@@ -13,6 +13,7 @@ type Props = {
   setChatGptApiKey: React.Dispatch<React.SetStateAction<string>>;
   chatGptEngine: string;
   setChatGptEngine: React.Dispatch<React.SetStateAction<GptEngine>>;
+  setError: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const Modal = ({
@@ -24,26 +25,36 @@ const Modal = ({
   setChatGptApiKey,
   chatGptEngine,
   setChatGptEngine,
+  setError,
 }: Props): JSX.Element => {
   const [langList, setLangList] = useState<string[]>([]);
   const [showLangList, setShowLangList] = useState(false);
 
+  const engines: GptEngineNames[] = [GptEngineNames.GPT_V3, GptEngineNames.GPT_V4];
   const [showEngineList, setShowEngineList] = useState(false);
 
-  const engines = ['gpt-3.5-turbo', 'gpt-4'] as const;
+  // const [apiKey, setApiKey] = useState(chatGptApiKey);
 
   useEffect(() => {
     (async () => {
       try {
         const response = await sendApiRequest<LanguagesResponse>('/languages');
-        if (response) {
-          setLangList(response.data);
+
+        if ('error' in response) {
+          throw new Error(response.error);
         }
+
+        setLangList(response.data);
       } catch (error) {
         console.error(error);
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+
+        setError('Failed to fetch languages');
       }
     })();
-  }, []);
+  }, [setError]);
 
   function hideModal() {
     setShowLangList(false);

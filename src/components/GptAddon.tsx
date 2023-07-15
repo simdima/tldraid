@@ -10,6 +10,8 @@ type Props = {
   chatGptApikey: string;
   chatGptEngine: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const GptAddon = ({
@@ -18,16 +20,17 @@ const GptAddon = ({
   chatGptApikey,
   chatGptEngine,
   setError,
+  isLoading,
+  setIsLoading,
 }: Props): JSX.Element => {
   const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [answers, setAnswers] = useState<string[]>([]);
 
   useEffect(() => {
     setQuestion('');
-    setAnswer('');
+    setAnswers([]);
     setIsLoading(false);
-  }, [selectedPlatform, utility]);
+  }, [selectedPlatform, utility, setIsLoading]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setQuestion(e.target.value);
@@ -41,6 +44,8 @@ const GptAddon = ({
         document.activeElement.id === 'gpt_input'
       ) {
         if (utility && question) {
+          setIsLoading(true);
+
           const options = {
             url: 'https://api.openai.com/v1/chat/completions',
             method: 'POST',
@@ -63,13 +68,11 @@ const GptAddon = ({
             },
           };
 
-          setIsLoading(true);
-          console.log('🏷️', utility, question);
           const response = await axios.request<GptResponse>(options);
           if (response.status >= 200 && response.status < 400) {
-            const [firstRespone] = response.data.choices;
-            setAnswer(a => a + '\n\n' + firstRespone.message.content);
-            setIsLoading(false);
+            const [firstResponse] = response.data.choices;
+            setQuestion('');
+            setAnswers(a => [...a, question + '\n\n' + firstResponse.message.content]);
           } else {
             throw new Error('Something went wrong');
           }
@@ -94,6 +97,8 @@ const GptAddon = ({
 
       setIsLoading(false);
       setError(errorText);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -109,7 +114,7 @@ const GptAddon = ({
               type='text'
               placeholder={
                 !chatGptApikey
-                  ? 'To use this bot configure your API key first'
+                  ? 'Add your API key to ask this bot a question'
                   : 'Try asking a bot for help with this utility...'
               }
               disabled={isLoading || !chatGptApikey}
@@ -117,21 +122,15 @@ const GptAddon = ({
               onChange={handleChange}
             />
           )}
-          <div>
-            <ReactMarkdown>{answer}</ReactMarkdown>
-          </div>
+          {answers.map(answer => (
+            <div
+              key={answer}
+              className='answer-container'>
+              <ReactMarkdown key={answer}>{answer}</ReactMarkdown>
+            </div>
+          ))}
         </div>
       )}
-
-      {/* {error && (
-        <ErrorMessage>
-          <div
-            className='error-popup'
-            onClick={() => setError('')}>
-            <div>{error}</div>
-          </div>
-        </ErrorMessage>
-      )} */}
     </>
   );
 };

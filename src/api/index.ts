@@ -1,14 +1,14 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { QueryParams } from '../@types';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5510',
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 export async function sendApiRequest<Response>(
   endpoint: string,
   params?: QueryParams
-): Promise<Response | null> {
+): Promise<Response | { error: string }> {
   try {
     const { data: response } = await api.get<Response>(endpoint, {
       params: {
@@ -19,9 +19,14 @@ export async function sendApiRequest<Response>(
 
     return response;
   } catch (error) {
-    console.error(error);
-    return null;
+    return customError(error);
   }
 }
 
-export default api;
+function customError(error: unknown): { error: string } {
+  if (error instanceof AxiosError) {
+    return { error: error.message };
+  }
+
+  return { error: '' };
+}

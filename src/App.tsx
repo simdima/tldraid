@@ -6,19 +6,22 @@ import Description from './components/Description';
 import GptAddon from './components/GptAddon';
 import Modal from './components/Modal';
 import ErrorMessage from './components/ErrorMessage';
-import { GptEngine, Platforms } from './@types';
+import Spinner from './components/Spinner';
+import useLocalStorage from './hooks/useLocalStorage';
+import { GptEngine, GptEngineNames, Platforms } from './@types';
 import './App.css';
 
 function App() {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
-  const [chatGptApiKey, setChatGptApiKey] = useState('');
-  const [chatGptEngine, setChatGptEngine] = useState<GptEngine>('gpt-3.5-turbo');
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>('common');
-  const [selectedUtil, setSelectedUtil] = useState('');
+  const [selectedUtility, setSelectedUtility] = useState('');
+
+  const [chatGptApiKey, setChatGptApiKey] = useLocalStorage();
+  const [chatGptEngine, setChatGptEngine] = useState<GptEngine>(GptEngineNames['GPT_V3']);
 
   const [showIntroduction, setShowIntroduction] = useState(true);
   const [showModal, setShowModal] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -33,24 +36,28 @@ function App() {
         <Search
           selectedPlatform={selectedPlatform}
           setSelectedPlatform={setSelectedPlatform}
-          setSelectedUtil={setSelectedUtil}
+          setSelectedUtil={setSelectedUtility}
+          setError={setError}
         />
 
-        {showIntroduction && <Introduction />}
+        {showIntroduction ? <Introduction /> : <Spinner isLoading={isLoading} />}
 
         <div className='content-container'>
           <Description
             selectedLanguage={selectedLanguage}
             setShowIntroduction={setShowIntroduction}
             selectedPlatform={selectedPlatform}
-            utility={selectedUtil}
+            utility={selectedUtility}
+            setError={setError}
           />
           <GptAddon
             selectedPlatform={selectedPlatform}
-            utility={selectedUtil}
+            utility={selectedUtility}
             chatGptApikey={chatGptApiKey}
             chatGptEngine={chatGptEngine}
             setError={setError}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
           />
         </div>
 
@@ -63,9 +70,11 @@ function App() {
           setChatGptApiKey={setChatGptApiKey}
           chatGptEngine={chatGptEngine}
           setChatGptEngine={setChatGptEngine}
+          setError={setError}
         />
 
         <ErrorMessage
+          key={error}
           error={error}
           setError={setError}
         />

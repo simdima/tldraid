@@ -10,12 +10,11 @@ function useOutsideClicker(
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (ref.current && !ref.current.contains(event.target as Node | null)) {
-        // console.log('You clicked outside of me!');
         onShowSearchList(false);
       }
     }
-    // Bind the event listener
     document.addEventListener('mousedown', handleClickOutside);
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -29,8 +28,6 @@ type Props = {
 const OutsideClicker = ({ children, onShowSearchList }: Props): JSX.Element => {
   const wrapperRef = useRef(null);
   useOutsideClicker(wrapperRef, onShowSearchList);
-
-  // console.log('OUTSIDE CLICK!!!!');
 
   return (
     <div

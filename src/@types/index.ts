@@ -11,7 +11,11 @@ export type LanguagesResponse = AxiosResponse<string[]>;
 export type UtilitesResponse = AxiosResponse<string[]>;
 export type UtilityResponse = AxiosResponse<string>;
 
-export type GptEngine = 'gpt-4' | 'gpt-3.5-turbo';
+export enum GptEngineNames {
+  GPT_V3 = 'gpt-3.5-turbo',
+  GPT_V4 = 'gpt-4',
+}
+export type GptEngine = GptEngineNames.GPT_V3 | GptEngineNames.GPT_V4;
 
 export type GptResponse = {
   id: string;

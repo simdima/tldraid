@@ -5,11 +5,11 @@
   width: 350px;
   margin: 5px auto;
   position: relative;
-  height: 17%;
 }
 
 .wrapper {
   position: relative;
+  width: 80%;
 }
 
 #searchTools {
@@ -126,4 +126,9 @@
   &:hover {
     background: var(--background-color);
   }
+}
+
+.util-search-container {
+  position: relative;
+  display: inline-flex;
 }

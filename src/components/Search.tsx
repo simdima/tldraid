@@ -9,15 +9,20 @@ type Props = {
   selectedPlatform: Platforms;
   setSelectedPlatform: React.Dispatch<React.SetStateAction<Platforms>>;
   setSelectedUtil: React.Dispatch<React.SetStateAction<string>>;
+  setError: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Props): JSX.Element => {
+const Search = ({
+  selectedPlatform,
+  setSelectedPlatform,
+  setSelectedUtil,
+  setError,
+}: Props): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearchList, setShowSearchList] = useState(false);
   const [utils, setUtils] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log('🔍 Search term has been changed to "', searchTerm, '"');
     setShowSearchList(!!searchTerm);
   }, [searchTerm]);
 
@@ -29,17 +34,23 @@ const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Prop
             platform: selectedPlatform,
           });
 
-          if (response) {
-            setUtils(response.data);
+          if ('error' in response) {
+            throw new Error(response.error);
           }
+
+          setUtils(response.data);
         }
       } catch (error) {
         console.error(error);
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+
+        setError('Failed to fetch utilities');
       }
     })();
-  }, [selectedPlatform]);
+  }, [selectedPlatform, setError]);
 
-  // get it from API?
   const platforms: Platforms[] = ['common', 'linux', 'osx', 'windows', 'android'];
 
   const sortedAndFilteredUtils = sortUtilities(
@@ -48,7 +59,6 @@ const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Prop
   );
 
   function handleSelectPlatform(p: Platforms) {
-    console.log('🔥 handleSelectPlatform()');
     setSelectedPlatform(p);
     setSelectedUtil('');
     setSearchTerm('');
@@ -60,9 +70,9 @@ const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Prop
   }
 
   function handleSelectUtility(utility: string) {
-    console.log('🔥 handleSelectUtility(utility), which is => ', utility);
     setSelectedUtil(utility);
     setShowSearchList(false);
+    setSearchTerm('');
   }
 
   function handleEnterKey(e: React.KeyboardEvent<HTMLDivElement>) {
@@ -98,6 +108,7 @@ const Search = ({ selectedPlatform, setSelectedPlatform, setSelectedUtil }: Prop
               value={searchTerm}
               onChange={handleChange}
             />
+
             {showSearchList && (
               <div className='searchList'>
                 {sortedAndFilteredUtils.map(util => (

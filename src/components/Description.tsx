@@ -9,6 +9,7 @@ type Props = {
   setShowIntroduction: React.Dispatch<React.SetStateAction<boolean>>;
   selectedPlatform: string;
   utility: string;
+  setError: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const Description = ({
@@ -16,33 +17,38 @@ const Description = ({
   setShowIntroduction,
   selectedPlatform,
   utility,
+  setError,
 }: Props): JSX.Element => {
   const [utilDescription, setUtilDescription] = useState('');
-
-  console.log('⚠️ Description component re-rendered ⚠️');
 
   useEffect(() => {
     (async () => {
       try {
         if (utility) {
-          console.log('🚀', utility, selectedPlatform, selectedLanguage);
           const response = await sendApiRequest<UtilityResponse>('/utility', {
             lang: selectedLanguage,
             platform: selectedPlatform,
             utility,
           });
-          if (response) {
-            setShowIntroduction(false);
-            setUtilDescription(response.data);
+
+          if ('error' in response) {
+            throw new Error(response.error);
           }
+
+          setShowIntroduction(false);
+          setUtilDescription(response.data);
         }
       } catch (error) {
         console.error(error);
+        if (error instanceof Error) {
+          console.error(error.message);
+        }
+
+        setError('Failed to fetch selected utility');
       }
     })();
-  }, [setShowIntroduction, utility, selectedLanguage, selectedPlatform]);
+  }, [setShowIntroduction, utility, selectedLanguage, selectedPlatform, setError]);
 
-  /** @todo try and add syntax hightlight for {{XXX}} */
   return (
     <>
       {utility && (
