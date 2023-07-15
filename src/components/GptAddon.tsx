@@ -122,9 +122,9 @@ const GptAddon = ({
               onChange={handleChange}
             />
           )}
-          {answers.map(answer => (
+          {answers.map((answer, idx) => (
             <div
-              key={answer}
+              key={idx}
               className='answer-container'>
               <ReactMarkdown key={answer}>{answer}</ReactMarkdown>
             </div>

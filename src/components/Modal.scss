@@ -54,13 +54,13 @@
     > .close-logo {
       width: 20px;
       height: 20px;
-      background-image: url('../assets/close-logo.png');
+      background-image: url('../assets/icons/close-logo.png');
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
 
       &:hover {
-        background-image: url('../assets/close-alt-logo.png');
+        background-image: url('../assets/icons/close-alt-logo.png');
       }
     }
   }

@@ -78,19 +78,19 @@
 }
 
 #common > .platform-icon {
-  background-image: url('../assets/monitor-logo.png');
+  background-image: url('../assets/icons/monitor-logo.png');
 }
 #linux > .platform-icon {
-  background-image: url('../assets/linux-logo.png');
+  background-image: url('../assets/icons/linux-logo.png');
 }
 #osx > .platform-icon {
-  background-image: url('../assets/apple-logo.png');
+  background-image: url('../assets/icons/apple-logo.png');
 }
 #windows > .platform-icon {
-  background-image: url('../assets/windows-logo.png');
+  background-image: url('../assets/icons/windows-logo.png');
 }
 #android > .platform-icon {
-  background-image: url('../assets/android-logo.png');
+  background-image: url('../assets/icons/android-logo.png');
 }
 
 @keyframes fade-in-from-top {
