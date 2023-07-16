@@ -52,8 +52,8 @@ docker run --name tldraid -p 3000:3000 -d tldraid
 
 5. Navigate to your container's URL, add your <a style="color:#413e77; font-weight: bold" href="https://platform.openai.com/account/api-keys">OpenAI API key</a>, choose <a style="color:#413e77; font-weight: bold" href="https://platform.openai.com/docs/guides/gpt">ChatGPT model</a> and language for man pages and you are good to go!
 
-   _Note 1_: **gpt-4** model is available only to Premium ChatGPT users
-   _Note 2_: if man page is missing for a language you selected it will be rendered in English
+_Note 1_: **gpt-4** model is available only to Premium ChatGPT users
+_Note 2_: if man page is missing for a language you selected it will be rendered in English
 
 ### Development
 
