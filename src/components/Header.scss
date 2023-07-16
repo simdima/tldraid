@@ -84,7 +84,7 @@
   animation: title-fade-in 1s ease-in-out 1s forwards;
 
   #config_btn {
-    background-image: url('../assets/icons/config-logo.png');
+    background-image: url('../assets/icons/settings.png');
     width: 30px;
     height: 30px;
     background-size: cover;
@@ -92,7 +92,7 @@
     background-position: center;
 
     &:hover {
-      background-image: url('../assets/icons/config-alt-logo.png');
+      background-image: url('../assets/icons/settings-alt.png');
     }
   }
 }

@@ -13,7 +13,8 @@
   -webkit-text-size-adjust: 100%;
 
   --background-color: #020024;
-  --primary-color: #252345;
+  /* --primary-color: #252345; */
+  --primary-color: #413e77;
   --text-color: #ebebeba3;
   --link-color: #494489;
   --link-secondary-color: #3f3b74;
@@ -34,9 +35,10 @@ body {
   color: var(--text-color);
 }
 
+/* fix for Chrome */
 input {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; /* fix for Chrome */
+    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 p > code,
@@ -53,7 +55,6 @@ a:focus {
   text-decoration: none;
   color: inherit;
   background-color: transparent;
-  white-space: nowrap;
 }
 
 input:focus,

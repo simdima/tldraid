@@ -16,6 +16,12 @@
   }
 }
 
+@media (max-width: 768px) {
+  .introduction {
+    width: 80%;
+  }
+}
+
 .introduction-non-keywords {
   color: var(--text-color);
   font-weight: normal;
