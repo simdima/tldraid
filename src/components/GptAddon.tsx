@@ -60,7 +60,7 @@ const GptAddon = ({
               messages: [
                 {
                   role: 'user',
-                  content: `Using '${utility}' utility ${
+                  content: `I'm using '${utility}' utility ${
                     selectedPlatform === 'common' ? '' : `on a ${selectedPlatform} system`
                   }. ${question}`,
                 },
