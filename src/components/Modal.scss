@@ -5,7 +5,7 @@
   position: absolute;
   width: 500px;
   height: 500px;
-  transform: translate(-50%, -30%);
+  transform: translate(-50%, -50%);
   background: var(--background-color);
   display: flex;
   flex-direction: column;
@@ -19,13 +19,19 @@
   }
 }
 
+@media (max-width: 768px) {
+  #config_modal {
+    width: 95%;
+  }
+}
+
 @keyframes modal-fade-from-top {
   0% {
     top: -100%;
     left: 50%;
   }
   100% {
-    top: 30%;
+    top: 50%;
     left: 50%;
   }
 }
@@ -54,13 +60,13 @@
     > .close-logo {
       width: 20px;
       height: 20px;
-      background-image: url('../assets/icons/close-logo.png');
+      background-image: url('../assets/icons/cancel.png');
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
 
       &:hover {
-        background-image: url('../assets/icons/close-alt-logo.png');
+        background-image: url('../assets/icons/cancel-alt.png');
       }
     }
   }

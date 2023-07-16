@@ -8,5 +8,17 @@
 
 .content-container {
   display: flex;
-  height: 65%;
+  /* height: 65%; */
+  margin-top: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+@media (max-width: 834px) {
+  .content-container {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0;
+    height: 100%;
+  }
 }

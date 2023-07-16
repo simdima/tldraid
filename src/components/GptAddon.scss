@@ -3,22 +3,29 @@
   flex-direction: column;
   align-items: center;
   width: 50%;
-  height: 90vh;
   margin: 10px 20px 10px 0;
   padding: 20px;
-
-  height: 100%;
   overflow: scroll;
 
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
 
-  border-left: 1px solid var(--primary-color);
+  border-left: 4px solid var(--primary-color);
 
   opacity: 0;
   animation-name: fadein;
   animation-duration: 1s;
   animation-fill-mode: forwards;
+}
+
+@media (max-width: 834px) {
+  .gptaddon-container {
+    width: 90%;
+    border-left: 0;
+    border-top: 8px solid var(--primary-color);
+    margin: 10px 10px 10px 0;
+    height: 50%;
+  }
 }
 
 #gpt_input {
