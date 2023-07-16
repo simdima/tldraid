@@ -4,8 +4,6 @@
 has an integrated chatbot converstation field where you can ask for specific examples and usecases</p>
 </div>
 
-<br>
-
 <hr>
 
 ### Why though?
@@ -23,7 +21,7 @@ I thought it'd be great to combine both of these tools, and that is where this a
 </p>
 
 **Option #1**
-The working instance of the app can be found <a style="color:#413e77; font-weight: bold" href="https://tldraid.simlabs.dev">here</a>
+The working instance of the app can be found <a style="color:#413e77; font-weight: bold" href="https://tldraid.simlabs.dev">here</a> (currently available only in Estonia)
 
 **Option #2**
 Run it locally using Docker.
@@ -62,6 +60,33 @@ docker run --name tldraid -p 3000:3000 -d tldraid
 Clone the repository, navigate inside and run:
 
 ```sh
+touch .env && echo "VITE_API_URL=[YOUR_API_SERVER_URL]" > .env
 npm i(nstall)
 npm run dev
 ```
+
+### License
+
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+### Author
+
+Dmitri Sim
