@@ -1,5 +1,5 @@
 <div style="display:flex; align-items: center">
-  <img src="/public/icon-readme.png" alt="app-icon" />
+  <img src="/public/icon-readme.png" alt="app-icon" style="border-radius: 5px" />
   <p style="margin-left: 10px">A web app that allows you to navigate through man pages for most common platforms but also
 has an integrated chatbot converstation field where you can ask for specific examples and usecases</p>
 </div>

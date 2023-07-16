@@ -102,18 +102,22 @@
 
 .description-container ul ~ p {
   margin: 10px 0;
+  width: auto;
 
   > code {
     background: var(--primary-color);
     padding: 5px 10px;
     border-radius: 5px;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: pre-wrap;
     opacity: 0;
     animation-name: fade-in;
     animation-duration: 1s;
     animation-delay: 1s;
     animation-fill-mode: forwards;
+
+    width: 100%;
+    display: inline-block;
   }
 }
 
@@ -123,5 +127,32 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .description-container {
+    h1 {
+      font-size: 40px;
+      width: 90%;
+    }
+
+    blockquote > p {
+      font-size: 1.1rem;
+      width: 90%;
+    }
+
+    ul > li {
+      font-size: 0.9rem;
+    }
+
+    ul ~ p {
+      font-size: 0.9rem;
+      width: inherit;
+
+      code {
+        overflow: auto;
+      }
+    }
   }
 }

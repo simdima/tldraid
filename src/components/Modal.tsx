@@ -173,6 +173,14 @@ const Modal = ({
                 Get an API key from OpenAI website
               </a>
             </div>
+
+            <div className='repo-link-container'>
+              <a
+                href='https://gitlab.com/dsim/tldraid'
+                target='_blank'>
+                <div id='repo_link'></div>
+              </a>
+            </div>
           </div>
         </div>
       )}

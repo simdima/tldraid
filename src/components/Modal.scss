@@ -113,6 +113,28 @@
     align-items: center;
     margin: 20px 40px;
   }
+
+  .repo-link-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    height: 40px;
+    cursor: pointer;
+
+    #repo_link {
+      background-image: url('../assets/icons/github.png');
+      width: 30px;
+      height: 30px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &:hover {
+        background-image: url('../assets/icons/github-alt.png');
+      }
+    }
+  }
 }
 
 .language-select-list {
