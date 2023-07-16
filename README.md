@@ -10,9 +10,9 @@ has an integrated chatbot converstation field where you can ask for specific exa
 
 ### Why though?
 
-As a passionate command line user I often make use of man pages to either learn how to use some cli utility that is new to me or just refresh my memory on a familiar one. However, sometimes I also find default man pages a bit abstract or lacking in some cases, so occasionally I end up searching the web for more specific implementaions.
+As a command line enthusiast I often make use of man pages to either learn how to use some cli utility that is new to me or just refresh my memory on a familiar one. However, sometimes I also find default man pages a bit abstract or lacking in some cases, so occasionally I end up searching the web for more specific implementations.
 
-With arrival of OpenAI ChatGPT it made my life a lot easier since I can just ask it exactly what I want to do with a utility of my choice (or what specifc result I want to get) and it spits out the answer.
+With arrival of OpenAI's <a style="color:#413e77; font-weight: bold" href="https://chat.openai.com/auth/login">ChatGPT</a> it made my life a lot easier since I can just ask it exactly what I want to do with a utility of my choice (or what specific result I want to get) and it spits out the answer.
 
 I thought it'd be great to combine both of these tools, and that is where this app comes in.
 
@@ -33,10 +33,6 @@ You will need an <a style="color:#413e77; font-weight: bold" href="https://gitla
 
 1. Clone this repository to your system and navigate inside the directory
 
-```sh
-git clone https://gitlab.com/dsim/tldraid && cd tldraid
-```
-
 2. Create an **.env** file and add the API server's url to environmental variable VITE_API_URL
 
 ```sh
@@ -47,11 +43,25 @@ touch .env && echo "VITE_API_URL=http://localhost:5510" > .env
 3. Build a Docker image _(change EXPOSE variable if needed)_
 
 ```sh
-docker build -t  tldraid .
+docker build -t tldraid .
 ```
 
-4. Start a Docker container _(change ports according to your setup)_
+4. Spin up a Docker container _(change ports according to your setup)_
 
 ```sh
 docker run --name tldraid -p 3000:3000 -d tldraid
+```
+
+5. Navigate to your container's URL, add your <a style="color:#413e77; font-weight: bold" href="https://platform.openai.com/account/api-keys">OpenAI API key</a>, choose <a style="color:#413e77; font-weight: bold" href="https://platform.openai.com/docs/guides/gpt">ChatGPT model</a> and language for man pages and you are good to go!
+
+   _Note 1_: **gpt-4** model is available only to Premium ChatGPT users
+   _Note 2_: if man page is missing for a language you selected it will be rendered in English
+
+### Development
+
+Clone the repository, navigate inside and run:
+
+```sh
+npm i(nstall)
+npm run dev
 ```
