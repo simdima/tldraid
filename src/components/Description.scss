@@ -9,15 +9,11 @@
   overflow: scroll;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
-}
 
-@media (max-width: 834px) {
-  .description-container {
-    width: 90%;
-    border-right: 0;
-    margin: 10px 0 10px 10px;
-    max-height: 50%;
-  }
+  opacity: 0;
+  animation-name: fadein;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
 }
 
 .description-container a {
@@ -130,10 +126,19 @@
   }
 }
 
+@media (max-width: 834px) {
+  .description-container {
+    width: 100%;
+    border-right: 0;
+    margin: 0 10px 5px 10px;
+    max-height: 50%;
+  }
+}
+
 @media (max-width: 768px) {
   .description-container {
     h1 {
-      font-size: 40px;
+      font-size: 35px;
       width: 90%;
     }
 

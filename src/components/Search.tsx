@@ -66,7 +66,7 @@ const Search = ({
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearchTerm(e.target.value);
+    setSearchTerm(e.target.value.toLowerCase());
   }
 
   function handleSelectUtility(utility: string) {

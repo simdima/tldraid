@@ -18,16 +18,6 @@
   animation-fill-mode: forwards;
 }
 
-@media (max-width: 834px) {
-  .gptaddon-container {
-    width: 90%;
-    border-left: 0;
-    border-top: 8px solid var(--primary-color);
-    margin: 10px 10px 10px 0;
-    height: 50%;
-  }
-}
-
 #gpt_input {
   width: 100%;
   height: 50px;
@@ -99,4 +89,30 @@
   color: var(--primary-color);
   font-weight: 600;
   text-transform: uppercase;
+}
+
+@media (max-width: 834px) {
+  .gptaddon-container {
+    width: 100%;
+    border-left: 0;
+    border-top: 8px solid var(--primary-color);
+    margin: 5px 10px 0 10px;
+    height: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  #gpt_input {
+    font-size: 0.9rem;
+  }
+
+  .gptaddon-container {
+    p {
+      font-size: 0.9rem;
+    }
+
+    > div pre {
+      font-size: 0.9rem;
+    }
+  }
 }
