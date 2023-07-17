@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.2 - 2023-07-17
+
+### Added
+
+- Search field transforms text to lower case
+
+### Fixed
+
+- Text is too big in GPTaddon portion of the app
+- Animation inconsistencies
+
 ## 1.0.1 - 2023-07-16
 
 ### Added
