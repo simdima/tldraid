@@ -1,5 +1,8 @@
 import { AxiosResponse } from 'axios';
 
+export const LANGUAGE_STORAGE_KEY = 'tldraid_pages_lang' as const;
+export const API_KEY_STORAGE_KEY = 'tldraid_gpt_apikey' as const;
+
 export type Platforms = 'android' | 'common' | 'linux' | 'osx' | 'windows';
 
 export type QueryParams = {

@@ -8,15 +8,21 @@ import Modal from './components/Modal';
 import ErrorMessage from './components/ErrorMessage';
 import Spinner from './components/Spinner';
 import useLocalStorage from './hooks/useLocalStorage';
-import { GptEngine, GptEngineNames, Platforms } from './@types';
+import {
+  API_KEY_STORAGE_KEY,
+  GptEngine,
+  GptEngineNames,
+  LANGUAGE_STORAGE_KEY,
+  Platforms,
+} from './@types';
 import './App.css';
 
 function App() {
-  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [selectedLanguage, setSelectedLanguage] = useLocalStorage(LANGUAGE_STORAGE_KEY, 'en');
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>('common');
   const [selectedUtility, setSelectedUtility] = useState('');
 
-  const [chatGptApiKey, setChatGptApiKey] = useLocalStorage();
+  const [chatGptApiKey, setChatGptApiKey] = useLocalStorage(API_KEY_STORAGE_KEY, '');
   const [chatGptEngine, setChatGptEngine] = useState<GptEngine>(GptEngineNames['GPT_V3']);
 
   const [showIntroduction, setShowIntroduction] = useState(true);

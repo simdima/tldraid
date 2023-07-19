@@ -33,8 +33,6 @@ const Modal = ({
   const engines: GptEngineNames[] = [GptEngineNames.GPT_V3, GptEngineNames.GPT_V4];
   const [showEngineList, setShowEngineList] = useState(false);
 
-  // const [apiKey, setApiKey] = useState(chatGptApiKey);
-
   useEffect(() => {
     (async () => {
       try {
