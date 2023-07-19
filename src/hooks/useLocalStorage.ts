@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 
 const useLocalStorage = (
-  initialValue = ''
+  storageKey: string,
+  initialValue: string
 ): [string, React.Dispatch<React.SetStateAction<string>>] => {
-  const storageKey = 'tldraid_gpt_apikey';
   const [value, setValue] = useState<string>(() => {
     const v = localStorage.getItem(storageKey);
 
-    return v ?? initialValue;
+    return v || initialValue;
   });
 
   useEffect(() => {
     localStorage.setItem(storageKey, value);
-  }, [value]);
+  }, [storageKey, value]);
 
   return [value, setValue];
 };

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3 - 2023-07-19
+
+### Added
+
+- Save selected language to local storage
+
 ## 1.0.2 - 2023-07-17
 
 ### Added
