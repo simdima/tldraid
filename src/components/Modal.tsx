@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import ISO6391 from 'iso-639-1';
 import { sendApiRequest } from '../api';
-import { GptEngine, GptEngineNames, LanguagesResponse } from '../@types';
+import { APP_VERSION, GptEngine, GptEngineNames, LanguagesResponse } from '../@types';
 import './Modal.scss';
 
 type Props = {
@@ -192,6 +192,7 @@ const Modal = ({
               <div id='repo_link'></div>
             </a>
           </div>
+          <p>v{APP_VERSION}</p>
         </div>
       </div>
     </>

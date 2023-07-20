@@ -5,6 +5,7 @@
 ### Added
 
 - Close configuration modal by pressing Escape key
+- Current release version in Modal component
 
 ### Fixed
 
