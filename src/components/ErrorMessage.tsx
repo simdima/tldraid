@@ -1,3 +1,4 @@
+import { useCallback, useEffect } from 'react';
 import './ErrorMessage.scss';
 
 type Props = {
@@ -6,12 +7,26 @@ type Props = {
 };
 
 const ErrorMessage = ({ error, setError }: Props): JSX.Element => {
+  const removeError = useCallback(() => {
+    setError('');
+  }, [setError]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      removeError();
+    }, 5e3);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [removeError]);
+
   return (
     <>
       {error && (
         <div
           className='error-popup'
-          onClick={() => setError('')}>
+          onClick={removeError}>
           <div>Error</div>
           <div>{error}</div>
         </div>

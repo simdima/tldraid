@@ -6,7 +6,7 @@ import './GptAddon.scss';
 
 type Props = {
   selectedPlatform: string;
-  utility: string;
+  selectedUtility: string;
   chatGptApikey: string;
   chatGptEngine: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
@@ -16,7 +16,7 @@ type Props = {
 
 const GptAddon = ({
   selectedPlatform,
-  utility,
+  selectedUtility,
   chatGptApikey,
   chatGptEngine,
   setError,
@@ -30,7 +30,7 @@ const GptAddon = ({
     setQuestion('');
     setAnswers([]);
     setIsLoading(false);
-  }, [selectedPlatform, utility, setIsLoading]);
+  }, [selectedPlatform, selectedUtility, setIsLoading]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setQuestion(e.target.value);
@@ -43,7 +43,7 @@ const GptAddon = ({
         document.activeElement &&
         document.activeElement.id === 'gpt_input'
       ) {
-        if (utility && question) {
+        if (selectedUtility && question) {
           setIsLoading(true);
 
           const options = {
@@ -60,7 +60,7 @@ const GptAddon = ({
               messages: [
                 {
                   role: 'user',
-                  content: `I'm using '${utility}' utility ${
+                  content: `I'm using '${selectedUtility}' utility ${
                     selectedPlatform === 'common' ? '' : `on a ${selectedPlatform} system`
                   }. ${question}`,
                 },
@@ -104,11 +104,11 @@ const GptAddon = ({
 
   return (
     <>
-      {utility && (
+      {selectedUtility && (
         <div
           onKeyUp={handleEnterPress}
           className='gptaddon-container'>
-          {utility && (
+          {selectedUtility && (
             <input
               id='gpt_input'
               type='text'

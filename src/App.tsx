@@ -35,30 +35,30 @@ function App() {
   }, []);
 
   return (
-    <>
-      <div className='app'>
-        <Header setShowModal={setShowModal} />
+    <div className='app'>
+      <Header setShowModal={setShowModal} />
 
-        <Search
-          selectedPlatform={selectedPlatform}
-          setSelectedPlatform={setSelectedPlatform}
-          setSelectedUtil={setSelectedUtility}
-          setError={setError}
-        />
+      <Search
+        selectedPlatform={selectedPlatform}
+        setSelectedPlatform={setSelectedPlatform}
+        setSelectedUtil={setSelectedUtility}
+        setError={setError}
+      />
 
-        {showIntroduction ? <Introduction /> : <Spinner isLoading={isLoading} />}
+      {showIntroduction ? <Introduction /> : <Spinner isLoading={isLoading} />}
 
+      {selectedUtility && (
         <div className='content-container'>
           <Description
             selectedLanguage={selectedLanguage}
             setShowIntroduction={setShowIntroduction}
             selectedPlatform={selectedPlatform}
-            utility={selectedUtility}
+            selectedUtility={selectedUtility}
             setError={setError}
           />
           <GptAddon
             selectedPlatform={selectedPlatform}
-            utility={selectedUtility}
+            selectedUtility={selectedUtility}
             chatGptApikey={chatGptApiKey}
             chatGptEngine={chatGptEngine}
             setError={setError}
@@ -66,9 +66,10 @@ function App() {
             setIsLoading={setIsLoading}
           />
         </div>
+      )}
 
+      {showModal && (
         <Modal
-          showModal={showModal}
           setShowModal={setShowModal}
           selectedLanguage={selectedLanguage}
           setSelectedLanguage={setSelectedLanguage}
@@ -78,14 +79,15 @@ function App() {
           setChatGptEngine={setChatGptEngine}
           setError={setError}
         />
+      )}
 
+      {error && (
         <ErrorMessage
-          key={error}
           error={error}
           setError={setError}
         />
-      </div>
-    </>
+      )}
+    </div>
   );
 }
 

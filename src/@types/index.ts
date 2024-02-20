@@ -1,5 +1,7 @@
 import { AxiosResponse } from 'axios';
+import { version } from '../../package.json';
 
+export const APP_VERSION = version;
 export const LANGUAGE_STORAGE_KEY = 'tldraid_pages_lang' as const;
 export const API_KEY_STORAGE_KEY = 'tldraid_gpt_apikey' as const;
 

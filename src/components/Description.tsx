@@ -8,7 +8,7 @@ type Props = {
   selectedLanguage: string;
   setShowIntroduction: React.Dispatch<React.SetStateAction<boolean>>;
   selectedPlatform: string;
-  utility: string;
+  selectedUtility: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -16,7 +16,7 @@ const Description = ({
   selectedLanguage,
   setShowIntroduction,
   selectedPlatform,
-  utility,
+  selectedUtility,
   setError,
 }: Props): JSX.Element => {
   const [utilDescription, setUtilDescription] = useState('');
@@ -24,11 +24,11 @@ const Description = ({
   useEffect(() => {
     (async () => {
       try {
-        if (utility) {
+        if (selectedUtility) {
           const response = await sendApiRequest<UtilityResponse>('/utility', {
             lang: selectedLanguage,
             platform: selectedPlatform,
-            utility,
+            utility: selectedUtility,
           });
 
           if ('error' in response) {
@@ -47,13 +47,13 @@ const Description = ({
         setError('Failed to fetch selected utility');
       }
     })();
-  }, [setShowIntroduction, utility, selectedLanguage, selectedPlatform, setError]);
+  }, [setShowIntroduction, selectedUtility, selectedLanguage, selectedPlatform, setError]);
 
   return (
     <>
-      {utility && (
+      {selectedUtility && (
         <div className='description-container'>
-          <ReactMarkdown key={utility}>{utilDescription}</ReactMarkdown>
+          <ReactMarkdown key={selectedUtility}>{utilDescription}</ReactMarkdown>
         </div>
       )}
     </>

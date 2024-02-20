@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.4 - 2023-07-20
+
+### Added
+
+- Close configuration modal by pressing Escape key
+- Current release version in Modal component
+
+### Fixed
+
+- Modal close button colors
+- Conditional rendering for Modal and Error components
+- API key field triggering re-rendering of the App with onChange event
+- Inconsistent naming for pieces of state
+
 ## 1.0.3 - 2023-07-19
 
 ### Added

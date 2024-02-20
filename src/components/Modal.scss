@@ -60,13 +60,13 @@
     > .close-logo {
       width: 20px;
       height: 20px;
-      background-image: url('../assets/icons/cancel.png');
+      background-image: url('../assets/icons/close.png');
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
 
       &:hover {
-        background-image: url('../assets/icons/cancel-alt.png');
+        background-image: url('../assets/icons/close-alt.png');
       }
     }
   }
@@ -133,6 +133,10 @@
       &:hover {
         background-image: url('../assets/icons/github-alt.png');
       }
+    }
+
+    + p {
+      float: right;
     }
   }
 }
