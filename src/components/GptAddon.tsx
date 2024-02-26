@@ -1,28 +1,28 @@
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import { GptErrorResponse, GptResponse } from '../@types';
+import { ChatGptErrorResponse, ChatGptResponse } from '../@types';
 import './GptAddon.scss';
+import { useAppSelector } from '../store/hooks';
+import {
+  selectSettingsChatGptApikey,
+  selectSettingsChatGptEngine,
+  selectSettingsPlatform,
+} from '../store/reducers/settingsSlice';
+import { selectUtilityName } from '../store/reducers/utilitySlice';
 
 type Props = {
-  selectedPlatform: string;
-  selectedUtility: string;
-  chatGptApikey: string;
-  chatGptEngine: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const GptAddon = ({
-  selectedPlatform,
-  selectedUtility,
-  chatGptApikey,
-  chatGptEngine,
-  setError,
-  isLoading,
-  setIsLoading,
-}: Props): JSX.Element => {
+const GptAddon = ({ setError, isLoading, setIsLoading }: Props): JSX.Element => {
+  const platform = useAppSelector(selectSettingsPlatform);
+  const utility = useAppSelector(selectUtilityName);
+  const chatGptEngine = useAppSelector(selectSettingsChatGptEngine);
+  const chatGptApiKey = useAppSelector(selectSettingsChatGptApikey);
+
   const [question, setQuestion] = useState('');
   const [answers, setAnswers] = useState<string[]>([]);
 
@@ -30,7 +30,7 @@ const GptAddon = ({
     setQuestion('');
     setAnswers([]);
     setIsLoading(false);
-  }, [selectedPlatform, selectedUtility, setIsLoading]);
+  }, [platform, utility, setIsLoading]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setQuestion(e.target.value);
@@ -43,7 +43,7 @@ const GptAddon = ({
         document.activeElement &&
         document.activeElement.id === 'gpt_input'
       ) {
-        if (selectedUtility && question) {
+        if (utility && question) {
           setIsLoading(true);
 
           const options = {
@@ -51,7 +51,7 @@ const GptAddon = ({
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${chatGptApikey}`,
+              'Authorization': `Bearer ${chatGptApiKey}`,
             },
             data: {
               model: chatGptEngine,
@@ -60,15 +60,15 @@ const GptAddon = ({
               messages: [
                 {
                   role: 'user',
-                  content: `I'm using '${selectedUtility}' utility ${
-                    selectedPlatform === 'common' ? '' : `on a ${selectedPlatform} system`
+                  content: `I'm using '${utility}' utility ${
+                    platform === 'common' ? '' : `on a ${platform} system`
                   }. ${question}`,
                 },
               ],
             },
           };
 
-          const response = await axios.request<GptResponse>(options);
+          const response = await axios.request<ChatGptResponse>(options);
           if (response.status >= 200 && response.status < 400) {
             const [firstResponse] = response.data.choices;
             setQuestion('');
@@ -81,7 +81,7 @@ const GptAddon = ({
     } catch (error) {
       let errorText = '';
       if (error instanceof AxiosError && error.response) {
-        const errorResponse = error.response.data as unknown as GptErrorResponse;
+        const errorResponse = error.response.data as unknown as ChatGptErrorResponse;
         if (errorResponse.error.code === 'invalid_api_key') {
           errorText = 'Your API key seems to be invalid';
         } else if (errorResponse.error.code === 'model_not_found') {
@@ -104,20 +104,20 @@ const GptAddon = ({
 
   return (
     <>
-      {selectedUtility && (
+      {utility && (
         <div
           onKeyUp={handleEnterPress}
           className='gptaddon-container'>
-          {selectedUtility && (
+          {utility && (
             <input
               id='gpt_input'
               type='text'
               placeholder={
-                !chatGptApikey
+                !chatGptApiKey
                   ? 'Add your API key to ask this bot a question'
                   : 'Try asking a bot for help with this utility...'
               }
-              disabled={isLoading || !chatGptApikey}
+              disabled={isLoading || !chatGptApiKey}
               value={question}
               onChange={handleChange}
             />

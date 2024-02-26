@@ -2,22 +2,19 @@ import { useEffect, useState } from 'react';
 import OutsideClicker from '../hooks/OutsideClicker';
 import { sendApiRequest } from '../api';
 import { sortUtilities } from '../helpers';
-import { UtilitesResponse, Platforms } from '../@types';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
+import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
+import { UtilitesResponse, Platform } from '../@types';
+
 import './Search.scss';
 
-type Props = {
-  selectedPlatform: Platforms;
-  setSelectedPlatform: React.Dispatch<React.SetStateAction<Platforms>>;
-  setSelectedUtil: React.Dispatch<React.SetStateAction<string>>;
-  setError: React.Dispatch<React.SetStateAction<string>>;
-};
+const Search = (): JSX.Element => {
+  const dispatch = useAppDispatch();
 
-const Search = ({
-  selectedPlatform,
-  setSelectedPlatform,
-  setSelectedUtil,
-  setError,
-}: Props): JSX.Element => {
+  const platform = useAppSelector(selectSettingsPlatform);
+  const utility = useAppSelector(selectUtilityName);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearchList, setShowSearchList] = useState(false);
   const [utils, setUtils] = useState<string[]>([]);
@@ -29,9 +26,9 @@ const Search = ({
   useEffect(() => {
     (async () => {
       try {
-        if (selectedPlatform) {
+        if (platform) {
           const response = await sendApiRequest<UtilitesResponse>('/utilities', {
-            platform: selectedPlatform,
+            platform: platform,
           });
 
           if ('error' in response) {
@@ -46,21 +43,24 @@ const Search = ({
           console.error(error.message);
         }
 
-        setError('Failed to fetch utilities');
+        // setError('Failed to fetch utilities');
       }
     })();
-  }, [selectedPlatform, setError]);
+  }, [platform]);
 
-  const platforms: Platforms[] = ['common', 'linux', 'osx', 'windows', 'android'];
+  const platforms: Platform[] = ['common', 'linux', 'osx', 'windows', 'android'];
 
   const sortedAndFilteredUtils = sortUtilities(
     utils.filter(util => util.indexOf(searchTerm.trim().toLowerCase()) > -1),
     searchTerm.trim().toLowerCase()
   );
 
-  function handleSelectPlatform(p: Platforms) {
-    setSelectedPlatform(p);
-    setSelectedUtil('');
+  function handleSelectPlatform(p: Platform) {
+    dispatch(changePlatform(p));
+    if (utility) {
+      dispatch(changeUtility(''));
+    }
+
     setSearchTerm('');
     setShowSearchList(false);
   }
@@ -70,7 +70,8 @@ const Search = ({
   }
 
   function handleSelectUtility(utility: string) {
-    setSelectedUtil(utility);
+    dispatch(changeUtility(utility));
+
     setShowSearchList(false);
     setSearchTerm('');
   }
@@ -93,7 +94,7 @@ const Search = ({
                 key={id}
                 id={id}
                 style={{ opacity: '0' }}
-                className={`platform ${id === selectedPlatform ? 'selected-platform' : ''}`}
+                className={`platform ${id === platform ? 'selected-platform' : ''}`}
                 onClick={() => handleSelectPlatform(id)}>
                 <div className='platform-icon'></div>
               </div>

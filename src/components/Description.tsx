@@ -3,32 +3,30 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { sendApiRequest } from '../api';
 import { UtilityResponse } from '../@types';
 import './Description.scss';
+import { useAppSelector } from '../store/hooks';
+import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
+import { selectUtilityName } from '../store/reducers/utilitySlice';
 
 type Props = {
-  selectedLanguage: string;
   setShowIntroduction: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedPlatform: string;
-  selectedUtility: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Description = ({
-  selectedLanguage,
-  setShowIntroduction,
-  selectedPlatform,
-  selectedUtility,
-  setError,
-}: Props): JSX.Element => {
-  const [utilDescription, setUtilDescription] = useState('');
+const Description = ({ setShowIntroduction, setError }: Props): JSX.Element => {
+  const language = useAppSelector(selectSettingsLanguage);
+  const platform = useAppSelector(selectSettingsPlatform);
+  const utility = useAppSelector(selectUtilityName);
+
+  const [utilityDescription, setUtilityDescription] = useState('');
 
   useEffect(() => {
     (async () => {
       try {
-        if (selectedUtility) {
+        if (utility) {
           const response = await sendApiRequest<UtilityResponse>('/utility', {
-            lang: selectedLanguage,
-            platform: selectedPlatform,
-            utility: selectedUtility,
+            lang: language,
+            platform,
+            utility,
           });
 
           if ('error' in response) {
@@ -36,7 +34,7 @@ const Description = ({
           }
 
           setShowIntroduction(false);
-          setUtilDescription(response.data);
+          setUtilityDescription(response.data);
         }
       } catch (error) {
         console.error(error);
@@ -47,13 +45,13 @@ const Description = ({
         setError('Failed to fetch selected utility');
       }
     })();
-  }, [setShowIntroduction, selectedUtility, selectedLanguage, selectedPlatform, setError]);
+  }, [setShowIntroduction, setError, language, platform, utility]);
 
   return (
     <>
-      {selectedUtility && (
+      {utility && (
         <div className='description-container'>
-          <ReactMarkdown key={selectedUtility}>{utilDescription}</ReactMarkdown>
+          <ReactMarkdown key={utility}>{utilityDescription}</ReactMarkdown>
         </div>
       )}
     </>

@@ -5,7 +5,7 @@ export const APP_VERSION = version;
 export const LANGUAGE_STORAGE_KEY = 'tldraid_pages_lang' as const;
 export const API_KEY_STORAGE_KEY = 'tldraid_gpt_apikey' as const;
 
-export type Platforms = 'android' | 'common' | 'linux' | 'osx' | 'windows';
+export type Platform = 'android' | 'common' | 'linux' | 'osx' | 'windows';
 
 export type QueryParams = {
   platform: string;
@@ -16,17 +16,17 @@ export type LanguagesResponse = AxiosResponse<string[]>;
 export type UtilitesResponse = AxiosResponse<string[]>;
 export type UtilityResponse = AxiosResponse<string>;
 
-export enum GptEngineNames {
+export enum ChatGptEngineNames {
   GPT_V3 = 'gpt-3.5-turbo',
   GPT_V4 = 'gpt-4',
 }
-export type GptEngine = GptEngineNames.GPT_V3 | GptEngineNames.GPT_V4;
+export type ChatGptEngine = 'gpt-3.5-turbo' | 'gpt-4';
 
-export type GptResponse = {
+export type ChatGptResponse = {
   id: string;
   object: string;
   created: number;
-  model: GptEngine;
+  model: ChatGptEngine;
   // typed as tuple since request is always sent with n=1 parameter
   choices: [
     {
@@ -45,7 +45,7 @@ export type GptResponse = {
   };
 };
 
-export type GptErrorResponse = {
+export type ChatGptErrorResponse = {
   error: {
     message: string;
     type: string;

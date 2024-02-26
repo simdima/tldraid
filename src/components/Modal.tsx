@@ -1,34 +1,34 @@
 import { useCallback, useEffect, useState } from 'react';
 import ISO6391 from 'iso-639-1';
 import { sendApiRequest } from '../api';
-import { APP_VERSION, GptEngine, GptEngineNames, LanguagesResponse } from '../@types';
+import { APP_VERSION, ChatGptEngine, ChatGptEngineNames, LanguagesResponse } from '../@types';
 import './Modal.scss';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import {
+  changeChatGptApiKey,
+  changeChatGptEngine,
+  changeLanguage,
+  selectSettingsChatGptApikey,
+  selectSettingsChatGptEngine,
+  selectSettingsLanguage,
+} from '../store/reducers/settingsSlice';
 
 type Props = {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedLanguage: string;
-  setSelectedLanguage: React.Dispatch<React.SetStateAction<string>>;
-  chatGptApiKey: string;
-  setChatGptApiKey: React.Dispatch<React.SetStateAction<string>>;
-  chatGptEngine: string;
-  setChatGptEngine: React.Dispatch<React.SetStateAction<GptEngine>>;
   setError: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Modal = ({
-  setShowModal,
-  selectedLanguage,
-  setSelectedLanguage,
-  chatGptApiKey,
-  setChatGptApiKey,
-  chatGptEngine,
-  setChatGptEngine,
-  setError,
-}: Props): JSX.Element => {
-  const [langList, setLangList] = useState<string[]>([]);
-  const [showLangList, setShowLangList] = useState(false);
+const Modal = ({ setShowModal, setError }: Props): JSX.Element => {
+  const dispatch = useAppDispatch();
 
-  const engines: GptEngineNames[] = [GptEngineNames.GPT_V3, GptEngineNames.GPT_V4];
+  const language = useAppSelector(selectSettingsLanguage);
+  const chatGptEngine = useAppSelector(selectSettingsChatGptEngine);
+  const chatGptApiKey = useAppSelector(selectSettingsChatGptApikey);
+
+  const [languagesList, setLanguagesList] = useState<string[]>([]);
+  const [showLanguagesList, setShowLanguagesList] = useState(false);
+
+  const engines: ChatGptEngine[] = ['gpt-3.5-turbo', 'gpt-4'];
   const [showEngineList, setShowEngineList] = useState(false);
 
   const [apiKey, setApiKey] = useState(chatGptApiKey);
@@ -42,7 +42,7 @@ const Modal = ({
           throw new Error(response.error);
         }
 
-        setLangList(response.data);
+        setLanguagesList(response.data);
       } catch (error) {
         console.error(error);
         if (error instanceof Error) {
@@ -55,34 +55,37 @@ const Modal = ({
   }, [setError]);
 
   const hideModal = useCallback(() => {
-    setShowLangList(false);
+    dispatch(changeChatGptApiKey(apiKey));
+
+    setShowLanguagesList(false);
     setShowEngineList(false);
-    setChatGptApiKey(apiKey);
     setShowModal(false);
-  }, [setShowLangList, setShowEngineList, setChatGptApiKey, setShowModal, apiKey]);
+  }, [setShowLanguagesList, setShowEngineList, setShowModal, dispatch, apiKey]);
 
   function handleClickLangSelect() {
     setShowEngineList(false);
-    setShowLangList(sll => !sll);
+    setShowLanguagesList(sll => !sll);
   }
 
   function handleClickEngineSelect() {
-    setShowLangList(false);
+    setShowLanguagesList(false);
     setShowEngineList(sel => !sel);
   }
 
-  function handleLangOptionSelected(selectedOption: string) {
-    setShowLangList(false);
-    setSelectedLanguage(selectedOption);
+  function handleChangeLanguage(selectedOption: string) {
+    dispatch(changeLanguage(selectedOption));
+
+    setShowLanguagesList(false);
   }
 
-  function handleEngineOptionSelected(selectedOption: GptEngine) {
+  function handleChangeChatGptEngine(engine: ChatGptEngine) {
+    dispatch(changeChatGptEngine(engine));
+
     setShowEngineList(false);
-    setChatGptEngine(selectedOption);
   }
 
-  function handleChangeApiKey(e: React.ChangeEvent<HTMLInputElement>) {
-    setApiKey(e.target.value);
+  function handleChangeChatGptApiKey({ target: { value } }: React.ChangeEvent<HTMLInputElement>) {
+    setApiKey(value);
   }
 
   useEffect(() => {
@@ -118,20 +121,20 @@ const Modal = ({
                 readOnly={true}
                 id='lang_select'
                 name='lang_select'
-                value={ISO6391.getName(selectedLanguage)}
+                value={ISO6391.getName(language)}
                 onClick={handleClickLangSelect}
               />
             </label>
-            {showLangList && (
+            {showLanguagesList && (
               <div className='language-select-list'>
-                {langList.map(
+                {languagesList.map(
                   lang =>
                     // skip options that have no entry in ISO-6391 library
                     ISO6391.getName(lang) && (
                       <div
                         key={lang}
                         className='searchOption'
-                        onClick={() => handleLangOptionSelected(lang)}>
+                        onClick={() => handleChangeLanguage(lang)}>
                         {ISO6391.getName(lang)}
                       </div>
                     )
@@ -159,7 +162,7 @@ const Modal = ({
                   <div
                     key={engine}
                     className='searchOption'
-                    onClick={() => handleEngineOptionSelected(engine)}>
+                    onClick={() => handleChangeChatGptEngine(engine)}>
                     {engine}
                   </div>
                 ))}
@@ -174,7 +177,7 @@ const Modal = ({
               id='chatgpt_apikey'
               name='chatgpt_apikey'
               value={apiKey}
-              onChange={handleChangeApiKey}
+              onChange={handleChangeChatGptApiKey}
             />
           </label>
           <div className='modal-info-container'>
