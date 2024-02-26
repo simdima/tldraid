@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import ISO6391 from 'iso-639-1';
-import { sendApiRequest } from '../api';
-import { APP_VERSION, ChatGptEngine, LanguagesResponse } from '../@types';
-import './Modal.scss';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   changeChatGptApiKey,
@@ -12,6 +9,9 @@ import {
   selectSettingsChatGptEngine,
   selectSettingsLanguage,
 } from '../store/reducers/settingsSlice';
+import { useGetLanguagesQuery } from '../store/service/tldraidApi';
+import { APP_VERSION, CHAT_GPT_ENGINES, ChatGptEngine } from '../@types';
+import './Modal.scss';
 
 type Props = {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,34 +25,12 @@ const Modal = ({ setShowModal, setError }: Props): JSX.Element => {
   const chatGptEngine = useAppSelector(selectSettingsChatGptEngine);
   const chatGptApiKey = useAppSelector(selectSettingsChatGptApikey);
 
-  const [languagesList, setLanguagesList] = useState<string[]>([]);
+  const { data: response } = useGetLanguagesQuery('');
   const [showLanguagesList, setShowLanguagesList] = useState(false);
 
-  const engines: ChatGptEngine[] = ['gpt-3.5-turbo', 'gpt-4'];
   const [showEngineList, setShowEngineList] = useState(false);
 
   const [apiKey, setApiKey] = useState(chatGptApiKey);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await sendApiRequest<LanguagesResponse>('/languages');
-
-        if ('error' in response) {
-          throw new Error(response.error);
-        }
-
-        setLanguagesList(response.data);
-      } catch (error) {
-        console.error(error);
-        if (error instanceof Error) {
-          console.error(error.message);
-        }
-
-        setError('Failed to fetch languages');
-      }
-    })();
-  }, [setError]);
 
   const hideModal = useCallback(() => {
     dispatch(changeChatGptApiKey(apiKey));
@@ -127,7 +105,7 @@ const Modal = ({ setShowModal, setError }: Props): JSX.Element => {
             </label>
             {showLanguagesList && (
               <div className='language-select-list'>
-                {languagesList.map(
+                {response?.data.map(
                   lang =>
                     // skip options that have no entry in ISO-6391 library
                     ISO6391.getName(lang) && (
@@ -158,7 +136,7 @@ const Modal = ({ setShowModal, setError }: Props): JSX.Element => {
 
             {showEngineList && (
               <div className='language-select-list'>
-                {engines.map(engine => (
+                {CHAT_GPT_ENGINES.map(engine => (
                   <div
                     key={engine}
                     className='searchOption'

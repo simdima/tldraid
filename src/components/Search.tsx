@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import OutsideClicker from '../hooks/OutsideClicker';
-import { sendApiRequest } from '../api';
 import { sortUtilities } from '../helpers';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
-import { UtilitesResponse, Platform } from '../@types';
+import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
+import { type Platform, PLATFORMS } from '../@types';
 
 import './Search.scss';
 
@@ -17,41 +17,15 @@ const Search = (): JSX.Element => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearchList, setShowSearchList] = useState(false);
-  const [utils, setUtils] = useState<string[]>([]);
 
   useEffect(() => {
     setShowSearchList(!!searchTerm);
   }, [searchTerm]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        if (platform) {
-          const response = await sendApiRequest<UtilitesResponse>('/utilities', {
-            platform,
-          });
-
-          if ('error' in response) {
-            throw new Error(response.error);
-          }
-
-          setUtils(response.data);
-        }
-      } catch (error) {
-        console.error(error);
-        if (error instanceof Error) {
-          console.error(error.message);
-        }
-
-        // setError('Failed to fetch utilities');
-      }
-    })();
-  }, [platform]);
-
-  const platforms: Platform[] = ['common', 'linux', 'osx', 'windows', 'android'];
+  const { data: response, isLoading, isError } = useGetUtilitiesQuery(platform);
 
   const sortedAndFilteredUtils = sortUtilities(
-    utils.filter(util => util.indexOf(searchTerm.trim().toLowerCase()) > -1),
+    response?.data.filter(util => util.indexOf(searchTerm.trim().toLowerCase()) > -1),
     searchTerm.trim().toLowerCase()
   );
 
@@ -89,7 +63,7 @@ const Search = (): JSX.Element => {
         onKeyUp={handleEnterKey}>
         <div id='searchTools'>
           <div id='util_platforms'>
-            {platforms.map(id => (
+            {PLATFORMS.map(id => (
               <div
                 key={id}
                 id={id}

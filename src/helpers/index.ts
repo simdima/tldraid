@@ -23,7 +23,7 @@ function saveToLocalStorage(key: LOCAL_STORAGE_KEY, value: string) {
   }
 }
 
-function sortUtilities(source: string[], term: string) {
+function sortUtilities(source: string[] = [], term: string) {
   return source.sort((util1, util2) => {
     if (util1 === term) return -1;
     if (util2 === term) return 1;
