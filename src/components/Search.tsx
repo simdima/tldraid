@@ -28,7 +28,7 @@ const Search = (): JSX.Element => {
       try {
         if (platform) {
           const response = await sendApiRequest<UtilitesResponse>('/utilities', {
-            platform: platform,
+            platform,
           });
 
           if ('error' in response) {

@@ -2,8 +2,14 @@ import { AxiosResponse } from 'axios';
 import { version } from '../../package.json';
 
 export const APP_VERSION = version;
-export const LANGUAGE_STORAGE_KEY = 'tldraid_pages_lang' as const;
-export const API_KEY_STORAGE_KEY = 'tldraid_gpt_apikey' as const;
+
+type LANGUAGE_STORAGE_KEY = 'tldraid_pages_lang';
+type GPT_ENGINE_STORAGE_KEY = 'tldraid_gpt_engine';
+type GPT_API_KEY_STORAGE_KEY = 'tldraid_gpt_apikey';
+export type LOCAL_STORAGE_KEY =
+  | LANGUAGE_STORAGE_KEY
+  | GPT_ENGINE_STORAGE_KEY
+  | GPT_API_KEY_STORAGE_KEY;
 
 export type Platform = 'android' | 'common' | 'linux' | 'osx' | 'windows';
 

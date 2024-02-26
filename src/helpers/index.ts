@@ -1,8 +1,6 @@
-import { API_KEY_STORAGE_KEY, LANGUAGE_STORAGE_KEY } from '../@types';
+import { LOCAL_STORAGE_KEY } from '../@types';
 
-function loadFromLocalStorage(
-  key: typeof LANGUAGE_STORAGE_KEY | typeof API_KEY_STORAGE_KEY
-): string | null {
+function loadFromLocalStorage<T>(key: LOCAL_STORAGE_KEY): T | null {
   try {
     const savedValue = localStorage.getItem(key);
     if (savedValue) {
@@ -17,10 +15,7 @@ function loadFromLocalStorage(
   }
 }
 
-function saveToLocalStorage(
-  key: typeof LANGUAGE_STORAGE_KEY | typeof API_KEY_STORAGE_KEY,
-  value: string
-) {
+function saveToLocalStorage(key: LOCAL_STORAGE_KEY, value: string) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {

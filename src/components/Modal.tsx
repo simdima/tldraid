@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import ISO6391 from 'iso-639-1';
 import { sendApiRequest } from '../api';
-import { APP_VERSION, ChatGptEngine, ChatGptEngineNames, LanguagesResponse } from '../@types';
+import { APP_VERSION, ChatGptEngine, LanguagesResponse } from '../@types';
 import './Modal.scss';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
