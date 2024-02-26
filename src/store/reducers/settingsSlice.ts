@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { ChatGptEngine, Platform } from '../../@types';
 import { loadFromLocalStorage, saveToLocalStorage } from '../../helpers';
 import { RootState } from '..';
+import { ChatGptEngine, Platform } from '../../@types';
 
 interface SettingsState {
   language: string;

@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import { ChatGptErrorResponse, ChatGptResponse } from '../@types';
-import './GptAddon.scss';
 import { useAppSelector } from '../store/hooks';
 import {
   selectSettingsChatGptApikey,
@@ -10,6 +8,9 @@ import {
   selectSettingsPlatform,
 } from '../store/reducers/settingsSlice';
 import { selectUtilityName } from '../store/reducers/utilitySlice';
+import { ChatGptErrorResponse, ChatGptResponse } from '../@types';
+
+import './GptAddon.scss';
 
 type Props = {
   setError: React.Dispatch<React.SetStateAction<string>>;

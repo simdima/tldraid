@@ -12,6 +12,7 @@ export type LOCAL_STORAGE_KEY =
   | GPT_API_KEY_STORAGE_KEY;
 
 export type Platform = 'android' | 'common' | 'linux' | 'osx' | 'windows';
+export const PLATFORMS: Platform[] = ['common', 'linux', 'osx', 'windows', 'android'];
 
 export type QueryParams = {
   platform: string;
@@ -27,6 +28,7 @@ export enum ChatGptEngineNames {
   GPT_V4 = 'gpt-4',
 }
 export type ChatGptEngine = 'gpt-3.5-turbo' | 'gpt-4';
+export const CHAT_GPT_ENGINES: ChatGptEngine[] = ['gpt-3.5-turbo', 'gpt-4'];
 
 export type ChatGptResponse = {
   id: string;
