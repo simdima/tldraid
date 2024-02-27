@@ -12,7 +12,7 @@ export type LOCAL_STORAGE_KEY =
   | GPT_API_KEY_STORAGE_KEY;
 
 export type Platform = 'android' | 'common' | 'linux' | 'osx' | 'windows';
-export const PLATFORMS: Platform[] = ['common', 'linux', 'osx', 'windows', 'android'];
+// export const PLATFORMS: Platform[] = ['common', 'linux', 'osx', 'windows', 'android'];
 
 export type QueryParams = {
   platform: string;

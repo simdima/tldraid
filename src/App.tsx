@@ -8,7 +8,7 @@ import Modal from './components/Modal';
 import ErrorMessage from './components/ErrorMessage';
 import Spinner from './components/Spinner';
 
-import './App.css';
+// import './App.css';
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -19,30 +19,40 @@ function App() {
     window.scrollTo(0, 0);
   }, []);
 
+  // return (
+  //   <div className='app'>
+  //     <Header setShowModal={setShowModal} />
+  //     <Search />
+  //     <Introduction />
+  //     <Spinner />
+  //     <div className='content-container'>
+  //       <Description />
+  //       <GptAddon
+  //         setError={setError}
+  //         isLoading={isLoading}
+  //         setIsLoading={setIsLoading}
+  //       />
+  //     </div>
+
+  //     {showModal && (
+  //       <Modal
+  //         setShowModal={setShowModal}
+  //         setError={setError}
+  //       />
+  //     )}
+
+  //     <ErrorMessage />
+  //   </div>
+  // );
   return (
-    <div className='app'>
-      <Header setShowModal={setShowModal} />
-      <Search />
-      <Introduction />
-      <Spinner />
-      <div className='content-container'>
-        <Description />
-        <GptAddon
-          setError={setError}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-        />
-      </div>
-
-      {showModal && (
-        <Modal
-          setShowModal={setShowModal}
-          setError={setError}
-        />
-      )}
-
-      <ErrorMessage />
-    </div>
+    <>
+      <header>
+        <Header />
+      </header>
+      <main>
+        <Search />
+      </main>
+    </>
   );
 }
 

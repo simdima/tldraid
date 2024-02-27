@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
-import OutsideClicker from '../hooks/OutsideClicker';
-import { sortUtilities } from '../helpers';
+import { useState } from 'react';
+import Downshift from 'downshift';
+import { Dropdown, TextInput } from 'flowbite-react';
+import { FaAndroid, FaWindows, FaApple, FaLinux, FaLaptop } from 'react-icons/fa';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
 import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
-import { type Platform, PLATFORMS } from '../@types';
+import { sortUtilities } from '../helpers';
+import { type Platform } from '../@types';
 
 import './Search.scss';
 
@@ -16,90 +18,116 @@ const Search = (): JSX.Element => {
   const utility = useAppSelector(selectUtilityName);
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [showSearchList, setShowSearchList] = useState(false);
 
-  useEffect(() => {
-    setShowSearchList(!!searchTerm);
-  }, [searchTerm]);
+  const selectedPlatformIcon = (platform: Platform) => {
+    if (platform === 'common') return <FaLaptop />;
+    if (platform === 'android') return <FaAndroid />;
+    if (platform === 'linux') return <FaLinux />;
+    if (platform === 'osx') return <FaApple />;
+    if (platform === 'windows') return <FaWindows />;
+  };
 
   const { data: response, isLoading, isError } = useGetUtilitiesQuery(platform);
 
-  // if (isError) {}
-
-  const sortedAndFilteredUtils = sortUtilities(
-    response?.data.filter(util => util.indexOf(searchTerm.trim().toLowerCase()) > -1),
-    searchTerm.trim().toLowerCase()
-  );
+  const filteredUtilities = sortUtilities(response?.data, searchTerm);
+  const showUtilitiesLis =
+    filteredUtilities.length > 0 && searchTerm !== '' && searchTerm.trim() !== utility;
 
   function handleSelectPlatform(p: Platform) {
     dispatch(changePlatform(p));
     if (utility) {
       dispatch(changeUtility(''));
     }
-
     setSearchTerm('');
-    setShowSearchList(false);
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearchTerm(e.target.value.toLowerCase());
+  function handleInputChange(value: string) {
+    setSearchTerm(value.toLowerCase());
   }
 
   function handleSelectUtility(utility: string) {
     dispatch(changeUtility(utility));
-
-    setShowSearchList(false);
     setSearchTerm('');
   }
 
   function handleEnterKey(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'Enter' && showSearchList) {
-      handleSelectUtility(sortedAndFilteredUtils[0]);
+    if (e.key === 'Enter' && showUtilitiesLis) {
+      handleSelectUtility(filteredUtilities[0]);
     }
   }
 
   return (
-    <div className='search-container'>
+    <div className='w-11/12 my-8 mx-auto flex'>
+      <Dropdown
+        arrowIcon={false}
+        label={selectedPlatformIcon(platform)}>
+        <Dropdown.Item
+          icon={FaLaptop}
+          onClick={() => handleSelectPlatform('common')}>
+          Universal
+        </Dropdown.Item>
+        <Dropdown.Item
+          icon={FaAndroid}
+          onClick={() => handleSelectPlatform('android')}>
+          Android
+        </Dropdown.Item>
+        <Dropdown.Item
+          icon={FaLinux}
+          onClick={() => handleSelectPlatform('linux')}>
+          Linux
+        </Dropdown.Item>
+        <Dropdown.Item
+          icon={FaApple}
+          onClick={() => handleSelectPlatform('osx')}>
+          OSX
+        </Dropdown.Item>
+        <Dropdown.Item
+          icon={FaWindows}
+          onClick={() => handleSelectPlatform('windows')}>
+          Windows
+        </Dropdown.Item>
+      </Dropdown>
       <div
-        className='wrapper'
-        onKeyUp={handleEnterKey}>
-        <div id='searchTools'>
-          <div id='util_platforms'>
-            {PLATFORMS.map(id => (
-              <div
-                key={id}
-                id={id}
-                style={{ opacity: '0' }}
-                className={`platform ${id === platform ? 'selected-platform' : ''}`}
-                onClick={() => handleSelectPlatform(id)}>
-                <div className='platform-icon'></div>
+        onKeyUp={handleEnterKey}
+        className='w-full ml-2 flex flex-col relative'>
+        <Downshift
+          inputValue={searchTerm}
+          onInputValueChange={value => handleInputChange(value)}
+          onChange={selection => handleSelectUtility(selection)}>
+          {({ getInputProps, getItemProps, getMenuProps, isOpen, getRootProps }) => (
+            <>
+              <div {...getRootProps({}, { suppressRefError: true })}>
+                <TextInput
+                  {...getInputProps({ value: searchTerm })}
+                  sizing='md'
+                  type='text'
+                  placeholder='Search for utility...'
+                />
               </div>
-            ))}
-          </div>
 
-          <OutsideClicker onShowSearchList={setShowSearchList}>
-            <input
-              id='util_search'
-              type='text'
-              placeholder='Search for utility...'
-              value={searchTerm}
-              onChange={handleChange}
-            />
-
-            {showSearchList && (
-              <div className='searchList'>
-                {sortedAndFilteredUtils.map(util => (
-                  <div
-                    key={util}
-                    className='searchOption'
-                    onClick={() => handleSelectUtility(util)}>
-                    {util}
-                  </div>
-                ))}
-              </div>
-            )}
-          </OutsideClicker>
-        </div>
+              {showUtilitiesLis && (
+                <ul
+                  {...getMenuProps()}
+                  className='z-10 rounded shadow focus:outline-none transition-opacity duration-100 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white absolute max-h-[300px] overflow-auto w-full mt-12 py-1'>
+                  {isOpen && searchTerm !== ''
+                    ? filteredUtilities.map((utility, index) => (
+                        <li
+                          {...getItemProps({
+                            key: utility,
+                            index,
+                            item: utility,
+                          })}>
+                          <button className='flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 focus:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none dark:hover:text-white dark:focus:bg-gray-600 dark:focus:text-white'>
+                            {utility}
+                          </button>
+                        </li>
+                      ))
+                    : null}
+                </ul>
+              )}
+            </>
+          )}
+        </Downshift>
       </div>
     </div>
   );
