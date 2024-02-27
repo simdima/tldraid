@@ -1,7 +1,20 @@
+import { useEffect, useState } from 'react';
+import { useAppSelector } from '../store/hooks';
+import { selectUtilityName } from '../store/reducers/utilitySlice';
+
 import './Introduction.scss';
 
-const Introduction = (): JSX.Element => {
-  return (
+const Introduction = (): JSX.Element | null => {
+  const utility = useAppSelector(selectUtilityName);
+  const [showIntroduction, setShowIntroduction] = useState(true);
+
+  useEffect(() => {
+    if (utility) {
+      setShowIntroduction(false);
+    }
+  }, [utility]);
+
+  return showIntroduction ? (
     <div className='introduction'>
       <p>
         <span className='introduction-non-keywords'>Get summaries of </span>
@@ -22,7 +35,7 @@ const Introduction = (): JSX.Element => {
         </span>
       </p>
     </div>
-  );
+  ) : null;
 };
 
 export default Introduction;

@@ -1,11 +1,12 @@
+import { useAppSelector } from '../store/hooks';
+import { selectIsLoading } from '../store/reducers/loadAndErrorSlice';
+
 import './Spinner.scss';
 
-type Props = {
-  isLoading: boolean;
-};
+const Spinner = (): JSX.Element | null => {
+  const isLoading = useAppSelector(selectIsLoading);
 
-const Spinner = ({ isLoading }: Props): JSX.Element => {
-  return (
+  return isLoading ? (
     <div className={`loader-container ${isLoading && 'loader-visible'}`}>
       <div className='loader'>
         <div></div>
@@ -13,7 +14,7 @@ const Spinner = ({ isLoading }: Props): JSX.Element => {
         <div></div>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default Spinner;

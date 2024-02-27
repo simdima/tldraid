@@ -24,6 +24,8 @@ const Search = (): JSX.Element => {
 
   const { data: response, isLoading, isError } = useGetUtilitiesQuery(platform);
 
+  // if (isError) {}
+
   const sortedAndFilteredUtils = sortUtilities(
     response?.data.filter(util => util.indexOf(searchTerm.trim().toLowerCase()) > -1),
     searchTerm.trim().toLowerCase()

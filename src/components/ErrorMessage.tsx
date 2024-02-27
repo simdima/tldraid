@@ -1,15 +1,17 @@
 import { useCallback, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { selectError, setError } from '../store/reducers/loadAndErrorSlice';
+
 import './ErrorMessage.scss';
 
-type Props = {
-  error: string;
-  setError: React.Dispatch<React.SetStateAction<string>>;
-};
+const ErrorMessage = (): JSX.Element => {
+  const dispatch = useAppDispatch();
 
-const ErrorMessage = ({ error, setError }: Props): JSX.Element => {
+  const error = useAppSelector(selectError);
+
   const removeError = useCallback(() => {
-    setError('');
-  }, [setError]);
+    dispatch(setError(''));
+  }, [dispatch]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

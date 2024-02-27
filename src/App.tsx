@@ -11,7 +11,6 @@ import Spinner from './components/Spinner';
 import './App.css';
 
 function App() {
-  const [showIntroduction, setShowIntroduction] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -24,13 +23,10 @@ function App() {
     <div className='app'>
       <Header setShowModal={setShowModal} />
       <Search />
-      {showIntroduction ? <Introduction /> : <Spinner isLoading={isLoading} />}
+      <Introduction />
+      <Spinner />
       <div className='content-container'>
-        <Description
-          setShowIntroduction={setShowIntroduction}
-          setError={setError}
-        />
-
+        <Description />
         <GptAddon
           setError={setError}
           isLoading={isLoading}
@@ -45,12 +41,7 @@ function App() {
         />
       )}
 
-      {error && (
-        <ErrorMessage
-          error={error}
-          setError={setError}
-        />
-      )}
+      <ErrorMessage />
     </div>
   );
 }

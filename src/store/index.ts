@@ -1,4 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import loadAndErrorReducer from './reducers/loadAndErrorSlice';
 import settingsReducer from './reducers/settingsSlice';
 import utilityReducer from './reducers/utilitySlice';
 import tldraidApi from './service/tldraidApi';
@@ -6,6 +7,7 @@ import tldraidApi from './service/tldraidApi';
 const rootReducer = combineReducers({
   settings: settingsReducer,
   utility: utilityReducer,
+  loadAndError: loadAndErrorReducer,
   [tldraidApi.reducerPath]: tldraidApi.reducer,
 });
 
