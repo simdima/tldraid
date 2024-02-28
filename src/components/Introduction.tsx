@@ -6,7 +6,7 @@ const Introduction = (): JSX.Element | null => {
   const utility = useAppSelector(selectUtilityName);
 
   return !utility ? (
-    <Blockquote className='w-11/12 text-center mx-auto not-italic'>
+    <Blockquote className='w-11/12 text-center mx-auto not-italic relative'>
       <span className='introduction-non-keywords'>Get summaries of </span>
       <a
         className='introduction-keywords'

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Downshift from 'downshift';
 import { Dropdown, TextInput } from 'flowbite-react';
-import { FaAndroid, FaWindows, FaApple, FaLinux, FaLaptop } from 'react-icons/fa';
+import { FaAndroid, FaWindows, FaApple, FaLinux, FaLaptop } from 'react-icons/fa6';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
@@ -10,7 +10,6 @@ import { sortUtilities } from '../helpers';
 import { type Platform } from '../@types';
 
 import './Search.scss';
-import ConditionalIcon from './molecules/PlatformIcon';
 
 const Search = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -60,36 +59,38 @@ const Search = (): JSX.Element => {
   // const bar = ConditionalIcon<false>;
 
   return (
-    <div className='w-11/12 my-8 mx-auto flex'>
-      <Dropdown
-        arrowIcon={false}
-        label={selectedPlatformIcon(platform)}>
-        <Dropdown.Item
-          icon={FaLaptop}
-          onClick={() => handleSelectPlatform('common')}>
-          Universal
-        </Dropdown.Item>
-        <Dropdown.Item
-          icon={FaAndroid}
-          onClick={() => handleSelectPlatform('android')}>
-          Android
-        </Dropdown.Item>
-        <Dropdown.Item
-          icon={FaLinux}
-          onClick={() => handleSelectPlatform('linux')}>
-          Linux
-        </Dropdown.Item>
-        <Dropdown.Item
-          icon={FaApple}
-          onClick={() => handleSelectPlatform('osx')}>
-          OSX
-        </Dropdown.Item>
-        <Dropdown.Item
-          icon={FaWindows}
-          onClick={() => handleSelectPlatform('windows')}>
-          Windows
-        </Dropdown.Item>
-      </Dropdown>
+    <div className='w-11/12 my-8 mx-auto flex z-30'>
+      <div className='flex opacity-0 animate-right-appear z-10'>
+        <Dropdown
+          arrowIcon={false}
+          label={selectedPlatformIcon(platform)}>
+          <Dropdown.Item
+            icon={FaLaptop}
+            onClick={() => handleSelectPlatform('common')}>
+            Universal
+          </Dropdown.Item>
+          <Dropdown.Item
+            icon={FaAndroid}
+            onClick={() => handleSelectPlatform('android')}>
+            Android
+          </Dropdown.Item>
+          <Dropdown.Item
+            icon={FaLinux}
+            onClick={() => handleSelectPlatform('linux')}>
+            Linux
+          </Dropdown.Item>
+          <Dropdown.Item
+            icon={FaApple}
+            onClick={() => handleSelectPlatform('osx')}>
+            OSX
+          </Dropdown.Item>
+          <Dropdown.Item
+            icon={FaWindows}
+            onClick={() => handleSelectPlatform('windows')}>
+            Windows
+          </Dropdown.Item>
+        </Dropdown>
+      </div>
       <div
         onKeyUp={handleEnterKey}
         className='w-full ml-2 flex flex-col relative'>
@@ -105,6 +106,7 @@ const Search = (): JSX.Element => {
                   sizing='md'
                   type='text'
                   placeholder='Search for utility...'
+                  className='opacity-0 animate-bottom-appear'
                 />
               </div>
 

@@ -11,9 +11,9 @@
 }
 
 .introduction-keywords {
-  @apply opacity-0 animate-keywords-fade text-cyan-600 whitespace-pre;
+  @apply opacity-0 animate-fade-in text-cyan-600 whitespace-pre hover:text-cyan-700;
 }
 
 .introduction-non-keywords {
-  @apply opacity-0 animate-non-keywords-fade;
+  @apply opacity-0 animate-fade-in-slowest;
 }
