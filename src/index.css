@@ -9,3 +9,11 @@
     font-size: 16px;
   }
 }
+
+.introduction-keywords {
+  @apply opacity-0 animate-keywords-fade text-cyan-600 whitespace-pre;
+}
+
+.introduction-non-keywords {
+  @apply opacity-0 animate-non-keywords-fade;
+}

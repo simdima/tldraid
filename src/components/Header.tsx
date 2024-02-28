@@ -1,5 +1,5 @@
 import { Button, Navbar } from 'flowbite-react';
-import './Header.scss';
+// import './Header.scss';
 import { FaGear } from 'react-icons/fa6';
 import { IconContext } from 'react-icons';
 
@@ -23,7 +23,7 @@ const Header = (): JSX.Element => {
     <Navbar fluid>
       <Navbar.Brand href='/'>
         <span className='self-center whitespace-nowrap text-4xl font-semibold dark:text-white'>
-          <span>tldr</span>
+          <span className='opacity-0 animate-header-appear-from-left'>tldr</span>
           <span className='text-cyan-600 '>AI</span>
           <span>d</span>
         </span>

@@ -10,6 +10,7 @@ import { sortUtilities } from '../helpers';
 import { type Platform } from '../@types';
 
 import './Search.scss';
+import ConditionalIcon from './molecules/PlatformIcon';
 
 const Search = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -55,6 +56,8 @@ const Search = (): JSX.Element => {
       handleSelectUtility(filteredUtilities[0]);
     }
   }
+  // const foo = ConditionalIcon<true>;
+  // const bar = ConditionalIcon<false>;
 
   return (
     <div className='w-11/12 my-8 mx-auto flex'>

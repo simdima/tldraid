@@ -51,6 +51,7 @@ function App() {
       </header>
       <main>
         <Search />
+        <Introduction />
       </main>
     </>
   );
