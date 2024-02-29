@@ -4,8 +4,11 @@ import { setError, setLoading } from '../store/reducers/loadAndErrorSlice';
 import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import { selectUtilityName } from '../store/reducers/utilitySlice';
 import { useGetUtilityQuery } from '../store/service/tldraidApi';
-
-import './Description.scss';
+import MarkdownHeader from './MarkdownElements/MarkdownHeader';
+import MarkdownParagraph from './MarkdownElements/MarkdownParagraph';
+import MarkdownLink from './MarkdownElements/MarkdownLink';
+import MarkdownList from './MarkdownElements/MarkdownList';
+import { Spinner } from 'flowbite-react';
 
 const Description = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -16,7 +19,7 @@ const Description = (): JSX.Element => {
 
   const {
     data: response,
-    // isLoading,
+    isLoading,
     isError,
   } = useGetUtilityQuery(
     {
@@ -33,10 +36,28 @@ const Description = (): JSX.Element => {
 
   return (
     <>
+      {isLoading && (
+        <Spinner
+          size='xl'
+          className='w-full mx-auto my-10'
+        />
+      )}
       {utility && response?.data && (
-        <div className='description-container'>
-          <ReactMarkdown key={utility}>{response.data}</ReactMarkdown>
-        </div>
+        <ReactMarkdown
+          // disallowedElements={['code']}
+          unwrapDisallowed
+          className='w-11/12 md:w-[500px] text-left mx-auto my-10'
+          components={{
+            h1: props => <MarkdownHeader {...props} />,
+            p: props => <MarkdownParagraph {...props} />,
+            // code: props => <MarkdownCode {...props} />,
+            a: props => <MarkdownLink {...props} />,
+            ul: props => <MarkdownList {...props} />,
+            // blockquote: props => <MarkdownBlockquote {...props} />,
+          }}
+          key={utility}>
+          {response.data}
+        </ReactMarkdown>
       )}
     </>
   );

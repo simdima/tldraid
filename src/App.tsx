@@ -6,7 +6,6 @@ import Description from './components/Description';
 import GptAddon from './components/GptAddon';
 import Modal from './components/Modal';
 import ErrorMessage from './components/ErrorMessage';
-import Spinner from './components/Spinner';
 
 // import './App.css';
 
@@ -52,6 +51,7 @@ function App() {
       <main>
         <Search />
         <Introduction />
+        <Description />
       </main>
     </>
   );

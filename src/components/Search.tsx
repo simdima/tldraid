@@ -9,8 +9,6 @@ import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
 import { sortUtilities } from '../helpers';
 import { type Platform } from '../@types';
 
-import './Search.scss';
-
 const Search = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
@@ -27,10 +25,10 @@ const Search = (): JSX.Element => {
     if (platform === 'windows') return <FaWindows />;
   };
 
-  const { data: response, isLoading, isError } = useGetUtilitiesQuery(platform);
+  const { data: response } = useGetUtilitiesQuery(platform);
 
   const filteredUtilities = sortUtilities(response?.data, searchTerm);
-  const showUtilitiesLis =
+  const showUtilitiesList =
     filteredUtilities.length > 0 && searchTerm !== '' && searchTerm.trim() !== utility;
 
   function handleSelectPlatform(p: Platform) {
@@ -51,15 +49,13 @@ const Search = (): JSX.Element => {
   }
 
   function handleEnterKey(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'Enter' && showUtilitiesLis) {
+    if (e.key === 'Enter' && showUtilitiesList) {
       handleSelectUtility(filteredUtilities[0]);
     }
   }
-  // const foo = ConditionalIcon<true>;
-  // const bar = ConditionalIcon<false>;
 
   return (
-    <div className='w-11/12 my-8 mx-auto flex z-30'>
+    <div className='w-11/12 md:w-96 my-8 mx-auto flex z-30'>
       <div className='flex opacity-0 animate-right-appear z-10'>
         <Dropdown
           arrowIcon={false}
@@ -110,7 +106,7 @@ const Search = (): JSX.Element => {
                 />
               </div>
 
-              {showUtilitiesLis && (
+              {showUtilitiesList && (
                 <ul
                   {...getMenuProps()}
                   className='z-10 rounded shadow focus:outline-none transition-opacity duration-100 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white absolute max-h-[300px] overflow-auto w-full mt-12 py-1'>

@@ -3,6 +3,13 @@ export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}', 'node_modules/flowbite-react/lib/esm/**/*.js'],
   theme: {
     extend: {
+      colors: {
+        'cyan-normal': '#0891B2',
+        'cyan-deep': '#0E7490',
+      },
+      // listStyleType: {
+      //   'disclosure-closed': 'disclosure-closed',
+      // },
       animation: {
         /* duration | easing-function | delay | iteration-count | direction | fill-mode | play-state | name  */
         // 'spin-slow': 'spin 3s linear forwards',
@@ -46,18 +53,6 @@ export default {
             right: '0',
           },
         },
-        // 'appear-from-right': {
-        //   '0%': {
-        //     // opacity: 0,
-        //     transform: 'translateX(250%)',
-        //     right: '250%',
-        //   },
-        //   '100%': {
-        //     // opacity: 100,
-        //     transform: 'translateX(0)',
-        //     right: '0',
-        //   },
-        // },
         'appear-from-top': {
           '0%': {
             opacity: '0',

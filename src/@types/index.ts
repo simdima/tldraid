@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { version } from '../../package.json';
+import { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
 
 export const APP_VERSION = version;
 
@@ -61,3 +62,6 @@ export type ChatGptErrorResponse = {
     code: string;
   };
 };
+
+export type MarkdownElement<T> = Omit<React.DetailedHTMLProps<React.HTMLAttributes<T>, T>, 'ref'> &
+  ReactMarkdownProps;
