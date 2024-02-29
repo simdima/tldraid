@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Downshift from 'downshift';
 import { Dropdown, TextInput } from 'flowbite-react';
 import { FaAndroid, FaWindows, FaApple, FaLinux, FaLaptop } from 'react-icons/fa6';
@@ -16,6 +16,7 @@ const Search = (): JSX.Element => {
   const utility = useAppSelector(selectUtilityName);
 
   const [searchTerm, setSearchTerm] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const selectedPlatformIcon = (platform: Platform) => {
     if (platform === 'common') return <FaLaptop />;
@@ -46,6 +47,7 @@ const Search = (): JSX.Element => {
   function handleSelectUtility(utility: string) {
     dispatch(changeUtility(utility));
     setSearchTerm('');
+    searchInputRef?.current?.blur();
   }
 
   function handleEnterKey(e: React.KeyboardEvent<HTMLDivElement>) {
@@ -103,6 +105,7 @@ const Search = (): JSX.Element => {
                   type='text'
                   placeholder='Search for utility...'
                   className='opacity-0 animate-bottom-appear'
+                  ref={searchInputRef}
                 />
               </div>
 
