@@ -1,11 +1,5 @@
 import { MarkdownElement } from '../../@types';
 
-// type MarkdownParagraphProps2 = Omit<
-//   React.DetailedHTMLProps<React.HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>,
-//   'ref'
-// > &
-//   ReactMarkdownProps;
-
 type MarkdownParagraphProps = MarkdownElement<HTMLParagraphElement>;
 
 const MarkdownParagraph = (props: MarkdownParagraphProps) => {
@@ -15,7 +9,7 @@ const MarkdownParagraph = (props: MarkdownParagraphProps) => {
     (props.children as JSX.Element[]).find(({ type }) => type === 'code')
   ) {
     return (
-      <p className='bg-cyan-deep text-white text-sm rounded px-2 py-1 mt-1 mb-6 font-mono'>
+      <p className='bg-cyan-normal text-white text-sm rounded px-2 py-1 mt-1 mb-6 font-mono'>
         {props.children}
       </p>
     );

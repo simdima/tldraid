@@ -1,7 +1,10 @@
+import { Link, useLocation } from 'react-router-dom';
 import { Navbar } from 'flowbite-react';
 import { FaGear } from 'react-icons/fa6';
 
 const Header = (): JSX.Element => {
+  const { pathname } = useLocation();
+
   return (
     <Navbar fluid>
       <Navbar.Brand
@@ -13,11 +16,13 @@ const Header = (): JSX.Element => {
           <span className='relative opacity-0 animate-top-appear'>d</span>
         </span>
       </Navbar.Brand>
-      <div>
-        <FaGear
-          size={30}
-          className='flex opacity-0 animate-fade-in-slowest text-cyan-normal hover:cursor-pointer dark:hover:text-cyan-deep'></FaGear>
-      </div>
+      {pathname === '/' && (
+        <Link to='/settings'>
+          <FaGear
+            size={30}
+            className='flex opacity-0 animate-fade-in-slowest text-cyan-normal hover:cursor-pointer dark:hover:text-cyan-deep'></FaGear>
+        </Link>
+      )}
     </Navbar>
   );
 };

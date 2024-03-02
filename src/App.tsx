@@ -1,60 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Header from './components/Header';
-import Search from './components/Search';
-import Introduction from './components/Introduction';
-import Description from './components/Description';
-import GptAddon from './components/GptAddon';
-import Modal from './components/Modal';
-import ErrorMessage from './components/ErrorMessage';
+import Home from './pages/Home';
+import Settings from './pages/Settings';
 
-// import './App.css';
-
-function App() {
-  const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-
+const App = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // return (
-  //   <div className='app'>
-  //     <Header setShowModal={setShowModal} />
-  //     <Search />
-  //     <Introduction />
-  //     <Spinner />
-  //     <div className='content-container'>
-  //       <Description />
-  //       <GptAddon
-  //         setError={setError}
-  //         isLoading={isLoading}
-  //         setIsLoading={setIsLoading}
-  //       />
-  //     </div>
-
-  //     {showModal && (
-  //       <Modal
-  //         setShowModal={setShowModal}
-  //         setError={setError}
-  //       />
-  //     )}
-
-  //     <ErrorMessage />
-  //   </div>
-  // );
   return (
-    <>
+    <Router>
       <header>
         <Header />
       </header>
       <main>
-        <Search />
-        <Introduction />
-        <Description />
+        <Switch>
+          <Route
+            path='/'
+            exact
+            component={Home}
+          />
+          <Route
+            path='/settings'
+            component={Settings}
+          />
+        </Switch>
       </main>
-    </>
+    </Router>
   );
-}
+};
 
 export default App;

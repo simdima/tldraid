@@ -24,9 +24,7 @@ function saveToLocalStorage(key: LOCAL_STORAGE_KEY, value: string) {
 }
 
 function sortUtilities(source: string[] = [], term: string) {
-  const filtered = source.filter(util => new RegExp(`^${term.trim()}.*`, 'gi').test(util));
-
-  return term.length > 2 ? filtered : filtered.slice(0, 20);
+  return source.filter(util => new RegExp(`^${term.trim()}.*`, 'gi').test(util));
 }
 
 export { loadFromLocalStorage, saveToLocalStorage, sortUtilities };
