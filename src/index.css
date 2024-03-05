@@ -1,63 +1,17 @@
-@import './fonts.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.6;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-
-  --background-color: #020024;
-  --primary-color: #413e77;
-  --text-color: #ebebeba3;
-  --link-color: #494489;
-  --link-secondary-color: #3f3b74;
+@layer base {
+  html {
+    font-family: 'Comfortaa', system-ui, sans-serif;
+  }
 }
 
-*,
-*::before,
-*::after {
-  font-weight: normal;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+.introduction-keywords {
+  @apply opacity-0 animate-fade-in text-cyan-normal whitespace-pre hover:text-cyan-deep;
 }
 
-html,
-body {
-  background: var(--background-color);
-  color: var(--text-color);
-}
-
-/* fix for Chrome */
-input {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-}
-
-p > code,
-pre > code {
-  font-family: 'Roboto Mono';
-}
-
-a,
-a:link,
-a:visited,
-a:hover,
-a:active,
-a:focus {
-  text-decoration: none;
-  color: inherit;
-  background-color: transparent;
-}
-
-input:focus,
-div:focus {
-  outline: none;
-  border-color: var(--text-color);
+.introduction-non-keywords {
+  @apply opacity-0 animate-fade-in-slowest;
 }

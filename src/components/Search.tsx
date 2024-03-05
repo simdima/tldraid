@@ -1,103 +1,140 @@
-import { useEffect, useState } from 'react';
-import OutsideClicker from '../hooks/OutsideClicker';
-import { sortUtilities } from '../helpers';
+import { useState } from 'react';
+import { useCombobox } from 'downshift';
+import { Dropdown, TextInput } from 'flowbite-react';
+import { FaAndroid, FaWindows, FaApple, FaLinux, FaLaptop } from 'react-icons/fa6';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
 import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
-import { type Platform, PLATFORMS } from '../@types';
+import { setError } from '../store/reducers/loadAndErrorSlice';
+import PlatformIcon from './molecules/PlatformIcon';
+import { sortUtilities } from '../helpers';
+import { type Platform } from '../@types';
 
-import './Search.scss';
-
-const Search = (): JSX.Element => {
+const Search = (): JSX.Element | null => {
   const dispatch = useAppDispatch();
 
   const platform = useAppSelector(selectSettingsPlatform);
   const utility = useAppSelector(selectUtilityName);
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showSearchList, setShowSearchList] = useState(false);
+  const { data: utilitiesResponse, isError } = useGetUtilitiesQuery(platform);
 
-  useEffect(() => {
-    setShowSearchList(!!searchTerm);
-  }, [searchTerm]);
+  const [utilities, setUtilities] = useState<string[]>([]);
 
-  const { data: response, isLoading, isError } = useGetUtilitiesQuery(platform);
+  const {
+    isOpen,
+    getMenuProps,
+    getInputProps,
+    highlightedIndex,
+    getItemProps,
+    inputValue,
+    setInputValue,
+  } = useCombobox({
+    items: utilities,
+    defaultInputValue: utility,
+    onIsOpenChange: ({ inputValue, isOpen }) => {
+      if (isOpen) {
+        if (inputValue) {
+          setUtilities(sortUtilities(utilitiesResponse?.data, inputValue));
+        } else {
+          setUtilities([]);
+        }
+      }
+    },
+    onInputValueChange: ({ inputValue }) => {
+      if (inputValue) {
+        setUtilities(sortUtilities(utilitiesResponse?.data, inputValue));
+      } else {
+        setUtilities([]);
+      }
+    },
+    onSelectedItemChange: ({ inputValue }) => {
+      if (inputValue) {
+        dispatch(changeUtility(inputValue));
+      }
+    },
+  });
 
-  const sortedAndFilteredUtils = sortUtilities(
-    response?.data.filter(util => util.indexOf(searchTerm.trim().toLowerCase()) > -1),
-    searchTerm.trim().toLowerCase()
-  );
-
-  function handleSelectPlatform(p: Platform) {
+  function handlePlatformChange(p: Platform) {
     dispatch(changePlatform(p));
     if (utility) {
       dispatch(changeUtility(''));
+      setInputValue('');
     }
-
-    setSearchTerm('');
-    setShowSearchList(false);
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearchTerm(e.target.value.toLowerCase());
+  function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    dispatch(changeUtility(inputValue));
   }
 
-  function handleSelectUtility(utility: string) {
-    dispatch(changeUtility(utility));
+  if (isError) {
+    dispatch(setError('Failed to get list of utilities'));
 
-    setShowSearchList(false);
-    setSearchTerm('');
-  }
-
-  function handleEnterKey(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'Enter' && showSearchList) {
-      handleSelectUtility(sortedAndFilteredUtils[0]);
-    }
+    return null;
   }
 
   return (
-    <div className='search-container'>
-      <div
-        className='wrapper'
-        onKeyUp={handleEnterKey}>
-        <div id='searchTools'>
-          <div id='util_platforms'>
-            {PLATFORMS.map(id => (
-              <div
-                key={id}
-                id={id}
-                style={{ opacity: '0' }}
-                className={`platform ${id === platform ? 'selected-platform' : ''}`}
-                onClick={() => handleSelectPlatform(id)}>
-                <div className='platform-icon'></div>
-              </div>
+    <div className='w-11/12 md:w-5/12 my-8 mx-auto flex relative z-50'>
+      <div className='flex opacity-0 animate-right-appear'>
+        <Dropdown
+          arrowIcon={false}
+          label={<PlatformIcon platform={platform} />}>
+          <Dropdown.Item
+            icon={FaLaptop}
+            onClick={() => handlePlatformChange('common')}>
+            Universal
+          </Dropdown.Item>
+          <Dropdown.Item
+            icon={FaAndroid}
+            onClick={() => handlePlatformChange('android')}>
+            Android
+          </Dropdown.Item>
+          <Dropdown.Item
+            icon={FaLinux}
+            onClick={() => handlePlatformChange('linux')}>
+            Linux
+          </Dropdown.Item>
+          <Dropdown.Item
+            icon={FaApple}
+            onClick={() => handlePlatformChange('osx')}>
+            OSX
+          </Dropdown.Item>
+          <Dropdown.Item
+            icon={FaWindows}
+            onClick={() => handlePlatformChange('windows')}>
+            Windows
+          </Dropdown.Item>
+        </Dropdown>
+      </div>
+      <div className='w-full ml-2 flex flex-col relative'>
+        <form onSubmit={handleSearchSubmit}>
+          <TextInput
+            {...getInputProps()}
+            sizing='md'
+            type='text'
+            placeholder='Search for utility...'
+            className='opacity-0 animate-bottom-appear'
+          />
+        </form>
+        <ul
+          {...getMenuProps()}
+          className='rounded shadow focus:outline-none transition-opacity duration-100 border border-gray-200 border-none bg-gray-700 text-white max-h-[300px] overflow-auto w-full mx-auto text-sm absolute mt-12'>
+          {isOpen &&
+            utilities.map((utilityName, index) => (
+              <li
+                key={utilityName}
+                {...getItemProps({
+                  item: utilityName,
+                  index,
+                })}
+                className={`my-2 px-4 py-2 cursor-pointer hover:bg-gray-600 ${
+                  index === highlightedIndex ? 'bg-gray-600' : ''
+                }`}>
+                {utilityName}
+              </li>
             ))}
-          </div>
-
-          <OutsideClicker onShowSearchList={setShowSearchList}>
-            <input
-              id='util_search'
-              type='text'
-              placeholder='Search for utility...'
-              value={searchTerm}
-              onChange={handleChange}
-            />
-
-            {showSearchList && (
-              <div className='searchList'>
-                {sortedAndFilteredUtils.map(util => (
-                  <div
-                    key={util}
-                    className='searchOption'
-                    onClick={() => handleSelectUtility(util)}>
-                    {util}
-                  </div>
-                ))}
-              </div>
-            )}
-          </OutsideClicker>
-        </div>
+        </ul>
       </div>
     </div>
   );
