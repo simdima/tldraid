@@ -13,7 +13,7 @@ const Header = (): JSX.Element => {
         <Link to='/settings'>
           <FaGear
             size={30}
-            className='flex opacity-0 animate-fade-in-slower text-cyan-normal hover:text-cyan-deep hover:cursor-pointer '></FaGear>
+            className='flex opacity-0 animate-fade-in-slower text-cyan-normal hover:text-cyan-deep hover:cursor-pointer hover:scale-110 transition-all duration-200'></FaGear>
         </Link>
       )}
     </Navbar>

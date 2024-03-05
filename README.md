@@ -1,33 +1,28 @@
-<div style="display:flex; align-items: center">
-  <img src="/public/icon-readme.png" alt="app-icon" style="border-radius: 5px" />
-  <p style="margin-left: 10px">A web app that allows you to navigate through man pages for most common platforms but also
-has an integrated chatbot converstation field where you can ask for specific examples and usecases</p>
-</div>
+<img width="200" src="/public/readme-logo.png" alt="app-logo" />
 
-<hr>
+A web app that allows you to navigate through man pages for most common platforms but also
+has an integrated chatbot converstation field where you can ask for specific examples and usecases with the help of OpenAI API.
 
-### Why though?
+<img src="/public/tldraid-demo.png" alt="app-logo" />
 
-As a command line enthusiast I often make use of man pages to either learn how to use some cli utility that is new to me or just refresh my memory on a familiar one. However, sometimes I also find default man pages a bit abstract or lacking in some cases, so occasionally I end up searching the web for more specific implementations.
+### Why?
 
-With arrival of OpenAI's <a style="color:#413e77; font-weight: bold" href="https://chat.openai.com/auth/login">ChatGPT</a> it made my life a lot easier since I can just ask it exactly what I want to do with a utility of my choice (or what specific result I want to get) and it spits out the answer.
+As a person who often finds himself tinkering with CLI utilities I frequently reference man pages to either learn how to use some program that is new to me or just refresh my memory on a familiar one. However, sometimes I also find default man pages a bit abstract or lacking in some cases, so I end up searching the web for more specific implementations.
+
+With arrival of OpenAI's [ChatGPT](https://chat.openai.com/auth/login) my life got a lot easier since I can just ask it exactly what I want to do with a utility of my choice (or what specific result I want to get) and it spits out the answer.
 
 I thought it'd be great to combine both of these tools, and that is where this app comes in.
 
 ### How to use?
 
-<p align="center" >
-  <img style="border-radius: 5px"src="/public/tldraid-intro-video.GIF" alt="intro-gif" />
-</p>
-
 **Option #1**
-The working instance of the app can be found <a style="color:#413e77; font-weight: bold" href="https://tldraid.simlabs.dev">here</a> (currently available only in Estonia)
+The working instance of the app can be found [here]("https://tldraid.simlabs.dev) (currently available only in Estonia)
 
 **Option #2**
 Run it locally using Docker.
 
 _Prerequisite_:
-You will need an <a style="color:#413e77; font-weight: bold" href="https://gitlab.com/dsim/tldraid-api">API server</a> for this app running locally
+You will need an [API server](https://gitlab.com/dsim/tldraid-api) for this app running locally
 
 1. Clone this repository to your system and navigate inside the directory
 
@@ -50,7 +45,7 @@ docker build -t tldraid .
 docker run --name tldraid -p 3000:3000 -d tldraid
 ```
 
-5. Navigate to your container's URL, add your <a style="color:#413e77; font-weight: bold" href="https://platform.openai.com/account/api-keys">OpenAI API key</a>, choose <a style="color:#413e77; font-weight: bold" href="https://platform.openai.com/docs/guides/gpt">ChatGPT model</a> and language for man pages and you are good to go!
+1. Navigate to your container's URL, add your [OpenAI API key](https://platform.openai.com/account/api-keys), choose [ChatGPT](https://platform.openai.com/docs/guides/gpt) model</a> and language for man pages and you are good to go!
 
 _Note 1_: **gpt-4** model is available only to Premium ChatGPT users
 

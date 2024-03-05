@@ -53,8 +53,8 @@ export default {
         'appear-from-top': {
           '0%': {
             opacity: '0',
-            transform: 'translateY(-100%)',
-            top: '-100%',
+            transform: 'translateY(-150px)',
+            top: '-150px',
           },
           '100%': {
             opacity: '100',
