@@ -2,7 +2,7 @@
   <img width="200" src="/public/readme-logo.png" alt="app-logo" />
 </p>
 
-A web application that allows you to go through through man pages for most common platforms with the help of integrated OpenAI chatbot converstation field where you can ask for specific examples and usecases.
+A web application that allows you to go through man pages for most common platforms with the help of integrated OpenAI chatbot converstation field where you can ask for specific examples and usecases.
 
 <img src="/public/tldraid-demo.png" alt="app-logo" />
 
