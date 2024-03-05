@@ -3,7 +3,7 @@ import { Platform } from '../../@types';
 
 interface ApiResponse<T> {
   data: T;
-} // needs adjustment
+}
 
 const tlraidApi = createApi({
   reducerPath: 'tlraidApi',

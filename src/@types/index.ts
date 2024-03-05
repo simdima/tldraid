@@ -13,13 +13,12 @@ export type LOCAL_STORAGE_KEY =
   | GPT_API_KEY_STORAGE_KEY;
 
 export type Platform = 'android' | 'common' | 'linux' | 'osx' | 'windows';
-// export const PLATFORMS: Platform[] = ['common', 'linux', 'osx', 'windows', 'android'];
 
-export type QueryParams = {
+export interface QueryParams {
   platform: string;
   lang?: string;
   utility?: string;
-};
+}
 export type LanguagesResponse = AxiosResponse<string[]>;
 export type UtilitesResponse = AxiosResponse<string[]>;
 export type UtilityResponse = AxiosResponse<string>;
@@ -31,7 +30,7 @@ export enum ChatGptEngineNames {
 export type ChatGptEngine = 'gpt-3.5-turbo' | 'gpt-4';
 export const CHAT_GPT_ENGINES: ChatGptEngine[] = ['gpt-3.5-turbo', 'gpt-4'];
 
-export type ChatGptResponse = {
+export interface ChatGptResponse {
   id: string;
   object: string;
   created: number;
@@ -52,16 +51,16 @@ export type ChatGptResponse = {
     completion_tokens: number;
     total_tokens: number;
   };
-};
+}
 
-export type ChatGptErrorResponse = {
+export interface ChatGptErrorResponse {
   error: {
     message: string;
     type: string;
     param: unknown;
     code: string;
   };
-};
+}
 
 export type MarkdownElement<T> = Omit<React.DetailedHTMLProps<React.HTMLAttributes<T>, T>, 'ref'> &
   ReactMarkdownProps;

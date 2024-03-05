@@ -8,14 +8,6 @@
   }
 }
 
-/* @media screen and (max-width: 767px) {
-  input,
-  select,
-  textarea {
-    font-size: 16px;
-  }
-} */
-
 .introduction-keywords {
   @apply opacity-0 animate-fade-in text-cyan-normal whitespace-pre hover:text-cyan-deep;
 }

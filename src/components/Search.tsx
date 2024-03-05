@@ -6,26 +6,20 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
 import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
+import { setError } from '../store/reducers/loadAndErrorSlice';
+import PlatformIcon from './molecules/PlatformIcon';
 import { sortUtilities } from '../helpers';
 import { type Platform } from '../@types';
 
-const Search = (): JSX.Element => {
+const Search = (): JSX.Element | null => {
   const dispatch = useAppDispatch();
 
   const platform = useAppSelector(selectSettingsPlatform);
   const utility = useAppSelector(selectUtilityName);
 
-  const selectedPlatformIcon = (platform: Platform) => {
-    if (platform === 'common') return <FaLaptop />;
-    if (platform === 'android') return <FaAndroid />;
-    if (platform === 'linux') return <FaLinux />;
-    if (platform === 'osx') return <FaApple />;
-    if (platform === 'windows') return <FaWindows />;
-  };
+  const { data: utilitiesResponse, isError } = useGetUtilitiesQuery(platform);
 
-  const { data: response } = useGetUtilitiesQuery(platform);
-
-  const [utilities, setUtilities] = useState(response?.data || []);
+  const [utilities, setUtilities] = useState<string[]>([]);
 
   const {
     isOpen,
@@ -37,9 +31,19 @@ const Search = (): JSX.Element => {
     setInputValue,
   } = useCombobox({
     items: utilities,
+    defaultInputValue: utility,
+    onIsOpenChange: ({ inputValue, isOpen }) => {
+      if (isOpen) {
+        if (inputValue) {
+          setUtilities(sortUtilities(utilitiesResponse?.data, inputValue));
+        } else {
+          setUtilities([]);
+        }
+      }
+    },
     onInputValueChange: ({ inputValue }) => {
       if (inputValue) {
-        setUtilities(sortUtilities(response?.data, inputValue));
+        setUtilities(sortUtilities(utilitiesResponse?.data, inputValue));
       } else {
         setUtilities([]);
       }
@@ -59,20 +63,25 @@ const Search = (): JSX.Element => {
     }
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     dispatch(changeUtility(inputValue));
   }
 
+  if (isError) {
+    dispatch(setError('Failed to get list of utilities'));
+
+    return null;
+  }
+
   return (
-    <div className='w-11/12 md:w-96 my-8 mx-auto flex relative z-50'>
+    <div className='w-11/12 md:w-5/12 my-8 mx-auto flex relative z-50'>
       <div className='flex opacity-0 animate-right-appear'>
         <Dropdown
           arrowIcon={false}
-          label={selectedPlatformIcon(platform)}>
+          label={<PlatformIcon platform={platform} />}>
           <Dropdown.Item
             icon={FaLaptop}
-            value={'FOO'}
             onClick={() => handlePlatformChange('common')}>
             Universal
           </Dropdown.Item>
@@ -99,7 +108,7 @@ const Search = (): JSX.Element => {
         </Dropdown>
       </div>
       <div className='w-full ml-2 flex flex-col relative'>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSearchSubmit}>
           <TextInput
             {...getInputProps()}
             sizing='md'
@@ -110,7 +119,7 @@ const Search = (): JSX.Element => {
         </form>
         <ul
           {...getMenuProps()}
-          className='rounded shadow focus:outline-none transition-opacity duration-100 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white max-h-[300px] overflow-auto w-full mx-auto text-sm absolute mt-12'>
+          className='rounded shadow focus:outline-none transition-opacity duration-100 border border-gray-200 border-none bg-gray-700 text-white max-h-[300px] overflow-auto w-full mx-auto text-sm absolute mt-12'>
           {isOpen &&
             utilities.map((utilityName, index) => (
               <li

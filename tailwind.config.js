@@ -8,18 +8,15 @@ export default {
         'cyan-deep': '#0E7490',
       },
       animation: {
-        /* duration | easing-function | delay | iteration-count | direction | fill-mode | play-state | name  */
-        // 'spin-slow': 'spin 3s linear forwards',
         'bounce': 'bounce 1.5s ease infinite',
         'fade-in-no-delay': 'fade-in 1s forwards;',
-        'fade-in': 'fade-in 0.5s 1.5s forwards;',
-        'fade-in-slower': 'fade-in 1s ease-in 1s forwards 1',
-        'fade-in-slowest': 'fade-in 2s ease-in 2.5s forwards',
+        'fade-in': 'fade-in 0.5s forwards;',
+        'fade-in-slower': 'fade-in 1s ease-in forwards 1',
+        'fade-in-slowest': 'fade-in 2s ease-in 0.5s forwards',
         'left-appear': 'appear-from-left 1s ease-in forwards',
-        'right-appear': 'appear-from-right 0.5s ease-in 2.5s forwards',
-        'top-appear': 'appear-from-top 1s ease-in 1s forwards',
-        'bottom-appear': 'appear-from-bottom 0.5s ease-in 2s both ',
-        // 'right-appear': 'appear-from-right 1s ease-in-out 2.5s 1 forwards',
+        'right-appear': 'appear-from-right 0.5s ease-in 0.5s forwards',
+        'top-appear': 'appear-from-top 1s ease-in  forwards',
+        'bottom-appear': 'appear-from-bottom 0.5s ease-in both ',
       },
       keyframes: {
         'fade-in': {

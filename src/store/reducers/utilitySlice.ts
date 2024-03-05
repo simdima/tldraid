@@ -4,7 +4,6 @@ import { RootState } from '..';
 interface UtilityState {
   name: string;
   botAnswers: string[];
-  // newBotAnswers: { utility: string; answers: string[] }[]; NEW SLICE?
 }
 
 const initialState: UtilityState = {
@@ -28,7 +27,7 @@ const utilitySlice = createSlice({
   },
 });
 
-export const { changeUtility, addBotAnswer } = utilitySlice.actions;
+export const { changeUtility, addBotAnswer, clearBotAnswers } = utilitySlice.actions;
 
 export const selectUtilityName = (state: RootState) => state.utility.name;
 export const selectUtilityBotAnswers = (state: RootState) => state.utility.botAnswers;
