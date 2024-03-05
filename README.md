@@ -1,11 +1,12 @@
-<img width="200" src="/public/readme-logo.png" alt="app-logo" />
+<p align="center">
+  <img width="200" src="/public/readme-logo.png" alt="app-logo" />
+</p>
 
-A web app that allows you to navigate through man pages for most common platforms but also
-has an integrated chatbot converstation field where you can ask for specific examples and usecases with the help of OpenAI API.
+A web application that allows you to go through man pages for most common platforms with the help of integrated OpenAI chatbot converstation field where you can ask for specific examples and usecases.
 
 <img src="/public/tldraid-demo.png" alt="app-logo" />
 
-### Why?
+## Why?
 
 As a person who often finds himself tinkering with CLI utilities I frequently reference man pages to either learn how to use some program that is new to me or just refresh my memory on a familiar one. However, sometimes I also find default man pages a bit abstract or lacking in some cases, so I end up searching the web for more specific implementations.
 
@@ -13,7 +14,7 @@ With arrival of OpenAI's [ChatGPT](https://chat.openai.com/auth/login) my life g
 
 I thought it'd be great to combine both of these tools, and that is where this app comes in.
 
-### How to use?
+## How to use?
 
 **Option #1**
 The working instance of the app can be found [here]("https://tldraid.simlabs.dev) (currently available only in Estonia)
@@ -51,7 +52,7 @@ _Note 1_: **gpt-4** model is available only to Premium ChatGPT users
 
 _Note 2_: if man page is missing for a language you selected it will be rendered in English
 
-### Development
+## Development
 
 Clone the repository, navigate inside and run:
 
@@ -61,7 +62,7 @@ npm i(nstall)
 npm run dev
 ```
 
-### License
+## License
 
 MIT License
 
@@ -83,6 +84,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-### Author
+## Author
 
 Dmitri Sim
