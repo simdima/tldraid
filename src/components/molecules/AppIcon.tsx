@@ -27,7 +27,7 @@ const AppIcon = () => (
         />
       </g>
     </svg>
-    <span className='self-center whitespace-nowrap text-4xl font-semibold text-white hover:animate-pulse -ml-2'>
+    <span className='self-center whitespace-nowrap text-3xl font-semibold text-white hover:animate-pulse -ml-2'>
       <span className='relative animate-left-appear'>tldr</span>
       <span className='opacity-0 animate-fade-in-slower text-cyan-normal'>AI</span>
       <span className='relative opacity-0 animate-top-appear'>d</span>
