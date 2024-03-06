@@ -4,11 +4,11 @@
 
 A web application that allows you to go through man pages for most common platforms with the help of integrated OpenAI chatbot converstation field where you can ask for specific examples and usecases.
 
-<img src="/public/tldraid-demo.png" alt="app-logo" />
+<img src="/public/tldraid-demo.png" alt="tldraid-demo-image" />
 
 ## Why?
 
-As a person who often finds himself tinkering with CLI utilities I frequently reference man pages to either learn how to use some program that is new to me or just refresh my memory on a familiar one. However, sometimes I also find default man pages a bit abstract or lacking in some cases, so I end up searching the web for more specific implementations.
+As a person who often finds himself tinkering with CLI utilities in a shell I frequently reference man pages to either learn how to use some program that is new to me or just refresh my memory on a familiar one. However, sometimes I also find default man pages a bit abstract, hard to navigate or even lacking in some cases, so I end up searching the web for more specific implementations.
 
 With arrival of OpenAI's [ChatGPT](https://chat.openai.com/auth/login) my life got a lot easier since I can just ask it exactly what I want to do with a utility of my choice (or what specific result I want to get) and it spits out the answer.
 
