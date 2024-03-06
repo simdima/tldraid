@@ -17,7 +17,7 @@ I thought it'd be great to combine both of these tools, and that is where this a
 ## How to use?
 
 **Option #1**
-The working instance of the app can be found [here]("https://tldraid.simlabs.dev) (currently available only in Estonia)
+The working instance of the app can be found [here]("https://tldraid.simlabs.dev) (currently available only to users located in Estonia)
 
 **Option #2**
 Run it locally using Docker.
