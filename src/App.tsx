@@ -1,94 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import ErrorToast from './components/ErrorToast';
 import Header from './components/Header';
-import Search from './components/Search';
-import Introduction from './components/Introduction';
-import Description from './components/Description';
-import GptAddon from './components/GptAddon';
-import Modal from './components/Modal';
-import ErrorMessage from './components/ErrorMessage';
-import Spinner from './components/Spinner';
-import useLocalStorage from './hooks/useLocalStorage';
-import {
-  API_KEY_STORAGE_KEY,
-  GptEngine,
-  GptEngineNames,
-  LANGUAGE_STORAGE_KEY,
-  Platforms,
-} from './@types';
-import './App.css';
+import Home from './pages/Home';
+import Settings from './pages/Settings';
 
-function App() {
-  const [selectedLanguage, setSelectedLanguage] = useLocalStorage(LANGUAGE_STORAGE_KEY, 'en');
-  const [selectedPlatform, setSelectedPlatform] = useState<Platforms>('common');
-  const [selectedUtility, setSelectedUtility] = useState('');
-
-  const [chatGptApiKey, setChatGptApiKey] = useLocalStorage(API_KEY_STORAGE_KEY, '');
-  const [chatGptEngine, setChatGptEngine] = useState<GptEngine>(GptEngineNames['GPT_V3']);
-
-  const [showIntroduction, setShowIntroduction] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-
+const App = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <div className='app'>
-      <Header setShowModal={setShowModal} />
-
-      <Search
-        selectedPlatform={selectedPlatform}
-        setSelectedPlatform={setSelectedPlatform}
-        setSelectedUtil={setSelectedUtility}
-        setError={setError}
-      />
-
-      {showIntroduction ? <Introduction /> : <Spinner isLoading={isLoading} />}
-
-      {selectedUtility && (
-        <div className='content-container'>
-          <Description
-            selectedLanguage={selectedLanguage}
-            setShowIntroduction={setShowIntroduction}
-            selectedPlatform={selectedPlatform}
-            selectedUtility={selectedUtility}
-            setError={setError}
+    <BrowserRouter>
+      <header className='h-1/4 flex-none'>
+        <Header />
+      </header>
+      <main className='flex flex-col flex-grow'>
+        <Switch>
+          <Route
+            path='/'
+            exact
+            component={Home}
           />
-          <GptAddon
-            selectedPlatform={selectedPlatform}
-            selectedUtility={selectedUtility}
-            chatGptApikey={chatGptApiKey}
-            chatGptEngine={chatGptEngine}
-            setError={setError}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
+          <Route
+            path='/settings'
+            component={Settings}
           />
-        </div>
-      )}
-
-      {showModal && (
-        <Modal
-          setShowModal={setShowModal}
-          selectedLanguage={selectedLanguage}
-          setSelectedLanguage={setSelectedLanguage}
-          chatGptApiKey={chatGptApiKey}
-          setChatGptApiKey={setChatGptApiKey}
-          chatGptEngine={chatGptEngine}
-          setChatGptEngine={setChatGptEngine}
-          setError={setError}
-        />
-      )}
-
-      {error && (
-        <ErrorMessage
-          error={error}
-          setError={setError}
-        />
-      )}
-    </div>
+        </Switch>
+      </main>
+      <ErrorToast />
+    </BrowserRouter>
   );
-}
+};
 
 export default App;

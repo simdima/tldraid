@@ -1,26 +1,22 @@
-import './Header.scss';
+import { Link, useLocation } from 'react-router-dom';
+import { Navbar } from 'flowbite-react';
+import { FaGear } from 'react-icons/fa6';
+import AppLogo from './molecules/AppLogo';
 
-type Props = {
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-};
+const Header = (): JSX.Element => {
+  const { pathname } = useLocation();
 
-const Header = ({ setShowModal }: Props): JSX.Element => {
   return (
-    <div className='app-header'>
-      <h1
-        className='title'
-        onClick={() => window.location.reload()}>
-        <span className='title-fade-from-left'>tldr</span>
-        <span className='title-fade-in'>AI</span>
-        <span className='title-fade-from-top'>d</span>
-      </h1>
-
-      <div
-        id='config_btn_container'
-        onClick={() => setShowModal(true)}>
-        <div id='config_btn'></div>
-      </div>
-    </div>
+    <Navbar fluid>
+      <AppLogo />
+      {pathname === '/' && (
+        <Link to='/settings'>
+          <FaGear
+            size={30}
+            className='flex opacity-0 animate-fade-in-slower text-cyan-normal hover:text-cyan-deep hover:cursor-pointer hover:scale-110 transition-all duration-200'></FaGear>
+        </Link>
+      )}
+    </Navbar>
   );
 };
 

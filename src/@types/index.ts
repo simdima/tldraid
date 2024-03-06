@@ -1,32 +1,40 @@
 import { AxiosResponse } from 'axios';
 import { version } from '../../package.json';
+import { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
 
 export const APP_VERSION = version;
-export const LANGUAGE_STORAGE_KEY = 'tldraid_pages_lang' as const;
-export const API_KEY_STORAGE_KEY = 'tldraid_gpt_apikey' as const;
 
-export type Platforms = 'android' | 'common' | 'linux' | 'osx' | 'windows';
+type LANGUAGE_STORAGE_KEY = 'tldraid_pages_lang';
+type GPT_ENGINE_STORAGE_KEY = 'tldraid_gpt_engine';
+type GPT_API_KEY_STORAGE_KEY = 'tldraid_gpt_apikey';
+export type LOCAL_STORAGE_KEY =
+  | LANGUAGE_STORAGE_KEY
+  | GPT_ENGINE_STORAGE_KEY
+  | GPT_API_KEY_STORAGE_KEY;
 
-export type QueryParams = {
+export type Platform = 'android' | 'common' | 'linux' | 'osx' | 'windows';
+
+export interface QueryParams {
   platform: string;
   lang?: string;
   utility?: string;
-};
+}
 export type LanguagesResponse = AxiosResponse<string[]>;
 export type UtilitesResponse = AxiosResponse<string[]>;
 export type UtilityResponse = AxiosResponse<string>;
 
-export enum GptEngineNames {
+export enum ChatGptEngineNames {
   GPT_V3 = 'gpt-3.5-turbo',
   GPT_V4 = 'gpt-4',
 }
-export type GptEngine = GptEngineNames.GPT_V3 | GptEngineNames.GPT_V4;
+export type ChatGptEngine = 'gpt-3.5-turbo' | 'gpt-4';
+export const CHAT_GPT_ENGINES: ChatGptEngine[] = ['gpt-3.5-turbo', 'gpt-4'];
 
-export type GptResponse = {
+export interface ChatGptResponse {
   id: string;
   object: string;
   created: number;
-  model: GptEngine;
+  model: ChatGptEngine;
   // typed as tuple since request is always sent with n=1 parameter
   choices: [
     {
@@ -43,13 +51,16 @@ export type GptResponse = {
     completion_tokens: number;
     total_tokens: number;
   };
-};
+}
 
-export type GptErrorResponse = {
+export interface ChatGptErrorResponse {
   error: {
     message: string;
     type: string;
     param: unknown;
     code: string;
   };
-};
+}
+
+export type MarkdownElement<T> = Omit<React.DetailedHTMLProps<React.HTMLAttributes<T>, T>, 'ref'> &
+  ReactMarkdownProps;
