@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.0 - 2024-03-06
+
+### Added
+
+- Extensive refactoring of app's components
+- TailwindCSS and Flowbite-React libraries for stying
+- Redux-toolkit for state managment
+- RTK-query for handling requests to API endpoints
+- Navigation is now handled by react-router
+- Custom logo
+- New font
+
 ## 1.0.4 - 2023-07-20
 
 ### Added
