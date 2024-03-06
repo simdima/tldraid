@@ -23,7 +23,7 @@ The working instance of the app can be found [here]("https://tldraid.simlabs.dev
 Run it locally using Docker.
 
 _Prerequisite_:
-You will need an [API server](https://gitlab.com/dsim/tldraid-api) for this app running locally
+You will need an [API server](https://github.com/simdima/tldraid-api) for this app running locally
 
 1. Clone this repository to your system and navigate inside the directory
 
