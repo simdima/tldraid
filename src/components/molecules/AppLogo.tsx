@@ -1,6 +1,6 @@
 import { Navbar } from 'flowbite-react';
 
-const AppIcon = () => (
+const AppLogo = () => (
   <Navbar.Brand
     href='/'
     className='bg-gray-800'>
@@ -35,4 +35,4 @@ const AppIcon = () => (
   </Navbar.Brand>
 );
 
-export default AppIcon;
+export default AppLogo;

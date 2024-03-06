@@ -1,14 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Navbar } from 'flowbite-react';
 import { FaGear } from 'react-icons/fa6';
-import AppIcon from './molecules/AppIcon';
+import AppLogo from './molecules/AppLogo';
 
 const Header = (): JSX.Element => {
   const { pathname } = useLocation();
 
   return (
     <Navbar fluid>
-      <AppIcon />
+      <AppLogo />
       {pathname === '/' && (
         <Link to='/settings'>
           <FaGear
