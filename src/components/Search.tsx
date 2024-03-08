@@ -114,12 +114,12 @@ const Search = (): JSX.Element | null => {
             sizing='md'
             type='text'
             placeholder='Search for utility...'
-            className='opacity-0 animate-bottom-appear'
+            className='opacity-0 animate-bottom-appear dark:bg-gray-700 rounded-xl'
           />
         </form>
         <ul
           {...getMenuProps()}
-          className='rounded shadow focus:outline-none transition-opacity duration-100 border border-gray-200 border-none bg-gray-700 text-white max-h-[300px] overflow-auto w-full mx-auto text-sm absolute mt-12'>
+          className='rounded shadow focus:outline-none transition-opacity duration-100 border border-gray-200 border-none bg-white dark:bg-gray-700 dark:text-white max-h-[300px] overflow-auto w-full mx-auto text-sm absolute mt-12'>
           {isOpen &&
             utilities.map((utilityName, index) => (
               <li
@@ -128,8 +128,8 @@ const Search = (): JSX.Element | null => {
                   item: utilityName,
                   index,
                 })}
-                className={`my-2 px-4 py-2 cursor-pointer hover:bg-gray-600 ${
-                  index === highlightedIndex ? 'bg-gray-600' : ''
+                className={`my-2 px-4 py-2 cursor-pointer ${
+                  index === highlightedIndex ? ' bg-gray-100 dark:bg-gray-600' : ''
                 }`}>
                 {utilityName}
               </li>

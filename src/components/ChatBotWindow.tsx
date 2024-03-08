@@ -72,13 +72,13 @@ const ChatBotWindow = (): JSX.Element | null => {
   return utility ? (
     <div className='fixed w-full flex justify-end bottom-3 right-3'>
       <Tooltip
-        className='z-50 duration-0'
+        className='z-50 duration-0 bg-gray-100'
         trigger='click'
         content={
           <>
             {!chatGptApiKey ? (
               <div className='w-80 p-4'>
-                <p>
+                <p className='text-black dark:text-white'>
                   To ask the bot a question add your OpenAI API key
                   <span>
                     {' '}
@@ -94,7 +94,7 @@ const ChatBotWindow = (): JSX.Element | null => {
             ) : (
               <>
                 <Textarea
-                  className='focus-visible:outline-none p-4 w-72 md:w-96 h-52'
+                  className='focus-visible:outline-none p-4 w-72 md:w-96 h-52 '
                   value={question}
                   onChange={handleTextAreaChange}
                   // ref={textAreaRef}

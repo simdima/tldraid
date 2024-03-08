@@ -16,7 +16,7 @@ const MarkdownParagraph = (props: MarkdownParagraphProps) => {
   }
 
   return (
-    <p className='text-center my-4 pb-4 mx-auto text-white mb-6 text-lg  max-w-[500px] md:text-center'>
+    <p className='text-center my-4 pb-4 mx-auto dark:text-white mb-6 text-lg  max-w-[500px] md:text-center'>
       {props.children}
     </p>
   );

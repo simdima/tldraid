@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 - 2024-03-08
+
+### Fixed
+
+- colors are wrong on devices set to lightmode
+
 ## 1.1.0 - 2024-03-06
 
 ### Added

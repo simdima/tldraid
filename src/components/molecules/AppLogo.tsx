@@ -3,7 +3,7 @@ import { Navbar } from 'flowbite-react';
 const AppLogo = () => (
   <Navbar.Brand
     href='/'
-    className='bg-gray-800'>
+    className='dark:bg-gray-800'>
     <svg
       version='1.0'
       xmlns='http://www.w3.org/2000/svg'
@@ -27,7 +27,7 @@ const AppLogo = () => (
         />
       </g>
     </svg>
-    <span className='self-center whitespace-nowrap text-3xl font-semibold text-white hover:animate-pulse -ml-2'>
+    <span className='self-center whitespace-nowrap text-3xl font-semibold dark:text-white hover:animate-pulse -ml-2'>
       <span className='relative animate-left-appear'>tldr</span>
       <span className='opacity-0 animate-fade-in-slower text-cyan-normal'>AI</span>
       <span className='relative opacity-0 animate-top-appear'>d</span>
