@@ -1,16 +1,22 @@
 # Changelog
 
+## 1.1.3 - 2024-03-08
+
+### Added
+
+- Chat bot answers for each utility are now saved until page reload
+
 ## 1.1.2 - 2024-03-08
 
 ### Fixed
 
-- favicon changed to .svg one
+- Favicon changed to .svg one
 
 ## 1.1.1 - 2024-03-08
 
 ### Fixed
 
-- colors are wrong on devices set to lightmode
+- Colors are wrong on devices set to lightmode
 
 ## 1.1.0 - 2024-03-06
 

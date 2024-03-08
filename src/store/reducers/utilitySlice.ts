@@ -1,14 +1,17 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '..';
 
+interface BotAnswers {
+  [utilityName: string]: string[];
+}
 interface UtilityState {
   name: string;
-  botAnswers: string[];
+  botAnswers: BotAnswers;
 }
 
 const initialState: UtilityState = {
   name: '',
-  botAnswers: [],
+  botAnswers: {},
 };
 
 const utilitySlice = createSlice({
@@ -19,15 +22,18 @@ const utilitySlice = createSlice({
       state.name = payload;
     },
     addBotAnswer: (state, { payload }: PayloadAction<string>) => {
-      state.botAnswers.push(payload);
-    },
-    clearBotAnswers: state => {
-      state.botAnswers = [];
+      if (state.name) {
+        if (!state.botAnswers[state.name]) {
+          state.botAnswers[state.name] = [];
+        }
+
+        state.botAnswers[state.name].push(JSON.stringify(payload));
+      }
     },
   },
 });
 
-export const { changeUtility, addBotAnswer, clearBotAnswers } = utilitySlice.actions;
+export const { changeUtility, addBotAnswer } = utilitySlice.actions;
 
 export const selectUtilityName = (state: RootState) => state.utility.name;
 export const selectUtilityBotAnswers = (state: RootState) => state.utility.botAnswers;

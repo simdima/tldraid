@@ -4,11 +4,7 @@ import { Spinner } from 'flowbite-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setError } from '../store/reducers/loadAndErrorSlice';
 import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
-import {
-  clearBotAnswers,
-  selectUtilityBotAnswers,
-  selectUtilityName,
-} from '../store/reducers/utilitySlice';
+import { selectUtilityBotAnswers, selectUtilityName } from '../store/reducers/utilitySlice';
 import { useGetUtilityQuery } from '../store/service/tldraidApi';
 import MarkdownHeader from './MarkdownElements/MarkdownHeader';
 import MarkdownParagraph from './MarkdownElements/MarkdownParagraph';
@@ -41,10 +37,6 @@ const Description = (): JSX.Element | null => {
     dispatch(setError('Failed to fetch selected utility'));
   }
 
-  useEffect(() => {
-    dispatch(clearBotAnswers());
-  }, [dispatch, utility]);
-
   const lastBotAnswerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     lastBotAnswerRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -75,18 +67,18 @@ const Description = (): JSX.Element | null => {
             </ReactMarkdown>
           </div>
 
-          {botAnswers.map((answer, idx) => (
+          {botAnswers[utility]?.map((answer, idx) => (
             <div
               className='w-11/12 md:w-5/12 text-left mx-auto mb-4'
               key={idx}
-              ref={idx === botAnswers.length - 1 ? lastBotAnswerRef : null}>
+              ref={idx === botAnswers[utility]?.length - 1 ? lastBotAnswerRef : null}>
               <ReactMarkdown
                 unwrapDisallowed
                 components={{
                   pre: props => <MarkdownParagraph {...props} />,
                   p: props => <MarkdownList {...props} />,
                 }}>
-                {answer}
+                {JSON.parse(answer)}
               </ReactMarkdown>
             </div>
           ))}
