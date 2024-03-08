@@ -1,11 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}', 'node_modules/flowbite-react/lib/esm/**/*.js'],
+  darkMode: 'selector',
   theme: {
     extend: {
       colors: {
-        'cyan-normal': '#0891B2',
-        'cyan-deep': '#0E7490',
+        'cyan-normal': '#0891B2', // cyan-600
+        'cyan-deep': '#0E7490', // cyan-700
       },
       animation: {
         'bounce': 'bounce 1.5s ease infinite',

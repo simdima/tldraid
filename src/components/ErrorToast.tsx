@@ -29,7 +29,7 @@ const ErrorToast = () => {
 
   return error ? (
     <div className='w-full flex justify-center fixed z-50 bottom-4 opacity-0 animate-bottom-appear'>
-      <Toast>
+      <Toast className='dark:bg-gray-800 dark:shadow-2xl'>
         <div className='inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-800 text-red-200'>
           <FaCircleExclamation className='h-5 w-5' />
         </div>

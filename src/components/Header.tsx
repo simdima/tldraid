@@ -7,7 +7,9 @@ const Header = (): JSX.Element => {
   const { pathname } = useLocation();
 
   return (
-    <Navbar fluid>
+    <Navbar
+      className='dark:bg-gray-800'
+      fluid>
       <AppLogo />
       {pathname === '/' && (
         <Link to='/settings'>
