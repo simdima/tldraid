@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2 - 2024-03-08
+
+### Fixed
+
+- favicon changed to .svg one
+
 ## 1.1.1 - 2024-03-08
 
 ### Fixed
