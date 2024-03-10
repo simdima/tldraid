@@ -1,4 +1,10 @@
-# Changelog
+# What's Changed
+
+## 1.1.6 - 2024-03-10
+
+### Added
+
+- Possibility to remove ChatGPT answers from utility's description
 
 ## 1.1.5 - 2024-03-10
 

@@ -1,12 +1,17 @@
-import { useEffect, useRef } from 'react';
+import { Button, Spinner } from 'flowbite-react';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import { Spinner } from 'flowbite-react';
+import { FaTrash } from 'react-icons/fa6';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setError } from '../store/reducers/loadAndErrorSlice';
 import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
-import { selectUtilityBotAnswers, selectUtilityName } from '../store/reducers/utilitySlice';
+import {
+  deleteBotAnswer,
+  selectUtilityBotAnswers,
+  selectUtilityName,
+} from '../store/reducers/utilitySlice';
 import { useGetUtilityQuery } from '../store/service/tldraidApi';
 import MarkdownHeader from './MarkdownElements/MarkdownHeader';
+import { useEffect, useRef } from 'react';
 import MarkdownParagraph from './MarkdownElements/MarkdownParagraph';
 import MarkdownLink from './MarkdownElements/MarkdownLink';
 import MarkdownList from './MarkdownElements/MarkdownList';
@@ -18,7 +23,7 @@ const Description = (): JSX.Element | null => {
   const language = useAppSelector(selectSettingsLanguage);
   const platform = useAppSelector(selectSettingsPlatform);
   const utility = useAppSelector(selectUtilityName);
-  const botAnswers = useAppSelector(selectUtilityBotAnswers); // @todo map answers to utility in store
+  const botAnswers = useAppSelector(selectUtilityBotAnswers);
 
   const {
     data: utilityResponse,
@@ -41,6 +46,10 @@ const Description = (): JSX.Element | null => {
   useEffect(() => {
     lastBotAnswerRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [botAnswers]);
+
+  const handleDeleteBotAnswer = (id: string) => {
+    dispatch(deleteBotAnswer(id));
+  };
 
   return (
     <div className='relative min-h-[100dvh] mb-4'>
@@ -67,19 +76,29 @@ const Description = (): JSX.Element | null => {
             </ReactMarkdown>
           </div>
 
-          {botAnswers[utility]?.map((answer, idx) => (
+          {botAnswers[utility]?.map(({ id, content }, idx) => (
             <div
-              className='w-11/12 md:w-5/12 text-left mx-auto mb-4'
-              key={idx}
+              className='w-11/12 md:w-5/12 text-left mx-auto mb-4 flex'
+              key={id}
               ref={idx === botAnswers[utility]?.length - 1 ? lastBotAnswerRef : null}>
               <ReactMarkdown
+                className='w-11/12'
                 unwrapDisallowed
                 components={{
                   pre: props => <MarkdownParagraph {...props} />,
                   p: props => <MarkdownList {...props} />,
+                  ul: props => <MarkdownList {...props} />,
                 }}>
-                {JSON.parse(answer)}
+                {JSON.parse(content)}
               </ReactMarkdown>
+              <Button
+                color='info'
+                size='xs'
+                aria-label='delete'
+                className='!bg-gray-500 self-start w-fit h-fit opacity-30 hover:opacity-100 transition-all duration-200'
+                onClick={() => handleDeleteBotAnswer(id)}>
+                <FaTrash />
+              </Button>
             </div>
           ))}
         </>

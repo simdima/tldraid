@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import { Link } from 'react-router-dom';
 import { Button, Spinner, Textarea, Tooltip } from 'flowbite-react';
 import { FaRobot } from 'react-icons/fa6';
@@ -46,11 +47,15 @@ const ChatBotWindow = (): JSX.Element | null => {
       setIsChatResponseLoading(false);
 
       if ('data' in chatGptApiResponse) {
-        dispatch(addBotAnswer(chatGptApiResponse.data));
+        dispatch(
+          addBotAnswer({
+            id: uuid(),
+            content: JSON.stringify(chatGptApiResponse.data),
+          })
+        );
 
         setQuestion('');
         setBotChatboxOpen(false);
-        // textAreaRef.current?.focus();
       }
 
       if ('error' in chatGptApiResponse) {
