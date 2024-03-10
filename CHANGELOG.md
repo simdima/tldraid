@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.4 - 2024-03-10
+
+### Added
+
+- Force dark mode of the app for all devices
+
+### Fixed
+
+- Make navbar links more intuitive
+
 ## 1.1.3 - 2024-03-08
 
 ### Added

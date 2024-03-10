@@ -15,3 +15,10 @@
 .introduction-non-keywords {
   @apply opacity-0 animate-fade-in-slowest;
 }
+
+.navbar-link {
+  @apply dark:text-white text-sm md:text-base font-bold cursor-pointer hover:text-cyan-deep transition-colors duration-200;
+}
+.navbar-link-active {
+  @apply underline text-cyan-normal dark:text-cyan-normal;
+}

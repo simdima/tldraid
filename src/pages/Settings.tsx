@@ -58,7 +58,6 @@ const Settings = () => {
 
   return (
     <div className='w-11/12 md:w-5/12 mx-auto mt-8 opacity-0 animate-fade-in-no-delay'>
-      <h1 className='text-xl mb-4 text-cyan-normal font-bold text-right'>Settings</h1>
       <form
         onSubmit={handleSaveClick}
         className='flex w-full flex-col gap-4'>
