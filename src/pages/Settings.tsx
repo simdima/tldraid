@@ -1,7 +1,9 @@
 import { useHistory } from 'react-router-dom';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button, Label, Select, Spinner, TextInput } from 'flowbite-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
+  SettingsState,
   changeChatGptApiKey,
   changeChatGptEngine,
   changeLanguage,
@@ -10,9 +12,14 @@ import {
   selectSettingsLanguage,
 } from '../store/reducers/settingsSlice';
 import { useGetLanguagesQuery } from '../store/service/tldraidApi';
-import React, { useState } from 'react';
 import { setError } from '../store/reducers/loadAndErrorSlice';
-import { CHAT_GPT_ENGINES, ChatGptEngine } from '../@types';
+import { CHAT_GPT_ENGINES } from '../@types';
+
+interface SettingsFormInputs {
+  language: SettingsState['language'];
+  chatGptEngine: SettingsState['chatGptEngine'];
+  chatGptApiKey: SettingsState['chatGptApiKey'];
+}
 
 const Settings = () => {
   const history = useHistory();
@@ -25,19 +32,26 @@ const Settings = () => {
 
   const { data: languagesResponse, isLoading, isError } = useGetLanguagesQuery('');
 
-  const [manpagesLanguage, setManpagesLanguage] = useState(language);
-  const [engine, setEngine] = useState(chatGptEngine);
-  const [apiKey, setApiKey] = useState(chatGptApiKey);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+  } = useForm<SettingsFormInputs>({
+    defaultValues: {
+      language,
+      chatGptEngine,
+      chatGptApiKey,
+    },
+  });
 
-  function handleSaveClick(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    dispatch(changeLanguage(manpagesLanguage));
-    dispatch(changeChatGptEngine(engine));
-    dispatch(changeChatGptApiKey(apiKey));
+  const updateSettings: SubmitHandler<SettingsFormInputs> = data => {
+    dispatch(changeLanguage(data.language));
+    dispatch(changeChatGptEngine(data.chatGptEngine));
+    dispatch(changeChatGptApiKey(data.chatGptApiKey));
 
     history.push('/');
-  }
+  };
 
   if (isError) {
     dispatch(setError('Failed to get available languages'));
@@ -58,57 +72,91 @@ const Settings = () => {
 
   return (
     <div className='w-11/12 md:w-5/12 mx-auto mt-8 opacity-0 animate-fade-in-no-delay'>
-      <h1 className='text-xl mb-4 text-cyan-normal font-bold text-right'>Settings</h1>
       <form
-        onSubmit={handleSaveClick}
+        onSubmit={handleSubmit(updateSettings)}
         className='flex w-full flex-col gap-4'>
         <div>
           <div className='mb-2 block'>
             <Label
-              htmlFor='manpages_language'
+              htmlFor='language'
               value='Language:'
             />
           </div>
-          <Select
-            id='manpages_language'
-            value={manpagesLanguage}
-            onChange={({ target: { value } }) => setManpagesLanguage(value)}>
-            {languagesResponse &&
-              languagesResponse?.data.map(language => <option key={language}>{language}</option>)}
-          </Select>
+          <Controller
+            name='language'
+            control={control}
+            render={({ field }) => (
+              <Select {...field}>
+                {languagesResponse &&
+                  languagesResponse?.data.map(language => (
+                    <option key={language}>{language}</option>
+                  ))}
+              </Select>
+            )}
+          />
         </div>
         <div>
           <div className='mb-2 block'>
             <Label
-              htmlFor='gpt_engine'
+              htmlFor='chatGptEngine'
               value='GPT engine version:'
             />
           </div>
-          <Select
-            id='gpt_engine'
-            value={engine}
-            onChange={({ target: { value } }) => setEngine(value as ChatGptEngine)}>
-            {CHAT_GPT_ENGINES.map(engine => (
-              <option key={engine}>{engine}</option>
-            ))}
-          </Select>
+          <Controller
+            name='chatGptEngine'
+            control={control}
+            render={({ field }) => (
+              <Select {...field}>
+                {CHAT_GPT_ENGINES.map(engine => (
+                  <option key={engine}>{engine}</option>
+                ))}
+              </Select>
+            )}
+          />
         </div>
         <div>
           <div className='mb-2 block'>
             <Label
-              htmlFor='gpt_apikey'
+              htmlFor='chatGptApiKey'
               value='OpenAI API key:'
             />
           </div>
-          <TextInput
-            id='gpt_apikey'
-            type='password'
-            value={apiKey}
-            onChange={({ target: { value } }) => setApiKey(value)}
+          <Controller
+            name='chatGptApiKey'
+            rules={{
+              minLength: {
+                value: 15,
+                message: 'API key is too short',
+              },
+              pattern: {
+                value: new RegExp(/^(?=.*\D)[^\s]+$/), // do not allow numeric-only and whitespaces
+                message: 'API key format is invalid',
+              },
+            }}
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                {...field}
+                type='password'
+                onChange={e => {
+                  field.onChange(e);
+                  trigger('chatGptApiKey');
+                }}
+              />
+            )}
           />
+          {errors.chatGptApiKey && (
+            <p className='mt-2 text-xs text-red-700 dark:text-red-700'>
+              {errors.chatGptApiKey.message}
+            </p>
+          )}
         </div>
 
-        <Button type='submit'>Save</Button>
+        <Button
+          type='submit'
+          disabled={Object.keys(errors).length > 0}>
+          Save
+        </Button>
       </form>
     </div>
   );
