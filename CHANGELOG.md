@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.5 - 2024-03-10
+
+### Added
+
+- Validation for Settings form (using [react-hook-form](https://react-hook-form.com))
+
 ## 1.1.4 - 2024-03-10
 
 ### Added

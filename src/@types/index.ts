@@ -23,10 +23,6 @@ export type LanguagesResponse = AxiosResponse<string[]>;
 export type UtilitesResponse = AxiosResponse<string[]>;
 export type UtilityResponse = AxiosResponse<string>;
 
-export enum ChatGptEngineNames {
-  GPT_V3 = 'gpt-3.5-turbo',
-  GPT_V4 = 'gpt-4',
-}
 export type ChatGptEngine = 'gpt-3.5-turbo' | 'gpt-4';
 export const CHAT_GPT_ENGINES: ChatGptEngine[] = ['gpt-3.5-turbo', 'gpt-4'];
 

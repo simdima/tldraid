@@ -3,7 +3,7 @@ import { loadFromLocalStorage, saveToLocalStorage } from '../../helpers';
 import { RootState } from '..';
 import { ChatGptEngine, Platform } from '../../@types';
 
-interface SettingsState {
+export interface SettingsState {
   language: string;
   platform: Platform;
   chatGptEngine: ChatGptEngine;
