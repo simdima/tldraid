@@ -72,7 +72,7 @@ const Description = (): JSX.Element | null => {
                 ul: props => <MarkdownList {...props} />,
               }}
               key={utility}>
-              {utilityResponse.data}
+              {utilityResponse.description}
             </ReactMarkdown>
           </div>
 
