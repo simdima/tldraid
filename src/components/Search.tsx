@@ -35,7 +35,7 @@ const Search = (): JSX.Element | null => {
     onIsOpenChange: ({ inputValue, isOpen }) => {
       if (isOpen) {
         if (inputValue) {
-          setUtilities(sortUtilities(utilitiesResponse?.data, inputValue));
+          setUtilities(sortUtilities(utilitiesResponse, inputValue));
         } else {
           setUtilities([]);
         }
@@ -43,7 +43,7 @@ const Search = (): JSX.Element | null => {
     },
     onInputValueChange: ({ inputValue }) => {
       if (inputValue) {
-        setUtilities(sortUtilities(utilitiesResponse?.data, inputValue));
+        setUtilities(sortUtilities(utilitiesResponse, inputValue));
       } else {
         setUtilities([]);
       }

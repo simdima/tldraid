@@ -1,8 +1,4 @@
-import { AxiosResponse } from 'axios';
-import { version } from '../../package.json';
 import { ReactMarkdownProps } from 'react-markdown/lib/complex-types';
-
-export const APP_VERSION = version;
 
 type LANGUAGE_STORAGE_KEY = 'tldraid_pages_lang';
 type GPT_ENGINE_STORAGE_KEY = 'tldraid_gpt_engine';
@@ -13,15 +9,6 @@ export type LOCAL_STORAGE_KEY =
   | GPT_API_KEY_STORAGE_KEY;
 
 export type Platform = 'android' | 'common' | 'linux' | 'osx' | 'windows';
-
-export interface QueryParams {
-  platform: string;
-  lang?: string;
-  utility?: string;
-}
-export type LanguagesResponse = AxiosResponse<string[]>;
-export type UtilitesResponse = AxiosResponse<string[]>;
-export type UtilityResponse = AxiosResponse<string>;
 
 export type ChatGptEngine = 'gpt-3.5-turbo' | 'gpt-4';
 export const CHAT_GPT_ENGINES: ChatGptEngine[] = ['gpt-3.5-turbo', 'gpt-4'];

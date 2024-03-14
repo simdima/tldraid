@@ -88,9 +88,7 @@ const Settings = () => {
             render={({ field }) => (
               <Select {...field}>
                 {languagesResponse &&
-                  languagesResponse?.data.map(language => (
-                    <option key={language}>{language}</option>
-                  ))}
+                  languagesResponse.map(language => <option key={language}>{language}</option>)}
               </Select>
             )}
           />

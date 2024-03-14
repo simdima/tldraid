@@ -1,5 +1,11 @@
 # What's Changed
 
+## 1.2.0 - 2024-03-15
+
+### Added
+
+- Adjusted HTTP queries for the newest version of tldrAId API
+
 ## 1.1.6 - 2024-03-10
 
 ### Added
