@@ -2,7 +2,7 @@ import { Button, Spinner } from 'flowbite-react';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { FaTrash } from 'react-icons/fa6';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setError } from '../store/reducers/loadAndErrorSlice';
+import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import {
   deleteBotAnswer,
@@ -39,7 +39,7 @@ const Description = (): JSX.Element | null => {
   );
 
   if (isError) {
-    dispatch(setError('Failed to fetch selected utility'));
+    dispatch(setToastError('Failed to fetch selected utility'));
   }
 
   const lastBotAnswerRef = useRef<HTMLDivElement>(null);

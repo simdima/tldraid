@@ -1,5 +1,11 @@
 # What's Changed
 
+## 1.3.0 - 2024-03-18
+
+### Added
+
+- Ability to use locally running Ollama LLM instead of OpenAI's ChatGPT bot
+
 ## 1.2.0 - 2024-03-15
 
 ### Added

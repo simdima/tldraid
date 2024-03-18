@@ -10,17 +10,12 @@ const Introduction = (): JSX.Element | null => {
       <span className='introduction-non-keywords'>Get summaries of </span>
       <a
         className='introduction-keywords'
-        href='https://tldr.sh/'
+        href='https://en.wikipedia.org/wiki/TLDR_Pages'
         target='_blank'>
         tldr pages
       </a>
       <span className='introduction-non-keywords'> and supercharge your learning </span>
-      <a
-        className='introduction-keywords'
-        href='https://chat.openai.com/'
-        target='_blank'>
-        with AI-powered ChatGPT bot
-      </a>
+      <span className='introduction-keywords cursor-pointer'>with AI-powered bot</span>
       <span className='introduction-non-keywords'>
         {' '}
         to help you find your way around any utility
