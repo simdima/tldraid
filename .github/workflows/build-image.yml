@@ -1,0 +1,28 @@
+name: Create a tarball with tldraid Docker image
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Create .env File
+        run: echo "VITE_API_URL=${{ secrets.YOUR_SECRET }}" > .env
+
+      - name: Build Docker image
+        run: docker build -t tldraid:${{ github.event.release.tag_name }} .
+          docker save -o tldraid:${{ github.event.release.tag_name }}.tar tldraid:${{ github.event.release.tag_name }}
+
+      - name: Create a tarball with the new Docker image
+        uses: actions/upload-artifact@v4
+        with:
+          name: tldraid-docker-image
+          path: tldraid:${{ github.event.release.tag_name }}.tar
