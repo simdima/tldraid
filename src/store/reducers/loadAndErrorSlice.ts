@@ -21,7 +21,7 @@ const loadAndErrorSlice = createSlice({
       state.isLoading = payload;
       state.error = '';
     },
-    setError: (state, { payload }: PayloadAction<string>) => {
+    setToastError: (state, { payload }: PayloadAction<string>) => {
       state.isLoading = false;
       state.error = payload;
     },
@@ -31,10 +31,10 @@ const loadAndErrorSlice = createSlice({
   },
 });
 
-export const { setLoading, setError, setFirstLoad } = loadAndErrorSlice.actions;
+export const { setLoading, setToastError, setFirstLoad } = loadAndErrorSlice.actions;
 
 export const selectIsLoading = (state: RootState) => state.loadAndError.isLoading;
-export const selectError = (state: RootState) => state.loadAndError.error;
+export const selectToastError = (state: RootState) => state.loadAndError.error;
 export const selectIsFirstLoad = (state: RootState) => state.loadAndError.isFirstLoad;
 
 export default loadAndErrorSlice.reducer;

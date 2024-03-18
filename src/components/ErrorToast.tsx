@@ -2,12 +2,12 @@ import { useEffect, useRef } from 'react';
 import { Toast } from 'flowbite-react';
 import { FaCircleExclamation } from 'react-icons/fa6';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectError, setError } from '../store/reducers/loadAndErrorSlice';
+import { selectToastError, setToastError } from '../store/reducers/loadAndErrorSlice';
 
 const ErrorToast = () => {
   const dispatch = useAppDispatch();
 
-  const error = useAppSelector(selectError);
+  const error = useAppSelector(selectToastError);
 
   const closeButtonContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -35,7 +35,7 @@ const ErrorToast = () => {
         </div>
         <div className='ml-3 text-sm font-normal'>{error}</div>
         <div ref={closeButtonContainerRef}>
-          <Toast.Toggle onClick={() => dispatch(setError(''))} />
+          <Toast.Toggle onClick={() => dispatch(setToastError(''))} />
         </div>
       </Toast>
     </div>

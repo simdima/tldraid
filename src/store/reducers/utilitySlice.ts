@@ -43,7 +43,7 @@ const utilitySlice = createSlice({
   },
 });
 
-export const { changeUtility, addBotAnswer, deleteBotAnswer } = utilitySlice.actions;
+export const { addBotAnswer, changeUtility, deleteBotAnswer } = utilitySlice.actions;
 
 export const selectUtilityName = (state: RootState) => state.utility.name;
 export const selectUtilityBotAnswers = (state: RootState) => state.utility.botAnswers;

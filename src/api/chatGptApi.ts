@@ -1,5 +1,37 @@
 import axios, { AxiosError } from 'axios';
-import { ChatGptEngine, ChatGptErrorResponse, ChatGptResponse, Platform } from '../@types';
+import { type ChatGptEngine, type Platform } from '../@types';
+
+export interface ChatGptResponse {
+  id: string;
+  object: string;
+  created: number;
+  model: ChatGptEngine;
+  // typed as tuple since request is always sent with n=1 parameter
+  choices: [
+    {
+      index: number;
+      message: {
+        role: string;
+        content: string;
+      };
+      finish_reason: string;
+    }
+  ];
+  usage: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
+}
+
+export interface ChatGptErrorResponse {
+  error: {
+    message: string;
+    type: string;
+    param: unknown;
+    code: string;
+  };
+}
 
 type ApiResponse =
   | {
@@ -10,7 +42,7 @@ type ApiResponse =
     }
   | undefined;
 
-async function sendChatGptApiRequest(
+async function sendChatGptCompletionRequest(
   platform: Platform,
   utility: string,
   engine: ChatGptEngine,
@@ -77,4 +109,4 @@ async function sendChatGptApiRequest(
   }
 }
 
-export { sendChatGptApiRequest };
+export { sendChatGptCompletionRequest };

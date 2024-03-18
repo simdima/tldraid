@@ -8,6 +8,8 @@ export interface SettingsState {
   platform: Platform;
   chatGptEngine: ChatGptEngine;
   chatGptApiKey: string;
+  ollamaUrl: string;
+  ollamaModel: string;
 }
 
 const initialState: SettingsState = {
@@ -15,6 +17,8 @@ const initialState: SettingsState = {
   platform: 'common',
   chatGptEngine: loadFromLocalStorage('tldraid_gpt_engine') || 'gpt-3.5-turbo',
   chatGptApiKey: loadFromLocalStorage('tldraid_gpt_apikey') || '',
+  ollamaUrl: loadFromLocalStorage('ollama_api_server_url') || '',
+  ollamaModel: loadFromLocalStorage('ollama_api_server_models') || '',
 };
 
 const settingsSlice = createSlice({
@@ -36,15 +40,31 @@ const settingsSlice = createSlice({
       state.chatGptApiKey = payload;
       saveToLocalStorage('tldraid_gpt_apikey', payload);
     },
+    changeOllamaUrl: (state, { payload }: PayloadAction<string>) => {
+      state.ollamaUrl = payload;
+      saveToLocalStorage('ollama_api_server_url', state.ollamaUrl);
+    },
+    updateOllamaModel: (state, { payload }: PayloadAction<string>) => {
+      state.ollamaModel = payload;
+      saveToLocalStorage('ollama_api_server_models', state.ollamaModel);
+    },
   },
 });
 
-export const { changeChatGptApiKey, changeChatGptEngine, changeLanguage, changePlatform } =
-  settingsSlice.actions;
+export const {
+  changeChatGptApiKey,
+  changeChatGptEngine,
+  changeLanguage,
+  changeOllamaUrl,
+  changePlatform,
+  updateOllamaModel,
+} = settingsSlice.actions;
 
 export const selectSettingsLanguage = (state: RootState) => state.settings.language;
 export const selectSettingsPlatform = (state: RootState) => state.settings.platform;
 export const selectSettingsChatGptEngine = (state: RootState) => state.settings.chatGptEngine;
 export const selectSettingsChatGptApikey = (state: RootState) => state.settings.chatGptApiKey;
+export const selectSettingsOllamaUrl = (state: RootState) => state.settings.ollamaUrl;
+export const selecteSettingsOllamaModel = (state: RootState) => state.settings.ollamaModel;
 
 export default settingsSlice.reducer;

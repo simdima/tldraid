@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
 import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
-import { setError } from '../store/reducers/loadAndErrorSlice';
+import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import PlatformIcon from './molecules/PlatformIcon';
 import { sortUtilities } from '../helpers';
 import { type Platform } from '../@types';
@@ -69,7 +69,7 @@ const Search = (): JSX.Element | null => {
   }
 
   if (isError) {
-    dispatch(setError('Failed to get list of utilities'));
+    dispatch(setToastError('Failed to get list of utilities'));
 
     return null;
   }
