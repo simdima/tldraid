@@ -86,7 +86,7 @@ const Settings = () => {
   const { isServerFound, serverModels } = useFetchOllamaModels(getValues('ollamaUrl'));
 
   useEffect(() => {
-    if (!isServerFound) {
+    if (!isServerFound && !errors.ollamaUrl) {
       dispatch(setToastError('API server with this address not found'));
     } else {
       dispatch(setToastError(''));
@@ -101,7 +101,7 @@ const Settings = () => {
     } else {
       setValue('ollamaModel', '');
     }
-  }, [dispatch, isServerFound, ollamaModel, serverModels, setError, setValue]);
+  }, [dispatch, errors.ollamaUrl, isServerFound, ollamaModel, serverModels, setError, setValue]);
 
   const updateSettings: SubmitHandler<SettingsFormInputs> = data => {
     dispatch(changeLanguage(data.language));
