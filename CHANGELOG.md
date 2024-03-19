@@ -1,5 +1,11 @@
 # What's Changed
 
+## 1.3.3 - 2024-03-19
+
+### Fixed
+
+- Ollama server not found error when input field in invalid
+
 ## 1.3.2 - 2024-03-19
 
 ### Added
