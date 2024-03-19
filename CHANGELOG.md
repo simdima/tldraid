@@ -1,5 +1,11 @@
 # What's Changed
 
+## 1.3.1 - 2024-03-19
+
+### Added
+
+- Local storage handling is deferred to [redux-persist](https://www.npmjs.com/package/redux-persist) library
+
 ## 1.3.0 - 2024-03-18
 
 ### Added

@@ -8,7 +8,6 @@ import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice
 import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
 import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import PlatformIcon from './molecules/PlatformIcon';
-import { sortUtilities } from '../helpers';
 import { type Platform } from '../@types';
 
 const Search = (): JSX.Element | null => {
@@ -17,9 +16,12 @@ const Search = (): JSX.Element | null => {
   const platform = useAppSelector(selectSettingsPlatform);
   const utility = useAppSelector(selectUtilityName);
 
-  const { data: utilitiesResponse, isError } = useGetUtilitiesQuery(platform);
+  const { data: utilitiesResponse = [], isError } = useGetUtilitiesQuery(platform);
 
   const [utilities, setUtilities] = useState<string[]>([]);
+
+  const sortUtilities = (source: string[], term: string) =>
+    source.filter(util => new RegExp(`^${term.trim()}.*`, 'gi').test(util));
 
   const {
     isOpen,
