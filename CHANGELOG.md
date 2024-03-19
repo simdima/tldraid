@@ -1,5 +1,11 @@
 # What's Changed
 
+## 1.3.2 - 2024-03-19
+
+### Added
+
+- Add [yup](https://www.npmjs.com/package/yup) for more silmpler Settings form validation
+
 ## 1.3.1 - 2024-03-19
 
 ### Added

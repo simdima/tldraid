@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Button, Label, Select, Spinner, TextInput } from 'flowbite-react';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
-  type SettingsState,
   changeChatGptApiKey,
   changeChatGptEngine,
   changeLanguage,
@@ -21,13 +22,33 @@ import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import useFetchOllamaModels from '../hooks/useFetchOllamaModels';
 import { CHAT_GPT_ENGINES } from '../@types';
 
-interface SettingsFormInputs {
-  language: SettingsState['language'];
-  chatGptEngine: SettingsState['chatGptEngine'];
-  chatGptApiKey: SettingsState['chatGptApiKey'];
-  ollamaUrl: SettingsState['ollamaUrl'];
-  ollamaModel: string;
-}
+const settingsSchema = yup.object({
+  language: yup.string().required(),
+  chatGptEngine: yup.string().oneOf(CHAT_GPT_ENGINES).required(),
+  chatGptApiKey: yup
+    .string()
+    .trim()
+    .ensure()
+    .matches(/^.{15,}$/, {
+      message: 'API ket is too short',
+      excludeEmptyString: true,
+    })
+    .matches(/^(?=.*\D)[^\s]+$/, {
+      message: 'Not a valid API key',
+      excludeEmptyString: true,
+    }),
+  ollamaUrl: yup
+    .string()
+    .ensure()
+    .matches(/^https?:\/\/.+$/, { message: 'Not a valid URL', excludeEmptyString: true })
+    .matches(/[^/]$/, {
+      message: 'Remove trailing slash from the url',
+      excludeEmptyString: true,
+    }),
+  ollamaModel: yup.string().ensure(),
+});
+
+type SettingsFormInputs = yup.InferType<typeof settingsSchema>;
 
 const Settings = () => {
   const history = useHistory();
@@ -52,6 +73,7 @@ const Settings = () => {
     setValue,
     trigger,
   } = useForm<SettingsFormInputs>({
+    resolver: yupResolver(settingsSchema),
     defaultValues: {
       language,
       chatGptEngine,
@@ -65,9 +87,9 @@ const Settings = () => {
 
   useEffect(() => {
     if (!isServerFound) {
-      setError('ollamaUrl', {
-        message: 'API server with this address not found',
-      });
+      dispatch(setToastError('API server with this address not found'));
+    } else {
+      dispatch(setToastError(''));
     }
 
     if (serverModels.length) {
@@ -79,7 +101,7 @@ const Settings = () => {
     } else {
       setValue('ollamaModel', '');
     }
-  }, [isServerFound, ollamaModel, serverModels, setError, setValue]);
+  }, [dispatch, isServerFound, ollamaModel, serverModels, setError, setValue]);
 
   const updateSettings: SubmitHandler<SettingsFormInputs> = data => {
     dispatch(changeLanguage(data.language));
@@ -158,16 +180,6 @@ const Settings = () => {
             </div>
             <Controller
               name='chatGptApiKey'
-              rules={{
-                minLength: {
-                  value: 15,
-                  message: 'API key is too short',
-                },
-                pattern: {
-                  value: new RegExp(/^(?=.*\D)[^\s]+$/), // do not allow numeric-only and whitespaces
-                  message: 'API key format is invalid',
-                },
-              }}
               control={control}
               render={({ field }) => (
                 <TextInput
@@ -192,12 +204,6 @@ const Settings = () => {
             </div>
             <Controller
               name='ollamaUrl'
-              rules={{
-                pattern: {
-                  value: new RegExp(/^https?:\/\/.+$/),
-                  message: 'Invalid URL',
-                },
-              }}
               control={control}
               render={({ field }) => (
                 <TextInput
@@ -243,7 +249,7 @@ const Settings = () => {
           type='submit'
           disabled={
             Object.keys(errors).length > 0 ||
-            (getValues('ollamaUrl').length > 0 && serverModels.length === 0)
+            (getValues('ollamaUrl') !== '' && serverModels.length === 0)
           }>
           Save
         </Button>
