@@ -1,4 +1,4 @@
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from 'flowbite-react';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { FaTrash } from 'react-icons/fa6';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -16,6 +16,7 @@ import MarkdownParagraph from './MarkdownElements/MarkdownParagraph';
 import MarkdownLink from './MarkdownElements/MarkdownLink';
 import MarkdownList from './MarkdownElements/MarkdownList';
 import ChatBotWindow from './ChatBotWindow';
+import Loader from './molecules/Loader';
 
 const Description = (): JSX.Element | null => {
   const dispatch = useAppDispatch();
@@ -54,7 +55,7 @@ const Description = (): JSX.Element | null => {
   return (
     <div className='relative min-h-[100dvh] mb-4'>
       {isLoading && (
-        <Spinner
+        <Loader
           size='xl'
           className='w-full mx-auto my-10'
         />
