@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ErrorToast from './components/ErrorToast';
 import Header from './components/Header';
 import Home from './pages/Home';
-import Settings from './pages/Settings';
+import Loader from './components/molecules/Loader';
+
+const Settings = lazy(() => import('./pages/Settings'));
 
 const App = () => {
   useEffect(() => {
@@ -16,17 +18,19 @@ const App = () => {
         <Header />
       </header>
       <main className='flex flex-col flex-grow'>
-        <Switch>
-          <Route
-            path='/'
-            exact
-            component={Home}
-          />
-          <Route
-            path='/settings'
-            component={Settings}
-          />
-        </Switch>
+        <Suspense fallback={<Loader size='xl' />}>
+          <Switch>
+            <Route
+              path='/'
+              exact
+              component={Home}
+            />
+            <Route
+              path='/settings'
+              component={Settings}
+            />
+          </Switch>
+        </Suspense>
       </main>
       <ErrorToast />
     </BrowserRouter>

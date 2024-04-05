@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { Link } from 'react-router-dom';
-import { Button, Spinner, Textarea, Tooltip } from 'flowbite-react';
+import { Button, Textarea, Tooltip } from 'flowbite-react';
 import { FaRobot } from 'react-icons/fa6';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
@@ -17,6 +17,7 @@ import { sendChatGptCompletionRequest } from '../api/chatGptApi';
 import { parseOllamaChatCompletion, sendOllamaChatCompletionRequest } from '../api/ollamaApi';
 import ChatGPTLogo from './molecules/ChatGPTLogo';
 import OllamaLogo from './molecules/OllamaLogo';
+import Loader from './molecules/Loader';
 
 const ChatBotWindow = (): JSX.Element | null => {
   const dispatch = useAppDispatch();
@@ -173,10 +174,7 @@ const ChatBotWindow = (): JSX.Element | null => {
                     className='mt-2 float-right w-24'
                     onClick={handleAskButtonClick}>
                     {isChatResponseLoading ? (
-                      <Spinner
-                        aria-label='Extra small spinner example'
-                        size='sm'
-                      />
+                      <Loader size='sm' />
                     ) : (
                       <span className='transition-none'>Ask</span>
                     )}
