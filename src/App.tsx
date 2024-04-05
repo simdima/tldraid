@@ -1,9 +1,10 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
 import ErrorToast from './components/ErrorToast';
 import Header from './components/Header';
-import Home from './pages/Home';
 import Loader from './components/molecules/Loader';
+import Home from './pages/Home';
 
 const Settings = lazy(() => import('./pages/Settings'));
 

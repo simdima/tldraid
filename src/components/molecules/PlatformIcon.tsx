@@ -1,4 +1,5 @@
 import { FaAndroid, FaApple, FaLaptop, FaLinux, FaWindows } from 'react-icons/fa6';
+
 import { type Platform } from '../../@types';
 
 interface PlatformIcon {

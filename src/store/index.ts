@@ -1,15 +1,16 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
-  persistStore,
-  persistReducer,
   FLUSH,
   PAUSE,
   PERSIST,
+  persistReducer,
+  persistStore,
   PURGE,
   REGISTER,
   REHYDRATE,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+
 import loadAndErrorReducer from './reducers/loadAndErrorSlice';
 import settingsReducer from './reducers/settingsSlice';
 import utilityReducer from './reducers/utilitySlice';
