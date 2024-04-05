@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import cls from 'classnames';
 import { useCombobox } from 'downshift';
 import { Dropdown, TextInput } from 'flowbite-react';
 import { FaAndroid, FaWindows, FaApple, FaLinux, FaLaptop } from 'react-icons/fa6';
@@ -78,7 +79,12 @@ const Search = (): JSX.Element | null => {
 
   return (
     <div className='w-11/12 md:w-5/12 my-8 mx-auto flex relative z-50'>
-      <div className='flex opacity-0 animate-right-appear'>
+      <div
+        className={cls(
+          'flex',
+          { 'opacity-100': utility },
+          { 'opacity-0 animate-right-appear': !utility }
+        )}>
         <Dropdown
           arrowIcon={false}
           label={<PlatformIcon platform={platform} />}>
@@ -116,7 +122,11 @@ const Search = (): JSX.Element | null => {
             sizing='md'
             type='text'
             placeholder='Search for utility...'
-            className='opacity-0 animate-bottom-appear dark:bg-gray-700 rounded-xl'
+            className={cls(
+              'dark:bg-gray-700 rounded-xl',
+              { 'opacity-100': utility },
+              { 'opacity-0 animate-bottom-appear': !utility }
+            )}
           />
         </form>
         <ul
