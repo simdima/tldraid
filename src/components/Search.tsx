@@ -67,7 +67,9 @@ const Search = (): JSX.Element | null => {
 
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    dispatch(changeUtility(inputValue));
+    if (inputValue && utilities.indexOf(inputValue) > -1) {
+      dispatch(changeUtility(inputValue));
+    }
   }
 
   if (isError) {
