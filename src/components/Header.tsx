@@ -1,5 +1,6 @@
-import { NavLink } from 'react-router-dom';
 import { Navbar } from 'flowbite-react';
+import { NavLink } from 'react-router-dom';
+
 import AppLogo from './molecules/AppLogo';
 
 const Header = (): JSX.Element => {

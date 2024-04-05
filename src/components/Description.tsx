@@ -1,6 +1,8 @@
 import { Button } from 'flowbite-react';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import { useEffect, useRef } from 'react';
 import { FaTrash } from 'react-icons/fa6';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
@@ -10,12 +12,11 @@ import {
   selectUtilityName,
 } from '../store/reducers/utilitySlice';
 import { useGetUtilityQuery } from '../store/service/tldraidApi';
+import ChatBotWindow from './ChatBotWindow';
 import MarkdownHeader from './MarkdownElements/MarkdownHeader';
-import { useEffect, useRef } from 'react';
-import MarkdownParagraph from './MarkdownElements/MarkdownParagraph';
 import MarkdownLink from './MarkdownElements/MarkdownLink';
 import MarkdownList from './MarkdownElements/MarkdownList';
-import ChatBotWindow from './ChatBotWindow';
+import MarkdownParagraph from './MarkdownElements/MarkdownParagraph';
 import Loader from './molecules/Loader';
 
 const Description = (): JSX.Element | null => {

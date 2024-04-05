@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+
 import { type Platform } from '../@types';
 
 export interface OllamaModel {

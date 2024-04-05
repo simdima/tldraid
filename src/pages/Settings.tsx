@@ -1,27 +1,28 @@
-import { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { Button, Label, Select, TextInput } from 'flowbite-react';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Label, Select, TextInput } from 'flowbite-react';
+import { useEffect } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
+import * as yup from 'yup';
+
+import { CHAT_GPT_ENGINES } from '../@types';
+import Loader from '../components/molecules/Loader';
+import useFetchOllamaModels from '../hooks/useFetchOllamaModels';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import {
   changeChatGptApiKey,
   changeChatGptEngine,
   changeLanguage,
   changeOllamaUrl,
+  selecteSettingsOllamaModel,
   selectSettingsChatGptApikey,
   selectSettingsChatGptEngine,
   selectSettingsLanguage,
   selectSettingsOllamaUrl,
-  selecteSettingsOllamaModel,
   updateOllamaModel,
 } from '../store/reducers/settingsSlice';
 import { useGetLanguagesQuery } from '../store/service/tldraidApi';
-import { setToastError } from '../store/reducers/loadAndErrorSlice';
-import useFetchOllamaModels from '../hooks/useFetchOllamaModels';
-import { CHAT_GPT_ENGINES } from '../@types';
-import Loader from '../components/molecules/Loader';
 
 const settingsSchema = yup.object({
   language: yup.string().required(),

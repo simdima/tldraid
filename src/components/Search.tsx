@@ -1,15 +1,16 @@
-import { useState } from 'react';
 import cls from 'classnames';
 import { useCombobox } from 'downshift';
 import { Dropdown, TextInput } from 'flowbite-react';
-import { FaAndroid, FaWindows, FaApple, FaLinux, FaLaptop } from 'react-icons/fa6';
+import { useState } from 'react';
+import { FaAndroid, FaApple, FaLaptop, FaLinux, FaWindows } from 'react-icons/fa6';
+
+import { type Platform } from '../@types';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
 import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
-import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import PlatformIcon from './molecules/PlatformIcon';
-import { type Platform } from '../@types';
 
 const Search = (): JSX.Element | null => {
   const dispatch = useAppDispatch();

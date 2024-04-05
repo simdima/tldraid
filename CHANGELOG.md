@@ -1,5 +1,18 @@
 # What's Changed
 
+## 1.3.7 - 2024-04-05
+
+### Added
+
+- Settings component is now lazy-loaded
+- Loader component extracted to separate file
+- eslint import/export sorting plugin
+
+### Fixed
+
+- Fetching utilities that are not in the Search dropdown
+- Search component animations removed if search field is not empty and user switches between routes
+
 ## 1.3.3 - 2024-03-19
 
 ### Fixed

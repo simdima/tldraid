@@ -1,23 +1,24 @@
-import { useEffect, useRef, useState } from 'react';
-import { v4 as uuid } from 'uuid';
-import { Link } from 'react-router-dom';
 import { Button, Textarea, Tooltip } from 'flowbite-react';
+import { useEffect, useRef, useState } from 'react';
 import { FaRobot } from 'react-icons/fa6';
+import { Link } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
+
+import { sendChatGptCompletionRequest } from '../api/chatGptApi';
+import { parseOllamaChatCompletion, sendOllamaChatCompletionRequest } from '../api/ollamaApi';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import {
+  selecteSettingsOllamaModel,
   selectSettingsChatGptApikey,
   selectSettingsChatGptEngine,
   selectSettingsOllamaUrl,
   selectSettingsPlatform,
-  selecteSettingsOllamaModel,
 } from '../store/reducers/settingsSlice';
 import { addBotAnswer, selectUtilityName } from '../store/reducers/utilitySlice';
-import { setToastError } from '../store/reducers/loadAndErrorSlice';
-import { sendChatGptCompletionRequest } from '../api/chatGptApi';
-import { parseOllamaChatCompletion, sendOllamaChatCompletionRequest } from '../api/ollamaApi';
 import ChatGPTLogo from './molecules/ChatGPTLogo';
-import OllamaLogo from './molecules/OllamaLogo';
 import Loader from './molecules/Loader';
+import OllamaLogo from './molecules/OllamaLogo';
 
 const ChatBotWindow = (): JSX.Element | null => {
   const dispatch = useAppDispatch();
