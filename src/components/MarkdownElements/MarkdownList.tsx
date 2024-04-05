@@ -1,4 +1,4 @@
-import { MarkdownElement } from '../../@types';
+import { type MarkdownElement } from '../../@types';
 
 type MarkdownListProps = MarkdownElement<HTMLUListElement | HTMLParagraphElement>;
 

@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Platform } from '../@types';
+import { type Platform } from '../@types';
 
 export interface OllamaModel {
   name: string;
