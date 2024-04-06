@@ -58,6 +58,8 @@ You can also use open-sourced Ollama LLM if you have one running on your local n
 
 More info on how to run LLM locally here: https://github.com/ollama/ollama
 
+_Note 3_: If you are not running tldrAId on the same machine as your Ollama instance, by default Ollama server is going to throw a CORS error when application tries to send requests to it, so you will have to adjust **OLLAMA_ORIGINS** environmental variable first. More info: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-allow-additional-web-origins-to-access-ollama
+
 To choose between ChatGPT and Ollama, click on bot icon below the textfield in chat bot window:
 
 <p align="center">
