@@ -1,5 +1,16 @@
 # What's Changed
 
+## 1.3.8 - 2024-04-06
+
+### Added
+
+- All bot-related API calls are now handled by [React Query](https://tanstack.com/query)
+- App error notification was moved from Redux store to its own context
+
+### Fixed
+
+- Refactored global error notification component to be more concise
+
 ## 1.3.7 - 2024-04-05
 
 ### Added

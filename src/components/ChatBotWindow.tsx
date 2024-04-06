@@ -1,13 +1,14 @@
+import { useQuery } from '@tanstack/react-query';
 import { Button, Textarea, Tooltip } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
 import { FaRobot } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
-import { sendChatGptCompletionRequest } from '../api/chatGptApi';
-import { parseOllamaChatCompletion, sendOllamaChatCompletionRequest } from '../api/ollamaApi';
+import { handleChatGptError, sendChatGptCompletionRequest } from '../api/chatGptApi';
+import { handleOllamaServerError, sendOllamaChatCompletionRequest } from '../api/ollamaApi';
+import useAppError from '../hooks/useAppError';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import {
   selecteSettingsOllamaModel,
   selectSettingsChatGptApikey,
@@ -21,6 +22,8 @@ import Loader from './molecules/Loader';
 import OllamaLogo from './molecules/OllamaLogo';
 
 const ChatBotWindow = (): JSX.Element | null => {
+  const { throwAppError } = useAppError();
+
   const dispatch = useAppDispatch();
 
   const utility = useAppSelector(selectUtilityName);
@@ -31,104 +34,87 @@ const ChatBotWindow = (): JSX.Element | null => {
   const ollamaUrl = useAppSelector(selectSettingsOllamaUrl);
   const ollamaModel = useAppSelector(selecteSettingsOllamaModel);
 
-  const minSettingsRequirementsMet = chatGptApiKey || (ollamaUrl && ollamaModel.length);
-
   const [selectedBot, setSelectedBot] = useState<'ChatGPT' | 'Ollama'>(
     chatGptApiKey ? 'ChatGPT' : 'Ollama'
   );
-  function handleSelectBot() {
+  const changeSelectedBot = () => {
     setSelectedBot(prevBot => {
-      if (prevBot === 'Ollama' && chatGptApiKey) {
-        return 'ChatGPT';
-      }
-
-      if (prevBot === 'ChatGPT' && ollamaUrl && ollamaModel.length) {
-        return 'Ollama';
-      }
+      if (prevBot === 'Ollama' && chatGptApiKey) return 'ChatGPT';
+      if (prevBot === 'ChatGPT' && ollamaUrl && ollamaModel.length) return 'Ollama';
 
       return prevBot;
     });
-  }
-
-  const [question, setQuestion] = useState('');
-  useEffect(() => {
-    setQuestion('');
-  }, [utility]);
-
-  function handleTextAreaChange({ target: { value } }: React.ChangeEvent<HTMLTextAreaElement>) {
-    setQuestion(value);
-  }
-
-  const [isChatResponseLoading, setIsChatResponseLoading] = useState(false);
-
-  async function handleAskButtonClick() {
-    setIsChatResponseLoading(true);
-
-    if (selectedBot === 'ChatGPT') {
-      const chatGptApiResponse = await sendChatGptCompletionRequest(
-        platform,
-        utility,
-        chatGptEngine,
-        chatGptApiKey,
-        question
-      );
-
-      if (chatGptApiResponse) {
-        if ('data' in chatGptApiResponse) {
-          dispatch(
-            addBotAnswer({
-              id: uuid(),
-              content: JSON.stringify(chatGptApiResponse.data),
-            })
-          );
-
-          setQuestion('');
-          setBotChatboxOpen(false);
-        }
-
-        if ('error' in chatGptApiResponse) {
-          dispatch(setToastError(chatGptApiResponse.error));
-        }
-      }
-    } else {
-      try {
-        const ollamaServerResponse = await sendOllamaChatCompletionRequest(
-          ollamaUrl,
-          ollamaModel,
-          utility,
-          platform,
-          question
-        );
-        if (ollamaServerResponse.statusText === 'OK') {
-          dispatch(
-            addBotAnswer({
-              id: uuid(),
-              content: JSON.stringify(ollamaServerResponse.data.response),
-            })
-          );
-
-          setQuestion('');
-          setBotChatboxOpen(false);
-        } else {
-          dispatch(setToastError('Failed to generate a response'));
-        }
-      } catch (error) {
-        dispatch(setToastError(parseOllamaChatCompletion(error)));
-      }
-    }
-
-    setIsChatResponseLoading(false);
-  }
+  };
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [botChatboxOpen, setBotChatboxOpen] = useState(false);
 
-  function handleBotIconClick() {
+  const [chatQuery, setChatQuery] = useState('');
+  useEffect(() => {
+    setChatQuery('');
+  }, [utility]);
+
+  const toggleChatBotWindow = () => {
     setBotChatboxOpen(isOpen => !isOpen);
     setTimeout(() => {
       if (botChatboxOpen) textAreaRef.current?.focus();
     }, 0);
-  }
+  };
+
+  const { isLoading: isChatGptQueryInProgress, refetch: sendChatGptQuery } = useQuery({
+    queryKey: ['chatGptApiQuery', { platform, utility, chatGptEngine, chatGptApiKey, chatQuery }],
+    queryFn: sendChatGptCompletionRequest,
+    enabled: false,
+    gcTime: 0,
+    retry: false,
+  });
+
+  const { isLoading: isOllamaQueryInProgress, refetch: sendOllamaQuery } = useQuery({
+    queryKey: ['ollamaApiQuery', { platform, utility, ollamaUrl, ollamaModel, chatQuery }],
+    queryFn: sendOllamaChatCompletionRequest,
+    enabled: false,
+    gcTime: 0,
+    retry: false,
+  });
+
+  const isBotQueryInProgress = isChatGptQueryInProgress || isOllamaQueryInProgress;
+
+  const sendChatBotQuery = async () => {
+    if (selectedBot === 'ChatGPT') {
+      const { data, error, isSuccess, isError } = await sendChatGptQuery();
+
+      if (isError) {
+        throwAppError(handleChatGptError(error));
+      }
+
+      if (isSuccess) {
+        dispatch(
+          addBotAnswer({
+            id: uuid(),
+            content: data.choices[0].message.content,
+          })
+        );
+
+        setChatQuery('');
+        setBotChatboxOpen(false);
+      }
+    } else {
+      const { data, error, isSuccess, isError } = await sendOllamaQuery();
+
+      if (isError) {
+        throwAppError(handleOllamaServerError(error));
+      }
+
+      if (isSuccess) {
+        dispatch(
+          addBotAnswer({
+            id: uuid(),
+            content: data.response,
+          })
+        );
+      }
+    }
+  };
 
   return utility ? (
     <div className='fixed w-full flex justify-end bottom-3 right-3'>
@@ -136,59 +122,57 @@ const ChatBotWindow = (): JSX.Element | null => {
         className='z-50 duration-0 bg-gray-100'
         trigger='click'
         content={
-          <>
-            {!minSettingsRequirementsMet ? (
-              <div className='w-80 p-4'>
-                <p className='text-black dark:text-white'>
-                  To ask a bot questions, first either add your{' '}
-                  <span className='text-cyan-normal'>OpenAI</span> API key or configure{' '}
-                  <span className='text-cyan-normal'>Ollama </span>
-                  server in
-                  <span>
-                    {' '}
-                    <Link
-                      className='underline md:whitespace-pre text-cyan-normal hover:text-cyan-deep cursor-pointer'
-                      to='/settings'>
-                      Settings
-                    </Link>{' '}
-                  </span>
-                </p>
+          chatGptApiKey || (ollamaUrl && ollamaModel.length) ? (
+            <>
+              <Textarea
+                className='focus-visible:outline-none p-4 w-72 md:w-96 h-52 '
+                value={chatQuery}
+                disabled={isBotQueryInProgress}
+                onChange={({ target: { value } }) => setChatQuery(value)}
+                placeholder={`What do you want to ask ${selectedBot} about ${utility}?`}
+              />
+              <div className='flex justify-between'>
+                <button
+                  disabled={isBotQueryInProgress}
+                  className='w-fit h-fit self-center mt-2 rounded-full bg-cyan-normal cursor-pointer hover:bg-cyan-deep'
+                  onClick={changeSelectedBot}>
+                  {selectedBot === 'ChatGPT' ? <ChatGPTLogo /> : <OllamaLogo />}
+                </button>
+                <Button
+                  disabled={isBotQueryInProgress || !chatQuery}
+                  className='mt-2 float-right w-24'
+                  onClick={sendChatBotQuery}>
+                  {isBotQueryInProgress ? (
+                    <Loader size='sm' />
+                  ) : (
+                    <span className='transition-none'>Ask</span>
+                  )}
+                </Button>
               </div>
-            ) : (
-              <>
-                <Textarea
-                  className='focus-visible:outline-none p-4 w-72 md:w-96 h-52 '
-                  value={question}
-                  onChange={handleTextAreaChange}
-                  disabled={isChatResponseLoading}
-                  placeholder={`What do you want to ask ${selectedBot} about ${utility}?`}
-                />
-                <div className='flex justify-between'>
-                  <div
-                    className='w-fit h-fit self-center mt-2 rounded-full bg-cyan-normal cursor-pointer hover:bg-cyan-deep'
-                    onClick={handleSelectBot}>
-                    {selectedBot === 'ChatGPT' ? <ChatGPTLogo /> : <OllamaLogo />}
-                  </div>
-
-                  <Button
-                    disabled={isChatResponseLoading || !question}
-                    className='mt-2 float-right w-24'
-                    onClick={handleAskButtonClick}>
-                    {isChatResponseLoading ? (
-                      <Loader size='sm' />
-                    ) : (
-                      <span className='transition-none'>Ask</span>
-                    )}
-                  </Button>
-                </div>
-              </>
-            )}
-          </>
+            </>
+          ) : (
+            <div className='w-80 p-4'>
+              <p className='text-black dark:text-white'>
+                To ask a bot questions, first either add your{' '}
+                <span className='text-cyan-normal'>OpenAI</span> API key or configure{' '}
+                <span className='text-cyan-normal'>Ollama </span>
+                server in
+                <span>
+                  {' '}
+                  <Link
+                    className='underline md:whitespace-pre text-cyan-normal hover:text-cyan-deep cursor-pointer'
+                    to='/settings'>
+                    Settings
+                  </Link>{' '}
+                </span>
+              </p>
+            </div>
+          )
         }>
         <Button
-          onClick={handleBotIconClick}
-          disabled={isChatResponseLoading}
-          className={`p-0 rounded-full w-12 h-12 animate-none hover:animate-bounce border-none shadow-2xl z-50`}>
+          onClick={toggleChatBotWindow}
+          disabled={isBotQueryInProgress}
+          className='p-0 rounded-full w-12 h-12 border-none shadow-2xl z-50 animate-none hover:animate-bounce'>
           <FaRobot
             scale={100}
             className='text-xl'

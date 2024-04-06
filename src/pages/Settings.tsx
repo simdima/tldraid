@@ -1,15 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Label, Select, TextInput } from 'flowbite-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { CHAT_GPT_ENGINES } from '../@types';
+import { getOllamaModels, handleOllamaServerError, OllamaModel } from '../api/ollamaApi';
 import Loader from '../components/molecules/Loader';
-import useFetchOllamaModels from '../hooks/useFetchOllamaModels';
+import useAppError from '../hooks/useAppError';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import {
   changeChatGptApiKey,
   changeChatGptEngine,
@@ -55,7 +56,11 @@ type SettingsFormInputs = yup.InferType<typeof settingsSchema>;
 const Settings = () => {
   const history = useHistory();
 
-  const { data: languagesResponse, isLoading, isError } = useGetLanguagesQuery('');
+  const {
+    data: languagesResponse,
+    isLoading: isLanguagesLoading,
+    isError: isLanguagesError,
+  } = useGetLanguagesQuery('');
 
   const dispatch = useAppDispatch();
 
@@ -66,12 +71,13 @@ const Settings = () => {
   const ollamaUrl = useAppSelector(selectSettingsOllamaUrl);
   const ollamaModel = useAppSelector(selecteSettingsOllamaModel);
 
+  const { throwAppError, clearAppError } = useAppError();
+
   const {
     control,
     formState: { errors },
     getValues,
     handleSubmit,
-    setError,
     setValue,
     trigger,
   } = useForm<SettingsFormInputs>({
@@ -85,25 +91,61 @@ const Settings = () => {
     },
   });
 
-  const { isServerFound, serverModels } = useFetchOllamaModels(getValues('ollamaUrl'));
+  const [ollamaServerModels, setOllamaServerModels] = useState<OllamaModel[]>([]);
+
+  const currentOllamaUrl = getValues('ollamaUrl').trim();
+  const queryClient = useQueryClient();
+  const { refetch: fetchOllamaModels } = useQuery({
+    queryKey: ['ollamaModels', ollamaModel, errors],
+    queryFn: () => getOllamaModels(currentOllamaUrl),
+    enabled: false,
+    retry: false,
+    gcTime: 0,
+    staleTime: 0,
+  });
 
   useEffect(() => {
-    if (!isServerFound && !errors.ollamaUrl) {
-      dispatch(setToastError('API server with this address not found'));
-    } else {
-      dispatch(setToastError(''));
-    }
+    if (!currentOllamaUrl.trim()) {
+      clearAppError();
 
-    if (serverModels.length) {
-      if (serverModels.find(model => model.name === ollamaModel)) {
-        setValue('ollamaModel', ollamaModel);
-      } else {
-        setValue('ollamaModel', serverModels[0].name);
-      }
-    } else {
+      setOllamaServerModels([]);
       setValue('ollamaModel', '');
+    } else if (/^https?:\/\/.+$/.test(currentOllamaUrl.trim())) {
+      const timeout = setTimeout(async () => {
+        queryClient.removeQueries({ queryKey: ['ollamaModels'] });
+
+        const { data, isError, isSuccess, error } = await fetchOllamaModels();
+
+        if (isError) {
+          setOllamaServerModels([]);
+          setValue('ollamaModel', '');
+
+          throwAppError(handleOllamaServerError(error));
+        }
+        if (isSuccess) {
+          clearAppError();
+
+          setOllamaServerModels(data.models);
+
+          if (data.models.find(m => m.name === ollamaModel)) {
+            setValue('ollamaModel', ollamaModel);
+          } else {
+            setValue('ollamaModel', data.models[0].name);
+          }
+        }
+      }, 1e3);
+
+      return () => clearTimeout(timeout);
     }
-  }, [dispatch, errors.ollamaUrl, isServerFound, ollamaModel, serverModels, setError, setValue]);
+  }, [
+    clearAppError,
+    currentOllamaUrl,
+    fetchOllamaModels,
+    ollamaModel,
+    queryClient,
+    setValue,
+    throwAppError,
+  ]);
 
   const updateSettings: SubmitHandler<SettingsFormInputs> = data => {
     dispatch(changeLanguage(data.language));
@@ -115,14 +157,14 @@ const Settings = () => {
     history.push('/');
   };
 
-  if (isError) {
-    dispatch(setToastError('Failed to get available languages'));
-
-    return null;
+  if (isLanguagesLoading) {
+    return <Loader size='xl' />;
   }
 
-  if (isLoading) {
-    return <Loader size='xl' />;
+  if (isLanguagesError) {
+    throwAppError('Failed to get available languages');
+
+    return null;
   }
 
   return (
@@ -229,8 +271,10 @@ const Settings = () => {
               name='ollamaModel'
               control={control}
               render={({ field }) => (
-                <Select {...field}>
-                  {serverModels.map(({ digest, model, name }) => (
+                <Select
+                  {...field}
+                  disabled={ollamaServerModels.length === 0}>
+                  {ollamaServerModels.map(({ digest, model, name }) => (
                     <option
                       key={digest}
                       value={model}>
@@ -247,7 +291,7 @@ const Settings = () => {
           type='submit'
           disabled={
             Object.keys(errors).length > 0 ||
-            (getValues('ollamaUrl') !== '' && serverModels.length === 0)
+            (currentOllamaUrl !== '' && ollamaServerModels.length === 0)
           }>
           Save
         </Button>

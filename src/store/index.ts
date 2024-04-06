@@ -11,7 +11,6 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import loadAndErrorReducer from './reducers/loadAndErrorSlice';
 import settingsReducer from './reducers/settingsSlice';
 import utilityReducer from './reducers/utilitySlice';
 import tldraidApi from './service/tldraidApi';
@@ -19,7 +18,6 @@ import tldraidApi from './service/tldraidApi';
 const rootReducer = combineReducers({
   settings: settingsReducer,
   utility: utilityReducer,
-  loadAndError: loadAndErrorReducer,
   [tldraidApi.reducerPath]: tldraidApi.reducer,
 });
 
@@ -28,7 +26,7 @@ const persistedReducer = persistReducer(
     key: 'tldraid',
     storage,
     version: 4,
-    blacklist: ['loadAndError', 'utility'].concat([tldraidApi.reducerPath]),
+    blacklist: ['utility'].concat([tldraidApi.reducerPath]),
   },
   rootReducer
 );

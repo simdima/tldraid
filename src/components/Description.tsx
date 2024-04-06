@@ -3,8 +3,8 @@ import { useEffect, useRef } from 'react';
 import { FaTrash } from 'react-icons/fa6';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
+import useAppError from '../hooks/useAppError';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import {
   deleteBotAnswer,
@@ -40,8 +40,10 @@ const Description = (): JSX.Element | null => {
     { skip: !language || !platform || !utility }
   );
 
+  const { throwAppError } = useAppError();
+
   if (isError) {
-    dispatch(setToastError('Failed to fetch selected utility'));
+    throwAppError('Failed to fetch selected utility');
   }
 
   const lastBotAnswerRef = useRef<HTMLDivElement>(null);
@@ -91,7 +93,7 @@ const Description = (): JSX.Element | null => {
                   p: props => <MarkdownList {...props} />,
                   ul: props => <MarkdownList {...props} />,
                 }}>
-                {JSON.parse(content)}
+                {content}
               </ReactMarkdown>
               <Button
                 color='info'

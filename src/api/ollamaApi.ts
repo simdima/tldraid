@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { QueryFunctionContext } from '@tanstack/react-query';
+import axios, { AxiosError } from 'axios';
 
 import { type Platform } from '../@types';
 
@@ -15,16 +16,6 @@ interface OllamaModelsResponse {
   models: OllamaModel[];
 }
 
-function getOllamaModels(baseUrl: string) {
-  return axios.get<OllamaModelsResponse>(`${baseUrl}/api/tags`);
-}
-
-interface OllamaChatCompletionRequest {
-  model: string;
-  prompt: string;
-  stream: boolean;
-}
-
 interface OllamaChatCompletionResponse {
   model: string;
   created_at: string;
@@ -39,32 +30,52 @@ interface OllamaChatCompletionResponse {
   eval_duration: number;
 }
 
-function sendOllamaChatCompletionRequest(
-  baseUrl: string,
-  model: string,
-  utility: string,
-  platform: Platform,
-  question: string
-) {
-  return axios.post<
-    OllamaChatCompletionResponse,
-    AxiosResponse<OllamaChatCompletionResponse>,
-    OllamaChatCompletionRequest
-  >(`${baseUrl}/api/generate`, {
-    model,
+const getOllamaModels = (baseUrl: string): Promise<OllamaModelsResponse> =>
+  axios.get(`${baseUrl}/api/tags`).then(response => response.data);
+
+const sendOllamaChatCompletionRequest = async ({
+  queryKey,
+}: QueryFunctionContext<
+  [
+    string,
+    {
+      ollamaUrl: string;
+      ollamaModel: string;
+      utility: string;
+      platform: Platform;
+      chatQuery: string;
+    }
+  ]
+>): Promise<OllamaChatCompletionResponse> => {
+  const [, { ollamaUrl, ollamaModel, utility, platform, chatQuery }] = queryKey;
+  const response = await axios.post(`${ollamaUrl}/api/generate`, {
+    model: ollamaModel,
     prompt: `I'm using '${utility}' utility ${
       platform === 'common' ? '' : `on a ${platform} system`
-    }. ${question}. Respond with markdown`,
+    }. ${chatQuery}. Respond with markdown`,
     stream: false,
   });
-}
 
-function parseOllamaChatCompletion(error: unknown) {
-  if (error instanceof AxiosError && error.response && 'error' in error.response.data) {
-    return `Ollama server responded with: ${error.response.data.error}`;
+  return response.data;
+};
+
+const handleOllamaServerError = (error: unknown) => {
+  if (error instanceof AxiosError) {
+    console.error(error.message);
+
+    if (error.message === 'Network Error') {
+      return 'No Ollama server found at this URL';
+    }
+
+    return 'Ollama default Axios Error';
   }
 
-  return 'Ollama server responded with error';
-}
+  console.error(error);
+  if (error instanceof DOMException) {
+    return error.message;
+  }
 
-export { getOllamaModels, parseOllamaChatCompletion, sendOllamaChatCompletionRequest };
+  return 'Unknown Ollama server error';
+};
+
+export { getOllamaModels, handleOllamaServerError, sendOllamaChatCompletionRequest };
