@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { FaAndroid, FaApple, FaLaptop, FaLinux, FaWindows } from 'react-icons/fa6';
 
 import { type Platform } from '../@types';
+import useAppError from '../hooks/useAppError';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { setToastError } from '../store/reducers/loadAndErrorSlice';
 import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
 import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
 import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
@@ -19,6 +19,8 @@ const Search = (): JSX.Element | null => {
   const utility = useAppSelector(selectUtilityName);
 
   const { data: utilitiesResponse = [], isError } = useGetUtilitiesQuery(platform);
+
+  const { throwAppError } = useAppError();
 
   const [utilities, setUtilities] = useState<string[]>([]);
 
@@ -75,7 +77,7 @@ const Search = (): JSX.Element | null => {
   }
 
   if (isError) {
-    dispatch(setToastError('Failed to get list of utilities'));
+    throwAppError('Failed to get list of utilities');
 
     return null;
   }
