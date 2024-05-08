@@ -29,7 +29,7 @@
     "react-router-dom": "^5.3.4",
     "redux-persist": "^6.0.0",
     "uuid": "^9.0.1",
-    "yup": "^1.4.0"
+    "zod": "^3.23.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",

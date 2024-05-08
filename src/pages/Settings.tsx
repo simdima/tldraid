@@ -1,12 +1,11 @@
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Label, Select, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import * as yup from 'yup';
+import { z } from 'zod';
 
-import { CHAT_GPT_ENGINES } from '../@types';
 import { getOllamaModels, handleOllamaServerError, OllamaModel } from '../api/ollamaApi';
 import Loader from '../components/molecules/Loader';
 import useAppError from '../hooks/useAppError';
@@ -16,42 +15,19 @@ import {
   changeChatGptEngine,
   changeLanguage,
   changeOllamaUrl,
+  ChatGptEngine,
   selecteSettingsOllamaModel,
   selectSettingsChatGptApikey,
   selectSettingsChatGptEngine,
   selectSettingsLanguage,
   selectSettingsOllamaUrl,
+  SettingsSchema,
   updateOllamaModel,
 } from '../store/reducers/settingsSlice';
 import { useGetLanguagesQuery } from '../store/service/tldraidApi';
 
-const settingsSchema = yup.object({
-  language: yup.string().required(),
-  chatGptEngine: yup.string().oneOf(CHAT_GPT_ENGINES).required(),
-  chatGptApiKey: yup
-    .string()
-    .trim()
-    .ensure()
-    .matches(/^.{15,}$/, {
-      message: 'API ket is too short',
-      excludeEmptyString: true,
-    })
-    .matches(/^(?=.*\D)[^\s]+$/, {
-      message: 'Not a valid API key',
-      excludeEmptyString: true,
-    }),
-  ollamaUrl: yup
-    .string()
-    .ensure()
-    .matches(/^https?:\/\/.+$/, { message: 'Not a valid URL', excludeEmptyString: true })
-    .matches(/[^/]$/, {
-      message: 'Remove trailing slash from the url',
-      excludeEmptyString: true,
-    }),
-  ollamaModel: yup.string().ensure(),
-});
-
-type SettingsFormInputs = yup.InferType<typeof settingsSchema>;
+const SettingsSchemaAdjusted = SettingsSchema.omit({ platform: true });
+type SettingsFormInputs = z.infer<typeof SettingsSchemaAdjusted>;
 
 const Settings = () => {
   const history = useHistory();
@@ -81,7 +57,7 @@ const Settings = () => {
     setValue,
     trigger,
   } = useForm<SettingsFormInputs>({
-    resolver: yupResolver(settingsSchema),
+    resolver: zodResolver(SettingsSchemaAdjusted),
     defaultValues: {
       language,
       chatGptEngine,
@@ -93,7 +69,7 @@ const Settings = () => {
 
   const [ollamaServerModels, setOllamaServerModels] = useState<OllamaModel[]>([]);
 
-  const currentOllamaUrl = getValues('ollamaUrl').trim();
+  const currentOllamaUrl = getValues('ollamaUrl');
   const queryClient = useQueryClient();
   const { refetch: fetchOllamaModels } = useQuery({
     queryKey: ['ollamaModels', ollamaModel, errors],
@@ -105,12 +81,12 @@ const Settings = () => {
   });
 
   useEffect(() => {
-    if (!currentOllamaUrl.trim()) {
+    if (errors.ollamaUrl || !currentOllamaUrl) {
       clearAppError();
 
       setOllamaServerModels([]);
       setValue('ollamaModel', '');
-    } else if (/^https?:\/\/.+$/.test(currentOllamaUrl.trim())) {
+    } else {
       const timeout = setTimeout(async () => {
         queryClient.removeQueries({ queryKey: ['ollamaModels'] });
 
@@ -140,6 +116,7 @@ const Settings = () => {
   }, [
     clearAppError,
     currentOllamaUrl,
+    errors,
     fetchOllamaModels,
     ollamaModel,
     queryClient,
@@ -204,7 +181,7 @@ const Settings = () => {
               control={control}
               render={({ field }) => (
                 <Select {...field}>
-                  {CHAT_GPT_ENGINES.map(engine => (
+                  {ChatGptEngine.options.map(engine => (
                     <option key={engine}>{engine}</option>
                   ))}
                 </Select>
