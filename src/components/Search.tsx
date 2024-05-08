@@ -44,7 +44,7 @@ const Search = (): JSX.Element | null => {
     onIsOpenChange: ({ inputValue, isOpen }) => {
       if (isOpen) {
         if (inputValue) {
-          setUtilities(sortUtilities(utilitiesResponse, inputValue));
+          setUtilities(sortUtilities(utilitiesResponse, inputValue.toLowerCase()));
         } else {
           setUtilities([]);
         }
@@ -52,14 +52,14 @@ const Search = (): JSX.Element | null => {
     },
     onInputValueChange: ({ inputValue }) => {
       if (inputValue) {
-        setUtilities(sortUtilities(utilitiesResponse, inputValue));
+        setUtilities(sortUtilities(utilitiesResponse, inputValue.toLowerCase()));
       } else {
         setUtilities([]);
       }
     },
     onSelectedItemChange: ({ inputValue }) => {
       if (inputValue) {
-        dispatch(changeUtility(inputValue));
+        dispatch(changeUtility(inputValue.toLowerCase()));
       }
     },
   });
@@ -127,6 +127,7 @@ const Search = (): JSX.Element | null => {
         <form onSubmit={handleSearchSubmit}>
           <TextInput
             {...getInputProps()}
+            value={inputValue.toLowerCase()}
             sizing='md'
             type='text'
             placeholder='Search for utility...'
