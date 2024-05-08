@@ -1,4 +1,4 @@
-import { type MarkdownElement } from '../../@types';
+import { type MarkdownElement } from './index';
 
 type MarkdownLinkProps = MarkdownElement<HTMLAnchorElement>;
 

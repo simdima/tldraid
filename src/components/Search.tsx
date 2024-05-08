@@ -4,10 +4,13 @@ import { Dropdown, TextInput } from 'flowbite-react';
 import { useState } from 'react';
 import { FaAndroid, FaApple, FaLaptop, FaLinux, FaWindows } from 'react-icons/fa6';
 
-import { type Platform } from '../@types';
 import useAppError from '../hooks/useAppError';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { changePlatform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
+import {
+  changePlatform,
+  type Platform,
+  selectSettingsPlatform,
+} from '../store/reducers/settingsSlice';
 import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
 import { useGetUtilitiesQuery } from '../store/service/tldraidApi';
 import PlatformIcon from './molecules/PlatformIcon';

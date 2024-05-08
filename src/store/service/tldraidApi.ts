@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import { type Platform } from '../../@types';
+import { type Platform } from '../reducers/settingsSlice';
 
 const tlraidApi = createApi({
   reducerPath: 'tlraidApi',

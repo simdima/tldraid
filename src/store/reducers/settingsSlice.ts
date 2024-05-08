@@ -1,18 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { z } from 'zod';
 
-import { ChatGptEngine, type Platform } from '../../@types';
 import { RootState } from '..';
 
-export interface SettingsState {
-  language: string;
-  platform: Platform;
-  chatGptEngine: ChatGptEngine;
-  chatGptApiKey: string;
-  ollamaUrl: string;
-  ollamaModel: string;
-}
+const Platform = z.enum(['android', 'common', 'linux', 'osx', 'windows']);
+export type Platform = z.infer<typeof Platform>;
 
-const initialState: SettingsState = {
+export const ChatGptEngine = z.enum(['gpt-3.5-turbo', 'gpt-4']);
+export type ChatGptEngine = z.infer<typeof ChatGptEngine>;
+
+export const SettingsSchema = z.object({
+  language: z.string().min(2).max(5),
+  platform: Platform,
+  chatGptEngine: ChatGptEngine,
+  chatGptApiKey: z.string().trim().min(15, { message: 'API key is too short' }).or(z.literal('')),
+  ollamaUrl: z
+    .string()
+    .trim()
+    .url()
+    .regex(/[^/]$/, { message: 'Remove trailing slash' })
+    .or(z.literal('')),
+  ollamaModel: z.string().or(z.literal('')),
+});
+
+const initialState: z.infer<typeof SettingsSchema> = {
   language: 'en',
   platform: 'common',
   chatGptEngine: 'gpt-3.5-turbo',

@@ -1,7 +1,7 @@
 import { QueryFunctionContext } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 
-import { type Platform } from '../@types';
+import { type Platform } from '../store/reducers/settingsSlice';
 
 export interface OllamaModel {
   name: string;
