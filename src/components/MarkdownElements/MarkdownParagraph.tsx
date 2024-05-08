@@ -9,14 +9,14 @@ const MarkdownParagraph = (props: MarkdownParagraphProps) => {
     (props.children as JSX.Element[]).find(({ type }) => type === 'code')
   ) {
     return (
-      <p className='bg-cyan-normal w-fit text-white text-sm rounded px-2 py-1 mt-1 mb-6 font-mono'>
+      <p className="mb-6 mt-1 w-fit rounded bg-cyan-normal px-2 py-1 font-mono text-sm text-white">
         {props.children}
       </p>
     );
   }
 
   return (
-    <p className='text-center my-4 pb-4 mx-auto dark:text-white mb-6 text-lg  max-w-[500px] md:text-center'>
+    <p className="mx-auto my-4 mb-6 max-w-[500px] pb-4 text-center text-lg  md:text-center dark:text-white">
       {props.children}
     </p>
   );

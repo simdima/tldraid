@@ -4,7 +4,7 @@ type MarkdownCodeProps = CodeProps;
 
 const MarkdownCode = (props: MarkdownCodeProps) => {
   return (
-    <p className='bg-cyan-normal w-fit text-white text-sm rounded px-2 py-1 mt-1 mb-6 font-mono'>
+    <p className="mb-6 mt-1 w-fit rounded bg-cyan-normal px-2 py-1 font-mono text-sm text-white">
       {props.children}
     </p>
   );
