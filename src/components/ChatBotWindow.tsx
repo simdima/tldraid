@@ -117,66 +117,68 @@ const ChatBotWindow = (): JSX.Element | null => {
   };
 
   return utility ? (
-    <div className='fixed w-full flex justify-end bottom-3 right-3'>
+    <div className="fixed bottom-3 right-3 flex w-full justify-end">
       <Tooltip
-        className='z-50 duration-0 bg-gray-100'
-        trigger='click'
+        className="z-50 bg-gray-100 duration-0"
+        trigger="click"
         content={
           chatGptApiKey || (ollamaUrl && ollamaModel.length) ? (
             <>
               <Textarea
-                className='focus-visible:outline-none p-4 w-72 md:w-96 h-52 '
+                className="h-52 w-72 p-4 focus-visible:outline-none md:w-96 "
                 value={chatQuery}
                 disabled={isBotQueryInProgress}
                 onChange={({ target: { value } }) => setChatQuery(value)}
                 placeholder={`What do you want to ask ${selectedBot} about ${utility}?`}
               />
-              <div className='flex justify-between'>
+              <div className="flex justify-between">
                 <button
                   disabled={isBotQueryInProgress}
-                  className='w-fit h-fit self-center mt-2 rounded-full bg-cyan-normal cursor-pointer hover:bg-cyan-deep'
-                  onClick={changeSelectedBot}>
+                  className="mt-2 h-fit w-fit cursor-pointer self-center rounded-full bg-cyan-normal hover:bg-cyan-deep"
+                  onClick={changeSelectedBot}
+                >
                   {selectedBot === 'ChatGPT' ? <ChatGPTLogo /> : <OllamaLogo />}
                 </button>
                 <Button
                   disabled={isBotQueryInProgress || !chatQuery}
-                  className='mt-2 float-right w-24'
-                  onClick={sendChatBotQuery}>
+                  className="float-right mt-2 w-24"
+                  onClick={sendChatBotQuery}
+                >
                   {isBotQueryInProgress ? (
-                    <Loader size='sm' />
+                    <Loader size="sm" />
                   ) : (
-                    <span className='transition-none'>Ask</span>
+                    <span className="transition-none">Ask</span>
                   )}
                 </Button>
               </div>
             </>
           ) : (
-            <div className='w-80 p-4'>
-              <p className='text-black dark:text-white'>
+            <div className="w-80 p-4">
+              <p className="text-black dark:text-white">
                 To ask a bot questions, first either add your{' '}
-                <span className='text-cyan-normal'>OpenAI</span> API key or configure{' '}
-                <span className='text-cyan-normal'>Ollama </span>
+                <span className="text-cyan-normal">OpenAI</span> API key or configure{' '}
+                <span className="text-cyan-normal">Ollama </span>
                 server in
                 <span>
                   {' '}
                   <Link
-                    className='underline md:whitespace-pre text-cyan-normal hover:text-cyan-deep cursor-pointer'
-                    to='/settings'>
+                    className="cursor-pointer text-cyan-normal underline hover:text-cyan-deep md:whitespace-pre"
+                    to="/settings"
+                  >
                     Settings
                   </Link>{' '}
                 </span>
               </p>
             </div>
           )
-        }>
+        }
+      >
         <Button
           onClick={toggleChatBotWindow}
           disabled={isBotQueryInProgress}
-          className='p-0 rounded-full w-12 h-12 border-none shadow-2xl z-50 animate-none hover:animate-bounce'>
-          <FaRobot
-            scale={100}
-            className='text-xl'
-          />
+          className="z-50 h-12 w-12 animate-none rounded-full border-none p-0 shadow-2xl hover:animate-bounce"
+        >
+          <FaRobot scale={100} className="text-xl" />
         </Button>
       </Tooltip>
     </div>

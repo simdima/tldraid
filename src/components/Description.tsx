@@ -56,17 +56,12 @@ const Description = (): JSX.Element | null => {
   };
 
   return (
-    <div className='relative min-h-[100dvh] mb-4'>
-      {isLoading && (
-        <Loader
-          size='xl'
-          className='w-full mx-auto my-10'
-        />
-      )}
+    <div className="relative mb-4 min-h-[100dvh]">
+      {isLoading && <Loader size="xl" className="mx-auto my-10 w-full" />}
 
       {utility && utilityResponse && (
         <>
-          <div className='w-11/12 md:w-5/12 text-left mx-auto mb-4 opacity-0 animate-fade-in-no-delay'>
+          <div className="mx-auto mb-4 w-11/12 animate-fade-in-no-delay text-left opacity-0 md:w-5/12">
             <ReactMarkdown
               unwrapDisallowed
               components={{
@@ -75,32 +70,36 @@ const Description = (): JSX.Element | null => {
                 a: props => <MarkdownLink {...props} />,
                 ul: props => <MarkdownList {...props} />,
               }}
-              key={utility}>
+              key={utility}
+            >
               {utilityResponse.description}
             </ReactMarkdown>
           </div>
 
           {botAnswers[utility]?.map(({ id, content }, idx) => (
             <div
-              className='w-11/12 md:w-5/12 text-left mx-auto mb-4 flex'
+              className="mx-auto mb-4 flex w-11/12 text-left md:w-5/12"
               key={id}
-              ref={idx === botAnswers[utility]?.length - 1 ? lastBotAnswerRef : null}>
+              ref={idx === botAnswers[utility]?.length - 1 ? lastBotAnswerRef : null}
+            >
               <ReactMarkdown
-                className='w-11/12'
+                className="w-11/12"
                 unwrapDisallowed
                 components={{
                   pre: props => <MarkdownParagraph {...props} />,
                   p: props => <MarkdownList {...props} />,
                   ul: props => <MarkdownList {...props} />,
-                }}>
+                }}
+              >
                 {content}
               </ReactMarkdown>
               <Button
-                color='info'
-                size='xs'
-                aria-label='delete'
-                className='!bg-gray-500 self-start w-fit h-fit opacity-30 hover:opacity-100 transition-all duration-200'
-                onClick={() => handleDeleteBotAnswer(id)}>
+                color="info"
+                size="xs"
+                aria-label="delete"
+                className="h-fit w-fit self-start !bg-gray-500 opacity-30 transition-all duration-200 hover:opacity-100"
+                onClick={() => handleDeleteBotAnswer(id)}
+              >
                 <FaTrash />
               </Button>
             </div>

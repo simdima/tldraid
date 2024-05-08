@@ -44,7 +44,7 @@ const sendOllamaChatCompletionRequest = async ({
       utility: string;
       platform: Platform;
       chatQuery: string;
-    }
+    },
   ]
 >): Promise<OllamaChatCompletionResponse> => {
   const [, { ollamaUrl, ollamaModel, utility, platform, chatQuery }] = queryKey;

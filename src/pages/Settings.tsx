@@ -135,7 +135,7 @@ const Settings = () => {
   };
 
   if (isLanguagesLoading) {
-    return <Loader size='xl' />;
+    return <Loader size="xl" />;
   }
 
   if (isLanguagesError) {
@@ -145,19 +145,14 @@ const Settings = () => {
   }
 
   return (
-    <div className='w-11/12 md:w-5/12 mx-auto mt-8 opacity-0 animate-fade-in-no-delay'>
-      <form
-        onSubmit={handleSubmit(updateSettings)}
-        className='flex w-full flex-col gap-4'>
+    <div className="mx-auto mt-8 w-11/12 animate-fade-in-no-delay opacity-0 md:w-5/12">
+      <form onSubmit={handleSubmit(updateSettings)} className="flex w-full flex-col gap-4">
         <div>
-          <div className='mb-2 block'>
-            <Label
-              htmlFor='language'
-              value='Language:'
-            />
+          <div className="mb-2 block">
+            <Label htmlFor="language" value="Language:" />
           </div>
           <Controller
-            name='language'
+            name="language"
             control={control}
             render={({ field }) => (
               <Select {...field}>
@@ -170,14 +165,11 @@ const Settings = () => {
 
         <>
           <div>
-            <div className='mb-2 block'>
-              <Label
-                htmlFor='chatGptEngine'
-                value='GPT engine version:'
-              />
+            <div className="mb-2 block">
+              <Label htmlFor="chatGptEngine" value="GPT engine version:" />
             </div>
             <Controller
-              name='chatGptEngine'
+              name="chatGptEngine"
               control={control}
               render={({ field }) => (
                 <Select {...field}>
@@ -189,19 +181,16 @@ const Settings = () => {
             />
           </div>
           <div>
-            <div className='mb-2 block'>
-              <Label
-                htmlFor='chatGptApiKey'
-                value='OpenAI API key:'
-              />
+            <div className="mb-2 block">
+              <Label htmlFor="chatGptApiKey" value="OpenAI API key:" />
             </div>
             <Controller
-              name='chatGptApiKey'
+              name="chatGptApiKey"
               control={control}
               render={({ field }) => (
                 <TextInput
                   {...field}
-                  type='password'
+                  type="password"
                   color={errors.chatGptApiKey ? 'failure' : 'gray'}
                   helperText={errors.chatGptApiKey && <span>{errors.chatGptApiKey.message}</span>}
                   onChange={e => {
@@ -213,20 +202,17 @@ const Settings = () => {
             />
           </div>
           <div>
-            <div className='mb-2 block'>
-              <Label
-                htmlFor='ollamaUrl'
-                value='Ollama API server URL:'
-              />
+            <div className="mb-2 block">
+              <Label htmlFor="ollamaUrl" value="Ollama API server URL:" />
             </div>
             <Controller
-              name='ollamaUrl'
+              name="ollamaUrl"
               control={control}
               render={({ field }) => (
                 <TextInput
                   {...field}
-                  type='text'
-                  placeholder='http://localhost:11434'
+                  type="text"
+                  placeholder="http://localhost:11434"
                   onChange={e => {
                     field.onChange(e);
                     trigger('ollamaUrl');
@@ -238,23 +224,16 @@ const Settings = () => {
             />
           </div>
           <div>
-            <div className='mb-2 block'>
-              <Label
-                htmlFor='ollamaModels'
-                value='Ollama model:'
-              />
+            <div className="mb-2 block">
+              <Label htmlFor="ollamaModels" value="Ollama model:" />
             </div>
             <Controller
-              name='ollamaModel'
+              name="ollamaModel"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  disabled={ollamaServerModels.length === 0}>
+                <Select {...field} disabled={ollamaServerModels.length === 0}>
                   {ollamaServerModels.map(({ digest, model, name }) => (
-                    <option
-                      key={digest}
-                      value={model}>
+                    <option key={digest} value={model}>
                       {name}
                     </option>
                   ))}
@@ -265,11 +244,12 @@ const Settings = () => {
         </>
 
         <Button
-          type='submit'
+          type="submit"
           disabled={
             Object.keys(errors).length > 0 ||
             (currentOllamaUrl !== '' && ollamaServerModels.length === 0)
-          }>
+          }
+        >
           Save
         </Button>
       </form>

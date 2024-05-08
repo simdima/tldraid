@@ -13,21 +13,14 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <header className='h-1/4 flex-none'>
+      <header className="h-1/4 flex-none">
         <Header />
       </header>
-      <main className='flex flex-col flex-grow'>
-        <Suspense fallback={<Loader size='xl' />}>
+      <main className="flex flex-grow flex-col">
+        <Suspense fallback={<Loader size="xl" />}>
           <Switch>
-            <Route
-              path='/'
-              exact
-              component={Home}
-            />
-            <Route
-              path='/settings'
-              component={Settings}
-            />
+            <Route path="/" exact component={Home} />
+            <Route path="/settings" component={Settings} />
           </Switch>
         </Suspense>
       </main>

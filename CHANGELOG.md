@@ -1,5 +1,16 @@
 # What's Changed
 
+## 1.3.9 - 2024-05-08
+
+### Added
+
+- Swap yup library for [zod](https://zod.dev) for more fine-tuning and validation
+- Make search term text always lowercase
+
+### Fixed
+
+- Utility links wrapping issues
+
 ## 1.3.8 - 2024-04-06
 
 ### Added

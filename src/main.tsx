@@ -17,9 +17,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <QueryClientProvider client={queryClient}>
       <AppErrorContextProvider>
         <Provider store={store}>
-          <PersistGate
-            loading={null}
-            persistor={persistor}>
+          <PersistGate loading={null} persistor={persistor}>
             <App />
           </PersistGate>
         </Provider>

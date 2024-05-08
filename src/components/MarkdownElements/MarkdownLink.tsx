@@ -8,7 +8,8 @@ const MarkdownLink = ({ children }: MarkdownLinkProps) => {
   return (
     <a
       href={href ? (href as string) : ''}
-      className='underline md:whitespace-pre-wrap text-cyan-normal hover:text-cyan-deep cursor-pointer'>
+      className="cursor-pointer text-cyan-normal underline hover:text-cyan-deep md:whitespace-pre-wrap"
+    >
       {children}
     </a>
   );

@@ -17,7 +17,7 @@ export interface ChatGptResponse {
         content: string;
       };
       finish_reason: string;
-    }
+    },
   ];
   usage: {
     prompt_tokens: number;
@@ -44,7 +44,7 @@ const sendChatGptCompletionRequest = async ({
       chatGptEngine: ChatGptEngine;
       chatGptApiKey: string;
       chatQuery: string;
-    }
+    },
   ]
 >): Promise<ChatGptResponse> => {
   const [, { platform, utility, chatGptEngine, chatGptApiKey, chatQuery }] = queryKey;

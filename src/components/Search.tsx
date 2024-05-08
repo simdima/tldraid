@@ -86,61 +86,51 @@ const Search = (): JSX.Element | null => {
   }
 
   return (
-    <div className='w-11/12 md:w-5/12 my-8 mx-auto flex relative z-50'>
+    <div className="relative z-50 mx-auto my-8 flex w-11/12 md:w-5/12">
       <div
         className={cls(
           'flex',
           { 'opacity-100': utility },
-          { 'opacity-0 animate-right-appear': !utility }
-        )}>
-        <Dropdown
-          arrowIcon={false}
-          label={<PlatformIcon platform={platform} />}>
-          <Dropdown.Item
-            icon={FaLaptop}
-            onClick={() => handlePlatformChange('common')}>
+          { 'animate-right-appear opacity-0': !utility }
+        )}
+      >
+        <Dropdown arrowIcon={false} label={<PlatformIcon platform={platform} />}>
+          <Dropdown.Item icon={FaLaptop} onClick={() => handlePlatformChange('common')}>
             Universal
           </Dropdown.Item>
-          <Dropdown.Item
-            icon={FaAndroid}
-            onClick={() => handlePlatformChange('android')}>
+          <Dropdown.Item icon={FaAndroid} onClick={() => handlePlatformChange('android')}>
             Android
           </Dropdown.Item>
-          <Dropdown.Item
-            icon={FaLinux}
-            onClick={() => handlePlatformChange('linux')}>
+          <Dropdown.Item icon={FaLinux} onClick={() => handlePlatformChange('linux')}>
             Linux
           </Dropdown.Item>
-          <Dropdown.Item
-            icon={FaApple}
-            onClick={() => handlePlatformChange('osx')}>
+          <Dropdown.Item icon={FaApple} onClick={() => handlePlatformChange('osx')}>
             OSX
           </Dropdown.Item>
-          <Dropdown.Item
-            icon={FaWindows}
-            onClick={() => handlePlatformChange('windows')}>
+          <Dropdown.Item icon={FaWindows} onClick={() => handlePlatformChange('windows')}>
             Windows
           </Dropdown.Item>
         </Dropdown>
       </div>
-      <div className='w-full ml-2 flex flex-col relative'>
+      <div className="relative ml-2 flex w-full flex-col">
         <form onSubmit={handleSearchSubmit}>
           <TextInput
             {...getInputProps()}
             value={inputValue.toLowerCase()}
-            sizing='md'
-            type='text'
-            placeholder='Search for utility...'
+            sizing="md"
+            type="text"
+            placeholder="Search for utility..."
             className={cls(
-              'dark:bg-gray-700 rounded-xl',
+              'rounded-xl dark:bg-gray-700',
               { 'opacity-100': utility },
-              { 'opacity-0 animate-bottom-appear': !utility }
+              { 'animate-bottom-appear opacity-0': !utility }
             )}
           />
         </form>
         <ul
           {...getMenuProps()}
-          className='rounded shadow focus:outline-none transition-opacity duration-100 border border-gray-200 border-none bg-white dark:bg-gray-700 dark:text-white max-h-[300px] overflow-auto w-full mx-auto text-sm absolute mt-12'>
+          className="absolute mx-auto mt-12 max-h-[300px] w-full overflow-auto rounded border border-none border-gray-200 bg-white text-sm shadow transition-opacity duration-100 focus:outline-none dark:bg-gray-700 dark:text-white"
+        >
           {isOpen &&
             utilities.map((utilityName, index) => (
               <li
@@ -149,9 +139,10 @@ const Search = (): JSX.Element | null => {
                   item: utilityName,
                   index,
                 })}
-                className={`my-2 px-4 py-2 cursor-pointer ${
+                className={`my-2 cursor-pointer px-4 py-2 ${
                   index === highlightedIndex ? ' bg-gray-100 dark:bg-gray-600' : ''
-                }`}>
+                }`}
+              >
                 {utilityName}
               </li>
             ))}
