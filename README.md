@@ -72,8 +72,8 @@ Clone the repository, navigate inside and run:
 
 ```sh
 touch .env && echo "VITE_API_URL=[YOUR_API_SERVER_URL]" > .env
-npm i(nstall)
-npm run dev
+yarn
+yarn run dev
 ```
 
 ## License
