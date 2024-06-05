@@ -1,15 +1,26 @@
-FROM node:20-alpine
+# Configure
+ARG NODE_VERSION=20-alpine
+FROM node:${NODE_VERSION} AS base
 
 WORKDIR /app
 
-COPY package*.json ./
+# Build
+FROM base AS build
 
-RUN npm i
-RUN npm i -g serve
+COPY yarn.lock package.json ./
+
+RUN yarn
 
 COPY . .
 
-RUN npm run build
+RUN yarn build
+
+# Start
+FROM base
+
+RUN npm i -g serve
+
+COPY --from=build /app /app
 
 EXPOSE 3000
 
