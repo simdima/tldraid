@@ -1,4 +1,4 @@
-import { type MarkdownElement } from './index';
+import type { MarkdownElement } from './index';
 
 type MarkdownParagraphProps = MarkdownElement<HTMLParagraphElement | HTMLPreElement>;
 
@@ -16,7 +16,7 @@ const MarkdownParagraph = (props: MarkdownParagraphProps) => {
   }
 
   return (
-    <p className="mx-auto my-4 mb-6 max-w-[500px] pb-4 text-center text-lg  md:text-center dark:text-white">
+    <p className="mx-auto my-4 mb-6 max-w-[500px] pb-4 text-center text-lg md:text-center dark:text-white">
       {props.children}
     </p>
   );
