@@ -13,7 +13,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <header className="h-1/4 flex-none">
+      <header className="flex-none">
         <Header />
       </header>
       <main className="flex flex-grow flex-col">
