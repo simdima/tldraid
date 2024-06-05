@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
+    "prettier:status": "prettier . --check",
+    "prettier:fix": "prettier . --write",
     "lint:status": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint --fix src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -47,7 +49,7 @@
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "postcss": "^8.4.35",
     "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.14",
+    "prettier-plugin-tailwindcss": "^0.6.0",
     "sass": "^1.63.6",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.0.2",
