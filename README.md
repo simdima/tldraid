@@ -1,4 +1,6 @@
-![app_logo](/public/readme-logo.png){ width="200" style="display: block; margin: 0 auto" }
+<p align="center">
+  <img width="200" src="/public/readme-logo.png" alt="app-logo" />
+</p>
 
 A web application that allows you to go through man pages for most common platforms with the help of integrated AI-powered chat bot conversation field where you can ask for specific examples and use cases.
 
@@ -60,7 +62,9 @@ More info on how to run LLM locally here: <https://github.com/ollama/ollama>
 
 To choose between ChatGPT and Ollama, click on bot icon below the textfield in chat bot window:
 
-![image](/public/bot-switch-image.png){ width="500" style="display: block; margin: 0 auto" }
+<p align="center">
+  <img width="500" src="/public/bot-switch-image.png" alt="app-logo" />
+</p>
 
 ## Development
 
