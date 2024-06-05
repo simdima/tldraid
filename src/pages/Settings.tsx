@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { z } from 'zod';
 
 import { getOllamaModels, handleOllamaServerError, OllamaModel } from '../api/ollamaApi';
+import { getLanguages } from '../api/tldraidApi';
 import Loader from '../components/molecules/Loader';
 import useAppError from '../hooks/useAppError';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -24,7 +25,6 @@ import {
   SettingsSchema,
   updateOllamaModel,
 } from '../store/reducers/settingsSlice';
-import { useGetLanguagesQuery } from '../store/service/tldraidApi';
 
 const SettingsSchemaAdjusted = SettingsSchema.omit({ platform: true });
 type SettingsFormInputs = z.infer<typeof SettingsSchemaAdjusted>;
@@ -36,7 +36,11 @@ const Settings = () => {
     data: languagesResponse,
     isLoading: isLanguagesLoading,
     isError: isLanguagesError,
-  } = useGetLanguagesQuery('');
+  } = useQuery({
+    queryKey: ['languages'],
+    queryFn: getLanguages,
+    staleTime: Infinity,
+  });
 
   const dispatch = useAppDispatch();
 

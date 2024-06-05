@@ -13,12 +13,10 @@ import storage from 'redux-persist/lib/storage';
 
 import settingsReducer from './reducers/settingsSlice';
 import utilityReducer from './reducers/utilitySlice';
-import tldraidApi from './service/tldraidApi';
 
 const rootReducer = combineReducers({
   settings: settingsReducer,
   utility: utilityReducer,
-  [tldraidApi.reducerPath]: tldraidApi.reducer,
 });
 
 const persistedReducer = persistReducer(
@@ -26,7 +24,7 @@ const persistedReducer = persistReducer(
     key: 'tldraid',
     storage,
     version: 4,
-    blacklist: ['utility'].concat([tldraidApi.reducerPath]),
+    blacklist: ['utility'],
   },
   rootReducer
 );
@@ -39,7 +37,7 @@ const setupStore = () =>
         serializableCheck: {
           ignoredActions: [FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE],
         },
-      }).concat(tldraidApi.middleware),
+      }),
   });
 
 const store = setupStore();
