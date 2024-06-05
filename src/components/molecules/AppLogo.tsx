@@ -7,7 +7,7 @@ const AppLogo = () => (
       xmlns="http://www.w3.org/2000/svg"
       width={70}
       height={70}
-      className="-ml-3 animate-fade-in-slowest opacity-0"
+      className="-ml-3"
       viewBox="0 0 200.000000 200.000000"
       preserveAspectRatio="xMidYMid meet"
       transform="matrix(1, 0, 0, 1, 0, 0)"
@@ -27,10 +27,10 @@ const AppLogo = () => (
         />
       </g>
     </svg>
-    <span className="-ml-2 self-center whitespace-nowrap text-3xl font-semibold hover:animate-pulse dark:text-white">
-      <span className="relative animate-left-appear">tldr</span>
-      <span className="animate-fade-in-slower text-cyan-normal opacity-0">AI</span>
-      <span className="relative animate-top-appear opacity-0">d</span>
+    <span className="-ml-2 self-center whitespace-nowrap text-3xl font-semibold dark:text-white">
+      <span>tldr</span>
+      <span className="text-cyan-normal">AI</span>
+      <span>d</span>
     </span>
   </Navbar.Brand>
 );

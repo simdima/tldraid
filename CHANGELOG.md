@@ -1,5 +1,18 @@
 # What's Changed
 
+## 1.4.0 - 2024-06-05
+
+### Added
+
+- RTK is now completely removed from the project in favor of React Query
+- Multi staging build in Dockerfile (as a result docker image is now more than 50% smaller)
+
+### Fixed
+
+- Minor layout changes (e.g platform selector was moved inside the search field)
+- Background not taking the full screen in Safari
+- Removed all animations from the header for a cleaner feel
+
 ## 1.3.9 - 2024-05-08
 
 ### Added

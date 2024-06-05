@@ -1,8 +1,10 @@
+import { useQuery } from '@tanstack/react-query';
 import { Button } from 'flowbite-react';
 import { useEffect, useRef } from 'react';
 import { FaTrash } from 'react-icons/fa6';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
+import { getUtilityByName } from '../api/tldraidApi';
 import useAppError from '../hooks/useAppError';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
@@ -11,8 +13,8 @@ import {
   selectUtilityBotAnswers,
   selectUtilityName,
 } from '../store/reducers/utilitySlice';
-import { useGetUtilityQuery } from '../store/service/tldraidApi';
 import ChatBotWindow from './ChatBotWindow';
+import Introduction from './Introduction';
 import MarkdownHeader from './MarkdownElements/MarkdownHeader';
 import MarkdownLink from './MarkdownElements/MarkdownLink';
 import MarkdownList from './MarkdownElements/MarkdownList';
@@ -29,16 +31,15 @@ const Description = (): JSX.Element | null => {
 
   const {
     data: utilityResponse,
-    isLoading,
     isError,
-  } = useGetUtilityQuery(
-    {
-      platform,
-      utility,
-      lang: language,
-    },
-    { skip: !language || !platform || !utility }
-  );
+    isLoading,
+  } = useQuery({
+    queryKey: ['utilityQuery', utility],
+    queryFn: () => getUtilityByName({ platform, language, utility }),
+    enabled: utility !== '',
+    gcTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
   const { throwAppError } = useAppError();
 
@@ -51,11 +52,9 @@ const Description = (): JSX.Element | null => {
     lastBotAnswerRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [botAnswers]);
 
-  const handleDeleteBotAnswer = (id: string) => {
-    dispatch(deleteBotAnswer(id));
-  };
-
-  return (
+  return !utility ? (
+    <Introduction />
+  ) : (
     <div className="relative mb-4 min-h-[100dvh]">
       {isLoading && <Loader size="xl" className="mx-auto my-10 w-full" />}
 
@@ -98,7 +97,7 @@ const Description = (): JSX.Element | null => {
                 size="xs"
                 aria-label="delete"
                 className="h-fit w-fit self-start !bg-gray-500 opacity-30 transition-all duration-200 hover:opacity-100"
-                onClick={() => handleDeleteBotAnswer(id)}
+                onClick={() => dispatch(deleteBotAnswer(id))}
               >
                 <FaTrash />
               </Button>

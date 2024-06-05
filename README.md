@@ -1,12 +1,10 @@
-<p align="center">
-  <img width="200" src="/public/readme-logo.png" alt="app-logo" />
-</p>
+![app_logo](/public/readme-logo.png){ width="200" style="display: block; margin: 0 auto" }
 
 A web application that allows you to go through man pages for most common platforms with the help of integrated AI-powered chat bot conversation field where you can ask for specific examples and use cases.
 
 Starting from version **1.3.0**, aside from [ChatGPT](https://chat.openai.com) bot, the application also allows to use locally running [Ollama server](https://github.com/ollama/ollama) for generating answers.
 
-<img src="/public/tldraid-demo.png" alt="tldraid-demo-image" />
+![demo](/public/tldraid-demo.png)
 
 ## Why?
 
@@ -56,15 +54,13 @@ docker run --name tldraid -p 3000:3000 -d tldraid
 
 You can also use open-sourced Ollama LLM if you have one running on your local network - just add your Ollama API server URL and choose one of the available models (which are fetched every time you open app's settings in case some model was removed by user manually) in the Settings.
 
-More info on how to run LLM locally here: https://github.com/ollama/ollama
+More info on how to run LLM locally here: <https://github.com/ollama/ollama>
 
-- _Note 3_: If you are not running tldrAId on the same machine as your Ollama instance, by default Ollama server is going to throw a CORS error when application tries to send requests to it, so you will have to adjust **OLLAMA_ORIGINS** environmental variable first. More info: https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-allow-additional-web-origins-to-access-ollama
+- _Note 3_: If you are not running tldrAId on the same machine as your Ollama instance, by default Ollama server is going to throw a CORS error when application tries to send requests to it, so you will have to adjust **OLLAMA_ORIGINS** environmental variable first. More info: <https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-allow-additional-web-origins-to-access-ollama>
 
 To choose between ChatGPT and Ollama, click on bot icon below the textfield in chat bot window:
 
-<p align="center">
-  <img width="500" src="/public/bot-switch-image.png" alt="app-logo" />
-</p>
+![image](/public/bot-switch-image.png){ width="500" style="display: block; margin: 0 auto" }
 
 ## Development
 

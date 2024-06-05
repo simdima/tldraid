@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Button, Textarea, Tooltip } from 'flowbite-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaRobot } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -46,20 +46,10 @@ const ChatBotWindow = (): JSX.Element | null => {
     });
   };
 
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [botChatboxOpen, setBotChatboxOpen] = useState(false);
-
   const [chatQuery, setChatQuery] = useState('');
   useEffect(() => {
     setChatQuery('');
   }, [utility]);
-
-  const toggleChatBotWindow = () => {
-    setBotChatboxOpen(isOpen => !isOpen);
-    setTimeout(() => {
-      if (botChatboxOpen) textAreaRef.current?.focus();
-    }, 0);
-  };
 
   const { isLoading: isChatGptQueryInProgress, refetch: sendChatGptQuery } = useQuery({
     queryKey: ['chatGptApiQuery', { platform, utility, chatGptEngine, chatGptApiKey, chatQuery }],
@@ -96,7 +86,6 @@ const ChatBotWindow = (): JSX.Element | null => {
         );
 
         setChatQuery('');
-        setBotChatboxOpen(false);
       }
     } else {
       const { data, error, isSuccess, isError } = await sendOllamaQuery();
@@ -125,7 +114,7 @@ const ChatBotWindow = (): JSX.Element | null => {
           chatGptApiKey || (ollamaUrl && ollamaModel.length) ? (
             <>
               <Textarea
-                className="h-52 w-72 p-4 focus-visible:outline-none md:w-96 "
+                className="h-52 w-72 p-4 focus-visible:outline-none md:w-96"
                 value={chatQuery}
                 disabled={isBotQueryInProgress}
                 onChange={({ target: { value } }) => setChatQuery(value)}
@@ -174,9 +163,8 @@ const ChatBotWindow = (): JSX.Element | null => {
         }
       >
         <Button
-          onClick={toggleChatBotWindow}
           disabled={isBotQueryInProgress}
-          className="z-50 h-12 w-12 animate-none rounded-full border-none p-0 shadow-2xl hover:animate-bounce"
+          className="z-50 flex h-12 w-12 animate-none items-center justify-center rounded-full border-none p-0 shadow-2xl hover:animate-bounce"
         >
           <FaRobot scale={100} className="text-xl" />
         </Button>

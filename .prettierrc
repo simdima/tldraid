@@ -4,9 +4,7 @@
   "bracketSpacing": true,
   "endOfLine": "lf",
   "jsxSingleQuote": false,
-  "plugins": [
-    "prettier-plugin-tailwindcss"
-  ],
+  "plugins": ["prettier-plugin-tailwindcss"],
   "printWidth": 100,
   "quoteProps": "consistent",
   "semi": true,
