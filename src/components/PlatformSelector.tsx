@@ -12,7 +12,6 @@ import PlatformIcon from './molecules/PlatformIcon';
 const PlatformSelector = memo(() => {
   const [utility, setUtility] = useAtom(utilityAtom);
   const [platform, setPlatform] = useAtom(platformAtom);
-  console.log({ platform });
 
   function handlePlatformChange(p: Platform) {
     setPlatform(p);
@@ -22,7 +21,7 @@ const PlatformSelector = memo(() => {
   return (
     <div
       className={cls(
-        'absolute right-[2px] top-[3px] h-auto w-fit',
+        'absolute right-[3px] top-[3px] h-auto w-fit',
         { 'opacity-100': utility },
         { 'animate-right-appear opacity-0': !utility }
       )}

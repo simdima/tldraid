@@ -7,9 +7,9 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 import { getUtilityByName } from '../api/tldraidApi';
 import { chatBotResponsesAtom } from '../atoms/chatBotAnswers';
+import { globalErrorAtom } from '../atoms/globalError';
 import { languageAtom, platformAtom } from '../atoms/settings';
 import { utilityAtom } from '../atoms/utility';
-import useAppError from '../hooks/useAppError';
 import ChatBotWindow from './ChatBotWindow';
 import Introduction from './Introduction';
 import MarkdownHeader from './MarkdownElements/MarkdownHeader';
@@ -42,10 +42,10 @@ const Description = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  const { throwAppError } = useAppError();
+  const [, setGlobalError] = useAtom(globalErrorAtom);
 
   if (isError) {
-    throwAppError('Failed to fetch selected utility');
+    setGlobalError('Failed to fetch selected utility');
   }
 
   const lastBotAnswerRef = useRef<HTMLDivElement>(null);

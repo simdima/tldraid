@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { handleChatGptError, sendChatGptCompletionRequest } from '../api/chatGptApi';
 import { handleOllamaServerError, sendOllamaChatCompletionRequest } from '../api/ollamaApi';
 import { ChatBotResponse, chatBotResponsesAtom } from '../atoms/chatBotAnswers';
+import { globalErrorAtom } from '../atoms/globalError';
 import {
   chatGptApiKeyAtom,
   chatGptEngineAtom,
@@ -17,13 +18,12 @@ import {
   platformAtom,
 } from '../atoms/settings';
 import { utilityAtom } from '../atoms/utility';
-import useAppError from '../hooks/useAppError';
 import ChatGPTLogo from './molecules/ChatGPTLogo';
 import Loader from './molecules/Loader';
 import OllamaLogo from './molecules/OllamaLogo';
 
 const ChatBotWindow = (): JSX.Element | null => {
-  const { throwAppError } = useAppError();
+  const [, setGlobalError] = useAtom(globalErrorAtom);
 
   const [utility] = useAtom(utilityAtom);
 
@@ -98,7 +98,7 @@ const ChatBotWindow = (): JSX.Element | null => {
       const { data, error, isSuccess, isError } = await sendChatGptQuery();
 
       if (isError) {
-        throwAppError(handleChatGptError(error));
+        setGlobalError(handleChatGptError(error));
       }
 
       if (isSuccess) {
@@ -113,7 +113,7 @@ const ChatBotWindow = (): JSX.Element | null => {
       const { data, error, isSuccess, isError } = await sendOllamaQuery();
 
       if (isError) {
-        throwAppError(handleOllamaServerError(error));
+        setGlobalError(handleOllamaServerError(error));
       }
 
       if (isSuccess) {

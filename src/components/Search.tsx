@@ -6,9 +6,9 @@ import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 
 import { getUtilitiesByPlatform } from '../api/tldraidApi';
+import { globalErrorAtom } from '../atoms/globalError';
 import { platformAtom } from '../atoms/settings';
 import { utilityAtom } from '../atoms/utility';
-import useAppError from '../hooks/useAppError';
 import PlatformSelector from './PlatformSelector';
 
 const Search = (): JSX.Element | null => {
@@ -20,7 +20,7 @@ const Search = (): JSX.Element | null => {
     queryFn: () => getUtilitiesByPlatform(platform),
   });
 
-  const { throwAppError } = useAppError();
+  const [, setGlobalError] = useAtom(globalErrorAtom);
 
   const [utilities, setUtilities] = useState<string[]>([]);
 
@@ -75,7 +75,7 @@ const Search = (): JSX.Element | null => {
   }
 
   if (isError) {
-    throwAppError('Failed to get list of utilities');
+    setGlobalError('Failed to get list of utilities');
 
     return null;
   }

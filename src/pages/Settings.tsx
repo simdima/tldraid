@@ -9,6 +9,7 @@ import { z } from 'zod';
 
 import { getOllamaModels, handleOllamaServerError, OllamaModel } from '../api/ollamaApi';
 import { getLanguages } from '../api/tldraidApi';
+import { globalErrorAtom } from '../atoms/globalError';
 import {
   chatGptApiKeyAtom,
   chatGptEngineAtom,
@@ -19,7 +20,6 @@ import {
   PlatformSchema,
 } from '../atoms/settings';
 import Loader from '../components/molecules/Loader';
-import useAppError from '../hooks/useAppError';
 
 export const SettingsSchema = z.object({
   language: z.string().min(2).max(5),
@@ -58,7 +58,7 @@ const Settings = () => {
   const [ollamaUrl, setOllamaUrl] = useAtom(ollamaUrlAtom);
   const [ollamaModel, setOllamaModel] = useAtom(ollamaModelAtom);
 
-  const { throwAppError, clearAppError } = useAppError();
+  const [, setGlobalError] = useAtom(globalErrorAtom);
 
   const {
     control,
@@ -93,7 +93,7 @@ const Settings = () => {
 
   useEffect(() => {
     if (errors.ollamaUrl || !currentOllamaUrl) {
-      clearAppError();
+      setGlobalError('');
 
       setOllamaServerModels([]);
       setValue('ollamaModel', '');
@@ -107,10 +107,10 @@ const Settings = () => {
           setOllamaServerModels([]);
           setValue('ollamaModel', '');
 
-          throwAppError(handleOllamaServerError(error));
+          setGlobalError(handleOllamaServerError(error));
         }
         if (isSuccess) {
-          clearAppError();
+          setGlobalError('');
 
           setOllamaServerModels(data.models);
 
@@ -125,14 +125,13 @@ const Settings = () => {
       return () => clearTimeout(timeout);
     }
   }, [
-    clearAppError,
     currentOllamaUrl,
-    errors,
+    errors.ollamaUrl,
     fetchOllamaModels,
     ollamaModel,
     queryClient,
+    setGlobalError,
     setValue,
-    throwAppError,
   ]);
 
   const updateSettings: SubmitHandler<SettingsFormInputs> = data => {
@@ -150,7 +149,7 @@ const Settings = () => {
   }
 
   if (isLanguagesError) {
-    throwAppError('Failed to get available languages');
+    setGlobalError('Failed to get available languages');
 
     return null;
   }
