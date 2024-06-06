@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import type { Platform } from '../store/reducers/settingsSlice';
+import type { Platform } from '../atoms/settings';
 
 type UtilityResponse = {
   description: string;

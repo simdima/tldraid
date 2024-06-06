@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Label, Select, TextInput } from 'flowbite-react';
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -8,23 +9,31 @@ import { z } from 'zod';
 
 import { getOllamaModels, handleOllamaServerError, OllamaModel } from '../api/ollamaApi';
 import { getLanguages } from '../api/tldraidApi';
+import {
+  chatGptApiKeyAtom,
+  chatGptEngineAtom,
+  ChatGptEngineSchema,
+  languageAtom,
+  ollamaModelAtom,
+  ollamaUrlAtom,
+  PlatformSchema,
+} from '../atoms/settings';
 import Loader from '../components/molecules/Loader';
 import useAppError from '../hooks/useAppError';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import {
-  changeChatGptApiKey,
-  changeChatGptEngine,
-  changeLanguage,
-  changeOllamaUrl,
-  ChatGptEngine,
-  selecteSettingsOllamaModel,
-  selectSettingsChatGptApikey,
-  selectSettingsChatGptEngine,
-  selectSettingsLanguage,
-  selectSettingsOllamaUrl,
-  SettingsSchema,
-  updateOllamaModel,
-} from '../store/reducers/settingsSlice';
+
+export const SettingsSchema = z.object({
+  language: z.string().min(2).max(5),
+  platform: PlatformSchema,
+  chatGptEngine: ChatGptEngineSchema,
+  chatGptApiKey: z.string().trim().min(15, { message: 'API key is too short' }).or(z.literal('')),
+  ollamaUrl: z
+    .string()
+    .trim()
+    .url()
+    .regex(/[^/]$/, { message: 'Remove trailing slash' })
+    .or(z.literal('')),
+  ollamaModel: z.string().or(z.literal('')),
+});
 
 const SettingsSchemaAdjusted = SettingsSchema.omit({ platform: true });
 type SettingsFormInputs = z.infer<typeof SettingsSchemaAdjusted>;
@@ -42,14 +51,12 @@ const Settings = () => {
     staleTime: Infinity,
   });
 
-  const dispatch = useAppDispatch();
+  const [language, setLanguage] = useAtom(languageAtom);
 
-  const language = useAppSelector(selectSettingsLanguage);
-
-  const chatGptEngine = useAppSelector(selectSettingsChatGptEngine);
-  const chatGptApiKey = useAppSelector(selectSettingsChatGptApikey);
-  const ollamaUrl = useAppSelector(selectSettingsOllamaUrl);
-  const ollamaModel = useAppSelector(selecteSettingsOllamaModel);
+  const [chatGptEngine, setChatGptEngine] = useAtom(chatGptEngineAtom);
+  const [chatGptApiKey, setChatGptApiKey] = useAtom(chatGptApiKeyAtom);
+  const [ollamaUrl, setOllamaUrl] = useAtom(ollamaUrlAtom);
+  const [ollamaModel, setOllamaModel] = useAtom(ollamaModelAtom);
 
   const { throwAppError, clearAppError } = useAppError();
 
@@ -129,11 +136,11 @@ const Settings = () => {
   ]);
 
   const updateSettings: SubmitHandler<SettingsFormInputs> = data => {
-    dispatch(changeLanguage(data.language));
-    dispatch(changeChatGptEngine(data.chatGptEngine));
-    dispatch(changeChatGptApiKey(data.chatGptApiKey));
-    dispatch(changeOllamaUrl(data.ollamaUrl));
-    dispatch(updateOllamaModel(data.ollamaModel));
+    setLanguage(data.language);
+    setChatGptEngine(data.chatGptEngine);
+    setChatGptApiKey(data.chatGptApiKey);
+    setOllamaUrl(data.ollamaUrl);
+    setOllamaModel(data.ollamaModel);
 
     history.push('/');
   };
@@ -177,7 +184,7 @@ const Settings = () => {
               control={control}
               render={({ field }) => (
                 <Select {...field}>
-                  {ChatGptEngine.options.map(engine => (
+                  {ChatGptEngineSchema.options.map(engine => (
                     <option key={engine}>{engine}</option>
                   ))}
                 </Select>

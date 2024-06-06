@@ -1,6 +1,6 @@
 import { FaAndroid, FaApple, FaLaptop, FaLinux, FaWindows } from 'react-icons/fa6';
 
-import type { Platform } from '../../store/reducers/settingsSlice';
+import type { Platform } from '../../atoms/settings';
 
 const PlatformIcon = ({ platform }: { platform: Platform }) => {
   if (platform === 'common') return <FaLaptop />;

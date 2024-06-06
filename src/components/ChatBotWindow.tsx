@@ -9,17 +9,15 @@ import { v4 as uuid } from 'uuid';
 import { handleChatGptError, sendChatGptCompletionRequest } from '../api/chatGptApi';
 import { handleOllamaServerError, sendOllamaChatCompletionRequest } from '../api/ollamaApi';
 import { ChatBotResponse, chatBotResponsesAtom } from '../atoms/chatBotAnswers';
+import {
+  chatGptApiKeyAtom,
+  chatGptEngineAtom,
+  ollamaModelAtom,
+  ollamaUrlAtom,
+  platformAtom,
+} from '../atoms/settings';
 import { utilityAtom } from '../atoms/utility';
 import useAppError from '../hooks/useAppError';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import {
-  selecteSettingsOllamaModel,
-  selectSettingsChatGptApikey,
-  selectSettingsChatGptEngine,
-  selectSettingsOllamaUrl,
-  selectSettingsPlatform,
-} from '../store/reducers/settingsSlice';
-// import { addBotAnswer, selectUtilityName } from '../store/reducers/utilitySlice';
 import ChatGPTLogo from './molecules/ChatGPTLogo';
 import Loader from './molecules/Loader';
 import OllamaLogo from './molecules/OllamaLogo';
@@ -27,16 +25,14 @@ import OllamaLogo from './molecules/OllamaLogo';
 const ChatBotWindow = (): JSX.Element | null => {
   const { throwAppError } = useAppError();
 
-  const dispatch = useAppDispatch();
-
-  // const utility = useAppSelector(selectUtilityName);
   const [utility] = useAtom(utilityAtom);
 
-  const platform = useAppSelector(selectSettingsPlatform);
-  const chatGptEngine = useAppSelector(selectSettingsChatGptEngine);
-  const chatGptApiKey = useAppSelector(selectSettingsChatGptApikey);
-  const ollamaUrl = useAppSelector(selectSettingsOllamaUrl);
-  const ollamaModel = useAppSelector(selecteSettingsOllamaModel);
+  const [platform] = useAtom(platformAtom);
+
+  const [chatGptEngine] = useAtom(chatGptEngineAtom);
+  const [chatGptApiKey] = useAtom(chatGptApiKeyAtom);
+  const [ollamaUrl] = useAtom(ollamaUrlAtom);
+  const [ollamaModel] = useAtom(ollamaModelAtom);
 
   const [selectedBot, setSelectedBot] = useState<'ChatGPT' | 'Ollama'>(
     chatGptApiKey ? 'ChatGPT' : 'Ollama'
@@ -106,12 +102,6 @@ const ChatBotWindow = (): JSX.Element | null => {
       }
 
       if (isSuccess) {
-        // dispatch(
-        //   addBotAnswer({
-        //     id: uuid(),
-        //     content: data.choices[0].message.content,
-        //   })
-        // );
         updateChatBotResponses({
           id: uuid(),
           content: data.choices[0].message.content,
@@ -127,12 +117,6 @@ const ChatBotWindow = (): JSX.Element | null => {
       }
 
       if (isSuccess) {
-        // dispatch(
-        //   addBotAnswer({
-        //     id: uuid(),
-        //     content: data.response,
-        //   })
-        // );
         updateChatBotResponses({
           id: uuid(),
           content: data.response,

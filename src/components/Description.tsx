@@ -7,15 +7,9 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 import { getUtilityByName } from '../api/tldraidApi';
 import { chatBotResponsesAtom } from '../atoms/chatBotAnswers';
+import { languageAtom, platformAtom } from '../atoms/settings';
 import { utilityAtom } from '../atoms/utility';
 import useAppError from '../hooks/useAppError';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
-// import {
-//   deleteBotAnswer,
-//   selectUtilityBotAnswers,
-//   selectUtilityName,
-// } from '../store/reducers/utilitySlice';
 import ChatBotWindow from './ChatBotWindow';
 import Introduction from './Introduction';
 import MarkdownHeader from './MarkdownElements/MarkdownHeader';
@@ -25,14 +19,9 @@ import MarkdownParagraph from './MarkdownElements/MarkdownParagraph';
 import Loader from './molecules/Loader';
 
 const Description = (): JSX.Element | null => {
-  // const dispatch = useAppDispatch();
-
-  const language = useAppSelector(selectSettingsLanguage);
-  const platform = useAppSelector(selectSettingsPlatform);
-  // const utility = useAppSelector(selectUtilityName);
-
+  const [language] = useAtom(languageAtom);
+  const [platform] = useAtom(platformAtom);
   const [utility] = useAtom(utilityAtom);
-  // const botAnswers = useAppSelector(selectUtilityBotAnswers);
   const [chatBotResponses, setChatBotResponses] = useAtom(chatBotResponsesAtom);
   const removeChatBotResponse = (id: string) => {
     setChatBotResponses(() => ({
