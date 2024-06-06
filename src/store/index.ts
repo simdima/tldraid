@@ -12,11 +12,11 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import settingsReducer from './reducers/settingsSlice';
-import utilityReducer from './reducers/utilitySlice';
+// import utilityReducer from './reducers/utilitySlice';
 
 const rootReducer = combineReducers({
   settings: settingsReducer,
-  utility: utilityReducer,
+  // utility: utilityReducer,
 });
 
 const persistedReducer = persistReducer(

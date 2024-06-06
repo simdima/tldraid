@@ -1,22 +1,26 @@
 import cls from 'classnames';
 import { Dropdown } from 'flowbite-react';
+import { useAtom } from 'jotai';
 import { memo } from 'react';
 import { FaAndroid, FaApple, FaLaptop, FaLinux, FaWindows } from 'react-icons/fa6';
 
+import { utilityAtom } from '../atoms/utility';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { changePlatform, Platform, selectSettingsPlatform } from '../store/reducers/settingsSlice';
-import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
+// import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
 import PlatformIcon from './molecules/PlatformIcon';
 
 const PlatformSelector = memo(() => {
   const dispatch = useAppDispatch();
 
-  const utility = useAppSelector(selectUtilityName);
+  // const utility = useAppSelector(selectUtilityName);
+  const [utility, setUtility] = useAtom(utilityAtom);
   const platform = useAppSelector(selectSettingsPlatform);
 
   function handlePlatformChange(p: Platform) {
     dispatch(changePlatform(p));
-    dispatch(changeUtility(''));
+    // dispatch(changeUtility(''));
+    setUtility('');
   }
 
   return (

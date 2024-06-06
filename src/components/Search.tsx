@@ -2,20 +2,23 @@ import { useQuery } from '@tanstack/react-query';
 import cls from 'classnames';
 import { useCombobox } from 'downshift';
 import { TextInput } from 'flowbite-react';
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 
 import { getUtilitiesByPlatform } from '../api/tldraidApi';
+import { utilityAtom } from '../atoms/utility';
 import useAppError from '../hooks/useAppError';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectSettingsPlatform } from '../store/reducers/settingsSlice';
-import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
+// import { changeUtility, selectUtilityName } from '../store/reducers/utilitySlice';
 import PlatformSelector from './PlatformSelector';
 
 const Search = (): JSX.Element | null => {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const platform = useAppSelector(selectSettingsPlatform);
-  const utility = useAppSelector(selectUtilityName);
+  // const utility = useAppSelector(selectUtilityName);
+  const [utility, setUtility] = useAtom(utilityAtom);
 
   const { data: utilitiesResponse = [], isError } = useQuery({
     queryKey: ['utilities', platform],
@@ -60,10 +63,13 @@ const Search = (): JSX.Element | null => {
     },
     onSelectedItemChange: ({ inputValue }) => {
       if (inputValue) {
-        dispatch(changeUtility(inputValue.toLowerCase()));
+        // dispatch(changeUtility(inputValue.toLowerCase()));
+        setUtility(inputValue.toLowerCase());
       }
     },
   });
+
+  // console.log({ inputValue, selectedUtility: utility });
 
   useEffect(() => {
     setInputValue('');
@@ -72,7 +78,8 @@ const Search = (): JSX.Element | null => {
   function handleSearchSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (inputValue && utilities.indexOf(inputValue) > -1) {
-      dispatch(changeUtility(inputValue));
+      // dispatch(changeUtility(inputValue));
+      setUtility(inputValue);
     }
   }
 
