@@ -1,5 +1,11 @@
 # What's Changed
 
+## 1.5.1 - 2024-06-06
+
+### Fixed
+
+- Missing intro component
+
 ## 1.5.0 - 2024-06-06
 
 ### Added
