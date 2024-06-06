@@ -1,7 +1,7 @@
 import { QueryFunctionContext } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 
-import type { Platform } from '../store/reducers/settingsSlice';
+import type { Platform } from '../atoms/settings';
 
 export interface OllamaModel {
   name: string;
@@ -30,8 +30,14 @@ interface OllamaChatCompletionResponse {
   eval_duration: number;
 }
 
-const getOllamaModels = (baseUrl: string): Promise<OllamaModelsResponse> =>
-  axios.get(`${baseUrl}/api/tags`).then(response => response.data);
+const getOllamaModels = async (baseUrl: string): Promise<OllamaModelsResponse> => {
+  const response = await axios.get(`${baseUrl}/api/tags`);
+  if (!response.data.models) {
+    throw new Error('Failed to get available models');
+  }
+
+  return response.data;
+};
 
 const sendOllamaChatCompletionRequest = async ({
   queryKey,
@@ -70,8 +76,7 @@ const handleOllamaServerError = (error: unknown) => {
     return 'Ollama default Axios Error';
   }
 
-  console.error(error);
-  if (error instanceof DOMException) {
+  if (error instanceof DOMException || error instanceof Error) {
     return error.message;
   }
 

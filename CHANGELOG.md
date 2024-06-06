@@ -1,5 +1,16 @@
 # What's Changed
 
+## 1.5.0 - 2024-06-06
+
+### Added
+
+- Redux toolkit was completely dropped and replaced with [jotai](https://jotai.org/) due to unnecessarily complicated and boilerplate'y setup just for keeping track of app's global state
+- Persistant storage is also handled by jotai now
+
+### Fixed
+
+- Chatbot icon getting in the way of last lines of content
+
 ## 1.4.0 - 2024-06-05
 
 ### Added

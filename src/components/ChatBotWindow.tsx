@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Button, Textarea, Tooltip } from 'flowbite-react';
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { FaRobot } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
@@ -7,32 +8,31 @@ import { v4 as uuid } from 'uuid';
 
 import { handleChatGptError, sendChatGptCompletionRequest } from '../api/chatGptApi';
 import { handleOllamaServerError, sendOllamaChatCompletionRequest } from '../api/ollamaApi';
-import useAppError from '../hooks/useAppError';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { ChatBotResponse, chatBotResponsesAtom } from '../atoms/chatBotAnswers';
+import { globalErrorAtom } from '../atoms/globalError';
 import {
-  selecteSettingsOllamaModel,
-  selectSettingsChatGptApikey,
-  selectSettingsChatGptEngine,
-  selectSettingsOllamaUrl,
-  selectSettingsPlatform,
-} from '../store/reducers/settingsSlice';
-import { addBotAnswer, selectUtilityName } from '../store/reducers/utilitySlice';
+  chatGptApiKeyAtom,
+  chatGptEngineAtom,
+  ollamaModelAtom,
+  ollamaUrlAtom,
+  platformAtom,
+} from '../atoms/settings';
+import { utilityAtom } from '../atoms/utility';
 import ChatGPTLogo from './molecules/ChatGPTLogo';
 import Loader from './molecules/Loader';
 import OllamaLogo from './molecules/OllamaLogo';
 
 const ChatBotWindow = (): JSX.Element | null => {
-  const { throwAppError } = useAppError();
+  const [, setGlobalError] = useAtom(globalErrorAtom);
 
-  const dispatch = useAppDispatch();
+  const [utility] = useAtom(utilityAtom);
 
-  const utility = useAppSelector(selectUtilityName);
+  const [platform] = useAtom(platformAtom);
 
-  const platform = useAppSelector(selectSettingsPlatform);
-  const chatGptEngine = useAppSelector(selectSettingsChatGptEngine);
-  const chatGptApiKey = useAppSelector(selectSettingsChatGptApikey);
-  const ollamaUrl = useAppSelector(selectSettingsOllamaUrl);
-  const ollamaModel = useAppSelector(selecteSettingsOllamaModel);
+  const [chatGptEngine] = useAtom(chatGptEngineAtom);
+  const [chatGptApiKey] = useAtom(chatGptApiKeyAtom);
+  const [ollamaUrl] = useAtom(ollamaUrlAtom);
+  const [ollamaModel] = useAtom(ollamaModelAtom);
 
   const [selectedBot, setSelectedBot] = useState<'ChatGPT' | 'Ollama'>(
     chatGptApiKey ? 'ChatGPT' : 'Ollama'
@@ -43,6 +43,30 @@ const ChatBotWindow = (): JSX.Element | null => {
       if (prevBot === 'ChatGPT' && ollamaUrl && ollamaModel.length) return 'Ollama';
 
       return prevBot;
+    });
+  };
+
+  const [, setChatBotResponses] = useAtom(chatBotResponsesAtom);
+  const updateChatBotResponses = (newChatBotResponse: ChatBotResponse) => {
+    setChatBotResponses(prev => {
+      if (utility) {
+        const updatedResponses: ChatBotResponse[] = [];
+
+        if (prev[utility]) {
+          const existingResponses = { ...prev }[utility];
+          updatedResponses.push(...existingResponses);
+          updatedResponses.push(newChatBotResponse);
+        } else {
+          updatedResponses.push(newChatBotResponse);
+        }
+
+        return {
+          ...prev,
+          [utility]: updatedResponses,
+        };
+      }
+
+      return prev;
     });
   };
 
@@ -74,16 +98,14 @@ const ChatBotWindow = (): JSX.Element | null => {
       const { data, error, isSuccess, isError } = await sendChatGptQuery();
 
       if (isError) {
-        throwAppError(handleChatGptError(error));
+        setGlobalError(handleChatGptError(error));
       }
 
       if (isSuccess) {
-        dispatch(
-          addBotAnswer({
-            id: uuid(),
-            content: data.choices[0].message.content,
-          })
-        );
+        updateChatBotResponses({
+          id: uuid(),
+          content: data.choices[0].message.content,
+        });
 
         setChatQuery('');
       }
@@ -91,16 +113,14 @@ const ChatBotWindow = (): JSX.Element | null => {
       const { data, error, isSuccess, isError } = await sendOllamaQuery();
 
       if (isError) {
-        throwAppError(handleOllamaServerError(error));
+        setGlobalError(handleOllamaServerError(error));
       }
 
       if (isSuccess) {
-        dispatch(
-          addBotAnswer({
-            id: uuid(),
-            content: data.response,
-          })
-        );
+        updateChatBotResponses({
+          id: uuid(),
+          content: data.response,
+        });
       }
     }
   };

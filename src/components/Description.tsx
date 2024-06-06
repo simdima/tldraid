@@ -1,18 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { Button } from 'flowbite-react';
+import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import { FaTrash } from 'react-icons/fa6';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 import { getUtilityByName } from '../api/tldraidApi';
-import useAppError from '../hooks/useAppError';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectSettingsLanguage, selectSettingsPlatform } from '../store/reducers/settingsSlice';
-import {
-  deleteBotAnswer,
-  selectUtilityBotAnswers,
-  selectUtilityName,
-} from '../store/reducers/utilitySlice';
+import { chatBotResponsesAtom } from '../atoms/chatBotAnswers';
+import { globalErrorAtom } from '../atoms/globalError';
+import { languageAtom, platformAtom } from '../atoms/settings';
+import { utilityAtom } from '../atoms/utility';
 import ChatBotWindow from './ChatBotWindow';
 import Introduction from './Introduction';
 import MarkdownHeader from './MarkdownElements/MarkdownHeader';
@@ -22,12 +19,16 @@ import MarkdownParagraph from './MarkdownElements/MarkdownParagraph';
 import Loader from './molecules/Loader';
 
 const Description = (): JSX.Element | null => {
-  const dispatch = useAppDispatch();
-
-  const language = useAppSelector(selectSettingsLanguage);
-  const platform = useAppSelector(selectSettingsPlatform);
-  const utility = useAppSelector(selectUtilityName);
-  const botAnswers = useAppSelector(selectUtilityBotAnswers);
+  const [language] = useAtom(languageAtom);
+  const [platform] = useAtom(platformAtom);
+  const [utility] = useAtom(utilityAtom);
+  const [chatBotResponses, setChatBotResponses] = useAtom(chatBotResponsesAtom);
+  const removeChatBotResponse = (id: string) => {
+    setChatBotResponses(() => ({
+      ...chatBotResponses,
+      [utility]: [...chatBotResponses[utility]].filter(res => res.id !== id),
+    }));
+  };
 
   const {
     data: utilityResponse,
@@ -41,21 +42,21 @@ const Description = (): JSX.Element | null => {
     refetchOnWindowFocus: false,
   });
 
-  const { throwAppError } = useAppError();
+  const [, setGlobalError] = useAtom(globalErrorAtom);
 
   if (isError) {
-    throwAppError('Failed to fetch selected utility');
+    setGlobalError('Failed to fetch selected utility');
   }
 
   const lastBotAnswerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     lastBotAnswerRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [botAnswers]);
+  }, [chatBotResponses]);
 
   return !utility ? (
     <Introduction />
   ) : (
-    <div className="relative mb-4 min-h-[100dvh]">
+    <div className="relative mb-12 h-fit">
       {isLoading && <Loader size="xl" className="mx-auto my-10 w-full" />}
 
       {utility && utilityResponse && (
@@ -75,11 +76,11 @@ const Description = (): JSX.Element | null => {
             </ReactMarkdown>
           </div>
 
-          {botAnswers[utility]?.map(({ id, content }, idx) => (
+          {chatBotResponses[utility]?.map(({ id, content }, idx) => (
             <div
-              className="mx-auto mb-4 flex w-11/12 text-left md:w-5/12"
+              className="mx-auto mb-4 flex w-11/12 text-left last:mb-10 md:w-5/12"
               key={id}
-              ref={idx === botAnswers[utility]?.length - 1 ? lastBotAnswerRef : null}
+              ref={idx === chatBotResponses[utility]?.length - 1 ? lastBotAnswerRef : null}
             >
               <ReactMarkdown
                 className="w-11/12"
@@ -97,7 +98,8 @@ const Description = (): JSX.Element | null => {
                 size="xs"
                 aria-label="delete"
                 className="h-fit w-fit self-start !bg-gray-500 opacity-30 transition-all duration-200 hover:opacity-100"
-                onClick={() => dispatch(deleteBotAnswer(id))}
+                // onClick={() => dispatch(deleteBotAnswer(id))}
+                onClick={() => removeChatBotResponse(id)}
               >
                 <FaTrash />
               </Button>

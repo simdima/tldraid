@@ -1,10 +1,13 @@
 import { Blockquote } from 'flowbite-react';
+import { atom } from 'jotai';
 
-import { useAppSelector } from '../store/hooks';
-import { selectUtilityName } from '../store/reducers/utilitySlice';
+import { utilityAtom } from '../atoms/utility';
+// import { useAppSelector } from '../store/hooks';
+// import { selectUtilityName } from '../store/reducers/utilitySlice';
 
 const Introduction = (): JSX.Element | null => {
-  const utility = useAppSelector(selectUtilityName);
+  // const utility = useAppSelector(selectUtilityName);
+  const utility = atom(utilityAtom);
 
   return !utility ? (
     <Blockquote className="relative mx-auto w-11/12 text-center not-italic sm:w-96">

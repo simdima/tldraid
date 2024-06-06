@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Label, Select, TextInput } from 'flowbite-react';
+import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -8,23 +9,31 @@ import { z } from 'zod';
 
 import { getOllamaModels, handleOllamaServerError, OllamaModel } from '../api/ollamaApi';
 import { getLanguages } from '../api/tldraidApi';
-import Loader from '../components/molecules/Loader';
-import useAppError from '../hooks/useAppError';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { globalErrorAtom } from '../atoms/globalError';
 import {
-  changeChatGptApiKey,
-  changeChatGptEngine,
-  changeLanguage,
-  changeOllamaUrl,
-  ChatGptEngine,
-  selecteSettingsOllamaModel,
-  selectSettingsChatGptApikey,
-  selectSettingsChatGptEngine,
-  selectSettingsLanguage,
-  selectSettingsOllamaUrl,
-  SettingsSchema,
-  updateOllamaModel,
-} from '../store/reducers/settingsSlice';
+  chatGptApiKeyAtom,
+  chatGptEngineAtom,
+  ChatGptEngineSchema,
+  languageAtom,
+  ollamaModelAtom,
+  ollamaUrlAtom,
+  PlatformSchema,
+} from '../atoms/settings';
+import Loader from '../components/molecules/Loader';
+
+export const SettingsSchema = z.object({
+  language: z.string().min(2).max(5),
+  platform: PlatformSchema,
+  chatGptEngine: ChatGptEngineSchema,
+  chatGptApiKey: z.string().trim().min(15, { message: 'API key is too short' }).or(z.literal('')),
+  ollamaUrl: z
+    .string()
+    .trim()
+    .url()
+    .regex(/[^/]$/, { message: 'Remove trailing slash' })
+    .or(z.literal('')),
+  ollamaModel: z.string().or(z.literal('')),
+});
 
 const SettingsSchemaAdjusted = SettingsSchema.omit({ platform: true });
 type SettingsFormInputs = z.infer<typeof SettingsSchemaAdjusted>;
@@ -42,16 +51,14 @@ const Settings = () => {
     staleTime: Infinity,
   });
 
-  const dispatch = useAppDispatch();
+  const [language, setLanguage] = useAtom(languageAtom);
 
-  const language = useAppSelector(selectSettingsLanguage);
+  const [chatGptEngine, setChatGptEngine] = useAtom(chatGptEngineAtom);
+  const [chatGptApiKey, setChatGptApiKey] = useAtom(chatGptApiKeyAtom);
+  const [ollamaUrl, setOllamaUrl] = useAtom(ollamaUrlAtom);
+  const [ollamaModel, setOllamaModel] = useAtom(ollamaModelAtom);
 
-  const chatGptEngine = useAppSelector(selectSettingsChatGptEngine);
-  const chatGptApiKey = useAppSelector(selectSettingsChatGptApikey);
-  const ollamaUrl = useAppSelector(selectSettingsOllamaUrl);
-  const ollamaModel = useAppSelector(selecteSettingsOllamaModel);
-
-  const { throwAppError, clearAppError } = useAppError();
+  const [, setGlobalError] = useAtom(globalErrorAtom);
 
   const {
     control,
@@ -86,7 +93,7 @@ const Settings = () => {
 
   useEffect(() => {
     if (errors.ollamaUrl || !currentOllamaUrl) {
-      clearAppError();
+      setGlobalError('');
 
       setOllamaServerModels([]);
       setValue('ollamaModel', '');
@@ -100,10 +107,10 @@ const Settings = () => {
           setOllamaServerModels([]);
           setValue('ollamaModel', '');
 
-          throwAppError(handleOllamaServerError(error));
+          setGlobalError(handleOllamaServerError(error));
         }
         if (isSuccess) {
-          clearAppError();
+          setGlobalError('');
 
           setOllamaServerModels(data.models);
 
@@ -118,22 +125,21 @@ const Settings = () => {
       return () => clearTimeout(timeout);
     }
   }, [
-    clearAppError,
     currentOllamaUrl,
-    errors,
+    errors.ollamaUrl,
     fetchOllamaModels,
     ollamaModel,
     queryClient,
+    setGlobalError,
     setValue,
-    throwAppError,
   ]);
 
   const updateSettings: SubmitHandler<SettingsFormInputs> = data => {
-    dispatch(changeLanguage(data.language));
-    dispatch(changeChatGptEngine(data.chatGptEngine));
-    dispatch(changeChatGptApiKey(data.chatGptApiKey));
-    dispatch(changeOllamaUrl(data.ollamaUrl));
-    dispatch(updateOllamaModel(data.ollamaModel));
+    setLanguage(data.language);
+    setChatGptEngine(data.chatGptEngine);
+    setChatGptApiKey(data.chatGptApiKey);
+    setOllamaUrl(data.ollamaUrl);
+    setOllamaModel(data.ollamaModel);
 
     history.push('/');
   };
@@ -143,7 +149,7 @@ const Settings = () => {
   }
 
   if (isLanguagesError) {
-    throwAppError('Failed to get available languages');
+    setGlobalError('Failed to get available languages');
 
     return null;
   }
@@ -159,7 +165,7 @@ const Settings = () => {
             name="language"
             control={control}
             render={({ field }) => (
-              <Select {...field}>
+              <Select {...field} aria-label="language">
                 {languagesResponse &&
                   languagesResponse.map(language => <option key={language}>{language}</option>)}
               </Select>
@@ -176,8 +182,8 @@ const Settings = () => {
               name="chatGptEngine"
               control={control}
               render={({ field }) => (
-                <Select {...field}>
-                  {ChatGptEngine.options.map(engine => (
+                <Select {...field} aria-label="chatGptEngine">
+                  {ChatGptEngineSchema.options.map(engine => (
                     <option key={engine}>{engine}</option>
                   ))}
                 </Select>
@@ -195,6 +201,7 @@ const Settings = () => {
                 <TextInput
                   {...field}
                   type="password"
+                  aria-label="chatGptApiKey"
                   color={errors.chatGptApiKey ? 'failure' : 'gray'}
                   helperText={errors.chatGptApiKey && <span>{errors.chatGptApiKey.message}</span>}
                   onChange={e => {
@@ -216,6 +223,7 @@ const Settings = () => {
                 <TextInput
                   {...field}
                   type="text"
+                  aria-label="ollamaServerUrl"
                   placeholder="http://localhost:11434"
                   onChange={e => {
                     field.onChange(e);
@@ -233,6 +241,7 @@ const Settings = () => {
             </div>
             <Controller
               name="ollamaModel"
+              aria-label="ollamaModel"
               control={control}
               render={({ field }) => (
                 <Select {...field} disabled={ollamaServerModels.length === 0}>
