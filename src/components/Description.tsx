@@ -56,7 +56,7 @@ const Description = (): JSX.Element | null => {
   return !utility ? (
     <Introduction />
   ) : (
-    <div className="relative mb-4 min-h-[100dvh]">
+    <div className="relative mb-12 h-fit">
       {isLoading && <Loader size="xl" className="mx-auto my-10 w-full" />}
 
       {utility && utilityResponse && (
@@ -78,7 +78,7 @@ const Description = (): JSX.Element | null => {
 
           {chatBotResponses[utility]?.map(({ id, content }, idx) => (
             <div
-              className="mx-auto mb-4 flex w-11/12 text-left md:w-5/12"
+              className="mx-auto mb-4 flex w-11/12 text-left last:mb-10 md:w-5/12"
               key={id}
               ref={idx === chatBotResponses[utility]?.length - 1 ? lastBotAnswerRef : null}
             >
