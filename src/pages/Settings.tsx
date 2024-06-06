@@ -165,7 +165,7 @@ const Settings = () => {
             name="language"
             control={control}
             render={({ field }) => (
-              <Select {...field}>
+              <Select {...field} aria-label="language">
                 {languagesResponse &&
                   languagesResponse.map(language => <option key={language}>{language}</option>)}
               </Select>
@@ -182,7 +182,7 @@ const Settings = () => {
               name="chatGptEngine"
               control={control}
               render={({ field }) => (
-                <Select {...field}>
+                <Select {...field} aria-label="chatGptEngine">
                   {ChatGptEngineSchema.options.map(engine => (
                     <option key={engine}>{engine}</option>
                   ))}
@@ -201,6 +201,7 @@ const Settings = () => {
                 <TextInput
                   {...field}
                   type="password"
+                  aria-label="chatGptApiKey"
                   color={errors.chatGptApiKey ? 'failure' : 'gray'}
                   helperText={errors.chatGptApiKey && <span>{errors.chatGptApiKey.message}</span>}
                   onChange={e => {
@@ -222,6 +223,7 @@ const Settings = () => {
                 <TextInput
                   {...field}
                   type="text"
+                  aria-label="ollamaServerUrl"
                   placeholder="http://localhost:11434"
                   onChange={e => {
                     field.onChange(e);
@@ -239,6 +241,7 @@ const Settings = () => {
             </div>
             <Controller
               name="ollamaModel"
+              aria-label="ollamaModel"
               control={control}
               render={({ field }) => (
                 <Select {...field} disabled={ollamaServerModels.length === 0}>
