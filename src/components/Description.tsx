@@ -38,8 +38,8 @@ const Description = (): JSX.Element | null => {
     queryKey: ['utilityQuery', utility],
     queryFn: () => getUtilityByName({ platform, language, utility }),
     enabled: utility !== '',
-    gcTime: Infinity,
     refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60,
   });
 
   const [, setGlobalError] = useAtom(globalErrorAtom);
