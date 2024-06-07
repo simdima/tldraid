@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import type { Platform } from '../atoms/settings';
+import type { Platform } from '../atoms/platform';
 
 type UtilityResponse = {
   description: string;

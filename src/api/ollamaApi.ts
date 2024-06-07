@@ -1,7 +1,7 @@
 import { QueryFunctionContext } from '@tanstack/react-query';
 import axios from 'axios';
 
-import type { Platform } from '../atoms/settings';
+import type { Platform } from '../atoms/platform';
 
 export interface OllamaModel {
   name: string;

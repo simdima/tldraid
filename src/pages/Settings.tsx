@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { getOllamaModels } from '../api/ollamaApi';
 import { getLanguages } from '../api/tldraidApi';
 import { globalErrorAtom } from '../atoms/globalError';
+import { PlatformSchema } from '../atoms/platform';
 import {
   chatGptApiKeyAtom,
   chatGptEngineAtom,
@@ -17,7 +18,6 @@ import {
   languageAtom,
   ollamaModelAtom,
   ollamaUrlAtom,
-  PlatformSchema,
 } from '../atoms/settings';
 import Loader from '../components/molecules/Loader';
 import useDebouncedValue from '../hooks/debouncedValue';

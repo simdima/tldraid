@@ -10,12 +10,12 @@ import { handleChatGptError, sendChatGptCompletionRequest } from '../api/chatGpt
 import { sendOllamaChatCompletionRequest } from '../api/ollamaApi';
 import { ChatBotResponse, chatBotResponsesAtom } from '../atoms/chatBotAnswers';
 import { globalErrorAtom } from '../atoms/globalError';
+import { platformAtom } from '../atoms/platform';
 import {
   chatGptApiKeyAtom,
   chatGptEngineAtom,
   ollamaModelAtom,
   ollamaUrlAtom,
-  platformAtom,
 } from '../atoms/settings';
 import { utilityAtom } from '../atoms/utility';
 import ChatGPTLogo from './molecules/ChatGPTLogo';

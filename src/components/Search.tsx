@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { getUtilitiesByPlatform } from '../api/tldraidApi';
 import { globalErrorAtom } from '../atoms/globalError';
-import { platformAtom } from '../atoms/settings';
+import { platformAtom } from '../atoms/platform';
 import { utilityAtom } from '../atoms/utility';
 import PlatformSelector from './PlatformSelector';
 
