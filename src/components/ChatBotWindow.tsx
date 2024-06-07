@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { handleChatGptError, sendChatGptCompletionRequest } from '../api/chatGptApi';
-import { handleOllamaServerError, sendOllamaChatCompletionRequest } from '../api/ollamaApi';
+import { sendOllamaChatCompletionRequest } from '../api/ollamaApi';
 import { ChatBotResponse, chatBotResponsesAtom } from '../atoms/chatBotAnswers';
 import { globalErrorAtom } from '../atoms/globalError';
 import {
@@ -110,10 +110,10 @@ const ChatBotWindow = (): JSX.Element | null => {
         setChatQuery('');
       }
     } else {
-      const { data, error, isSuccess, isError } = await sendOllamaQuery();
+      const { data, isSuccess, isError } = await sendOllamaQuery();
 
       if (isError) {
-        setGlobalError(handleOllamaServerError(error));
+        setGlobalError('Failed to get a response from Ollama');
       }
 
       if (isSuccess) {
