@@ -1,5 +1,12 @@
 # What's Changed
 
+## 1.5.2 - 2024-06-07
+
+### Fixed
+
+- Refactored Settings form component
+- Parmater 'platform' was saved to local storage
+
 ## 1.5.1 - 2024-06-06
 
 ### Fixed

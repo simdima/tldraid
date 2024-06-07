@@ -8,7 +8,8 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { getUtilityByName } from '../api/tldraidApi';
 import { chatBotResponsesAtom } from '../atoms/chatBotAnswers';
 import { globalErrorAtom } from '../atoms/globalError';
-import { languageAtom, platformAtom } from '../atoms/settings';
+import { platformAtom } from '../atoms/platform';
+import { languageAtom } from '../atoms/settings';
 import { utilityAtom } from '../atoms/utility';
 import ChatBotWindow from './ChatBotWindow';
 import Introduction from './Introduction';
@@ -38,8 +39,8 @@ const Description = (): JSX.Element | null => {
     queryKey: ['utilityQuery', utility],
     queryFn: () => getUtilityByName({ platform, language, utility }),
     enabled: utility !== '',
-    gcTime: Infinity,
     refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60,
   });
 
   const [, setGlobalError] = useAtom(globalErrorAtom);

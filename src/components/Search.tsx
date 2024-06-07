@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { getUtilitiesByPlatform } from '../api/tldraidApi';
 import { globalErrorAtom } from '../atoms/globalError';
-import { platformAtom } from '../atoms/settings';
+import { platformAtom } from '../atoms/platform';
 import { utilityAtom } from '../atoms/utility';
 import PlatformSelector from './PlatformSelector';
 
@@ -18,6 +18,7 @@ const Search = (): JSX.Element | null => {
   const { data: utilitiesResponse = [], isError } = useQuery({
     queryKey: ['utilities', platform],
     queryFn: () => getUtilitiesByPlatform(platform),
+    staleTime: 1000 * 60 * 60,
   });
 
   const [, setGlobalError] = useAtom(globalErrorAtom);

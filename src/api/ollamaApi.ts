@@ -1,7 +1,7 @@
 import { QueryFunctionContext } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
-import type { Platform } from '../atoms/settings';
+import type { Platform } from '../atoms/platform';
 
 export interface OllamaModel {
   name: string;
@@ -65,22 +65,4 @@ const sendOllamaChatCompletionRequest = async ({
   return response.data;
 };
 
-const handleOllamaServerError = (error: unknown) => {
-  if (error instanceof AxiosError) {
-    console.error(error.message);
-
-    if (error.message === 'Network Error') {
-      return 'No Ollama server found at this URL';
-    }
-
-    return 'Ollama default Axios Error';
-  }
-
-  if (error instanceof DOMException || error instanceof Error) {
-    return error.message;
-  }
-
-  return 'Unknown Ollama server error';
-};
-
-export { getOllamaModels, handleOllamaServerError, sendOllamaChatCompletionRequest };
+export { getOllamaModels, sendOllamaChatCompletionRequest };

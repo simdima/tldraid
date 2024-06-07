@@ -1,6 +1,6 @@
 import { FaAndroid, FaApple, FaLaptop, FaLinux, FaWindows } from 'react-icons/fa6';
 
-import type { Platform } from '../../atoms/settings';
+import type { Platform } from '../../atoms/platform';
 
 const PlatformIcon = ({ platform }: { platform: Platform }) => {
   if (platform === 'common') return <FaLaptop />;

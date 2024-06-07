@@ -4,8 +4,8 @@ import { useAtom } from 'jotai';
 import { memo } from 'react';
 import { FaAndroid, FaApple, FaLaptop, FaLinux, FaWindows } from 'react-icons/fa6';
 
-import type { Platform } from '../atoms/settings';
-import { platformAtom } from '../atoms/settings';
+import type { Platform } from '../atoms/platform';
+import { platformAtom } from '../atoms/platform';
 import { utilityAtom } from '../atoms/utility';
 import PlatformIcon from './molecules/PlatformIcon';
 

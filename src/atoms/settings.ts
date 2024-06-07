@@ -2,9 +2,6 @@ import { atomWithStorage } from 'jotai/utils';
 import { SyncStorage } from 'jotai/vanilla/utils/atomWithStorage';
 import { z } from 'zod';
 
-export const PlatformSchema = z.enum(['android', 'common', 'linux', 'osx', 'windows']);
-export type Platform = z.infer<typeof PlatformSchema>;
-
 export const ChatGptEngineSchema = z.enum(['gpt-3.5-turbo', 'gpt-4']);
 export type ChatGptEngine = z.infer<typeof ChatGptEngineSchema>;
 
@@ -32,12 +29,6 @@ const options = {
 };
 
 export const languageAtom = atomWithStorage('tldraid_language', 'en', initStorage(), options);
-export const platformAtom = atomWithStorage<Platform>(
-  'tldraid_platform',
-  'common',
-  initStorage<Platform>(),
-  options
-);
 export const chatGptEngineAtom = atomWithStorage<ChatGptEngine>(
   'tldraid_chatGptEngine',
   'gpt-3.5-turbo',
