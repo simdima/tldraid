@@ -1,13 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Button, Label, Select, TextInput } from 'flowbite-react';
 import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { z } from 'zod';
 
-import { getOllamaModels, handleOllamaServerError, OllamaModel } from '../api/ollamaApi';
+import { getOllamaModels } from '../api/ollamaApi';
 import { getLanguages } from '../api/tldraidApi';
 import { globalErrorAtom } from '../atoms/globalError';
 import {
@@ -20,8 +20,9 @@ import {
   PlatformSchema,
 } from '../atoms/settings';
 import Loader from '../components/molecules/Loader';
+import useDebouncedValue from '../hooks/debouncedValue';
 
-export const SettingsSchema = z.object({
+const SettingsSchema = z.object({
   language: z.string().min(2).max(5),
   platform: PlatformSchema,
   chatGptEngine: ChatGptEngineSchema,
@@ -42,13 +43,13 @@ const Settings = () => {
   const history = useHistory();
 
   const {
-    data: languagesResponse,
+    data: availableLanguages,
     isLoading: isLanguagesLoading,
     isError: isLanguagesError,
   } = useQuery({
     queryKey: ['languages'],
     queryFn: getLanguages,
-    staleTime: Infinity,
+    staleTime: 1000 * 60 * 60,
   });
 
   const [language, setLanguage] = useAtom(languageAtom);
@@ -61,12 +62,10 @@ const Settings = () => {
   const [, setGlobalError] = useAtom(globalErrorAtom);
 
   const {
+    watch,
     control,
     formState: { errors },
-    getValues,
     handleSubmit,
-    setValue,
-    trigger,
   } = useForm<SettingsFormInputs>({
     resolver: zodResolver(SettingsSchemaAdjusted),
     defaultValues: {
@@ -76,73 +75,36 @@ const Settings = () => {
       ollamaUrl,
       ollamaModel,
     },
+    mode: 'onChange',
   });
-
-  const [ollamaServerModels, setOllamaServerModels] = useState<OllamaModel[]>([]);
-
-  const currentOllamaUrl = getValues('ollamaUrl');
-  const queryClient = useQueryClient();
-  const { refetch: fetchOllamaModels } = useQuery({
-    queryKey: ['ollamaModels', ollamaModel, errors],
-    queryFn: () => getOllamaModels(currentOllamaUrl),
-    enabled: false,
-    retry: false,
-    gcTime: 0,
-    staleTime: 0,
-  });
-
-  useEffect(() => {
-    if (errors.ollamaUrl || !currentOllamaUrl) {
-      setGlobalError('');
-
-      setOllamaServerModels([]);
-      setValue('ollamaModel', '');
-    } else {
-      const timeout = setTimeout(async () => {
-        queryClient.removeQueries({ queryKey: ['ollamaModels'] });
-
-        const { data, isError, isSuccess, error } = await fetchOllamaModels();
-
-        if (isError) {
-          setOllamaServerModels([]);
-          setValue('ollamaModel', '');
-
-          setGlobalError(handleOllamaServerError(error));
-        }
-        if (isSuccess) {
-          setGlobalError('');
-
-          setOllamaServerModels(data.models);
-
-          if (data.models.find(m => m.name === ollamaModel)) {
-            setValue('ollamaModel', ollamaModel);
-          } else {
-            setValue('ollamaModel', data.models[0].name);
-          }
-        }
-      }, 1e3);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [
-    currentOllamaUrl,
-    errors.ollamaUrl,
-    fetchOllamaModels,
-    ollamaModel,
-    queryClient,
-    setGlobalError,
-    setValue,
-  ]);
 
   const updateSettings: SubmitHandler<SettingsFormInputs> = data => {
     setLanguage(data.language);
     setChatGptEngine(data.chatGptEngine);
     setChatGptApiKey(data.chatGptApiKey);
     setOllamaUrl(data.ollamaUrl);
-    setOllamaModel(data.ollamaModel);
+    setOllamaModel(data.ollamaUrl ? data.ollamaModel : '');
 
     history.push('/');
   };
+
+  const currentOllamaUrl = watch('ollamaUrl');
+  const { debouncedValue: debouncedCurrentOllamaUrl } = useDebouncedValue(currentOllamaUrl);
+
+  const { data, error, isSuccess } = useQuery({
+    queryKey: ['ollamaModels', debouncedCurrentOllamaUrl],
+    queryFn: () => getOllamaModels(debouncedCurrentOllamaUrl),
+    enabled: !!debouncedCurrentOllamaUrl && !errors.ollamaUrl,
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (error || (isSuccess && !data.models)) {
+      setGlobalError('No available models found at this URL');
+    } else {
+      setGlobalError('');
+    }
+  }, [data, error, isSuccess, setGlobalError]);
 
   if (isLanguagesLoading) {
     return <Loader size="xl" />;
@@ -166,102 +128,91 @@ const Settings = () => {
             control={control}
             render={({ field }) => (
               <Select {...field} aria-label="language">
-                {languagesResponse &&
-                  languagesResponse.map(language => <option key={language}>{language}</option>)}
+                {availableLanguages?.map(language => <option key={language}>{language}</option>)}
               </Select>
             )}
           />
         </div>
 
-        <>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="chatGptEngine" value="GPT engine version:" />
-            </div>
-            <Controller
-              name="chatGptEngine"
-              control={control}
-              render={({ field }) => (
-                <Select {...field} aria-label="chatGptEngine">
-                  {ChatGptEngineSchema.options.map(engine => (
-                    <option key={engine}>{engine}</option>
-                  ))}
-                </Select>
-              )}
-            />
+        <div>
+          <div className="mb-2 block">
+            <Label htmlFor="chatGptEngine" value="GPT engine version:" />
           </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="chatGptApiKey" value="OpenAI API key:" />
-            </div>
-            <Controller
-              name="chatGptApiKey"
-              control={control}
-              render={({ field }) => (
-                <TextInput
-                  {...field}
-                  type="password"
-                  aria-label="chatGptApiKey"
-                  color={errors.chatGptApiKey ? 'failure' : 'gray'}
-                  helperText={errors.chatGptApiKey && <span>{errors.chatGptApiKey.message}</span>}
-                  onChange={e => {
-                    field.onChange(e);
-                    trigger('chatGptApiKey');
-                  }}
-                />
-              )}
-            />
+          <Controller
+            name="chatGptEngine"
+            control={control}
+            render={({ field }) => (
+              <Select {...field} aria-label="chatGptEngine">
+                {ChatGptEngineSchema.options.map(engine => (
+                  <option key={engine}>{engine}</option>
+                ))}
+              </Select>
+            )}
+          />
+        </div>
+
+        <div>
+          <div className="mb-2 block">
+            <Label htmlFor="chatGptApiKey" value="OpenAI API key:" />
           </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="ollamaUrl" value="Ollama API server URL:" />
-            </div>
-            <Controller
-              name="ollamaUrl"
-              control={control}
-              render={({ field }) => (
-                <TextInput
-                  {...field}
-                  type="text"
-                  aria-label="ollamaServerUrl"
-                  placeholder="http://localhost:11434"
-                  onChange={e => {
-                    field.onChange(e);
-                    trigger('ollamaUrl');
-                  }}
-                  color={errors.ollamaUrl ? 'failure' : 'gray'}
-                  helperText={errors.ollamaUrl && <span>{errors?.ollamaUrl.message}</span>}
-                />
-              )}
-            />
+          <Controller
+            name="chatGptApiKey"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                {...field}
+                type="password"
+                aria-label="chatGptApiKey"
+                color={errors.chatGptApiKey ? 'failure' : 'gray'}
+                helperText={errors.chatGptApiKey && <span>{errors.chatGptApiKey.message}</span>}
+              />
+            )}
+          />
+        </div>
+
+        <div>
+          <div className="mb-2 block">
+            <Label htmlFor="ollamaUrl" value="Ollama API server URL:" />
           </div>
-          <div>
-            <div className="mb-2 block">
-              <Label htmlFor="ollamaModels" value="Ollama model:" />
-            </div>
-            <Controller
-              name="ollamaModel"
-              aria-label="ollamaModel"
-              control={control}
-              render={({ field }) => (
-                <Select {...field} disabled={ollamaServerModels.length === 0}>
-                  {ollamaServerModels.map(({ digest, model, name }) => (
-                    <option key={digest} value={model}>
-                      {name}
-                    </option>
-                  ))}
-                </Select>
-              )}
-            />
+          <Controller
+            name="ollamaUrl"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                {...field}
+                type="text"
+                aria-label="ollamaServerUrl"
+                placeholder="http://localhost:11434"
+                color={errors.ollamaUrl ? 'failure' : 'gray'}
+                helperText={errors.ollamaUrl && <span>{errors?.ollamaUrl.message}</span>}
+              />
+            )}
+          />
+        </div>
+
+        <div>
+          <div className="mb-2 block">
+            <Label htmlFor="ollamaModel" value="Ollama model:" />
           </div>
-        </>
+          <Controller
+            name="ollamaModel"
+            aria-label="ollamaModel"
+            control={control}
+            render={({ field }) => (
+              <Select {...field} disabled={!data?.models}>
+                {data?.models.map(({ digest, model, name }) => (
+                  <option key={digest} value={model}>
+                    {name}
+                  </option>
+                ))}
+              </Select>
+            )}
+          />
+        </div>
 
         <Button
           type="submit"
-          disabled={
-            Object.keys(errors).length > 0 ||
-            (currentOllamaUrl !== '' && ollamaServerModels.length === 0)
-          }
+          disabled={Object.keys(errors).length > 0 || (!!currentOllamaUrl && !data?.models)}
         >
           Save
         </Button>
