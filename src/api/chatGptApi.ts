@@ -1,7 +1,8 @@
 import { QueryFunctionContext } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 
-import type { ChatGptEngine, Platform } from '../atoms/settings';
+import { Platform } from '../atoms/platform';
+import type { ChatGptEngine } from '../atoms/settings';
 
 export interface ChatGptResponse {
   id: string;
