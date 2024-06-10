@@ -1,5 +1,11 @@
 # What's Changed
 
+## 1.5.3 - 2024-06-10
+
+### Add
+
+- Immer for more simplified state updates
+
 ## 1.5.2 - 2024-06-07
 
 ### Fixed
