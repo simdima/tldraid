@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Button } from 'flowbite-react';
+import { produce } from 'immer';
 import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import { FaTrash } from 'react-icons/fa6';
@@ -25,10 +26,13 @@ const Description = (): JSX.Element | null => {
   const [utility] = useAtom(utilityAtom);
   const [chatBotResponses, setChatBotResponses] = useAtom(chatBotResponsesAtom);
   const removeChatBotResponse = (id: string) => {
-    setChatBotResponses(() => ({
-      ...chatBotResponses,
-      [utility]: [...chatBotResponses[utility]].filter(res => res.id !== id),
-    }));
+    setChatBotResponses(
+      produce(existingResponses => {
+        existingResponses[utility] = existingResponses[utility].filter(
+          response => response.id !== id
+        );
+      })
+    );
   };
 
   const {
@@ -99,7 +103,6 @@ const Description = (): JSX.Element | null => {
                 size="xs"
                 aria-label="delete"
                 className="h-fit w-fit self-start !bg-gray-500 opacity-30 transition-all duration-200 hover:opacity-100"
-                // onClick={() => dispatch(deleteBotAnswer(id))}
                 onClick={() => removeChatBotResponse(id)}
               >
                 <FaTrash />

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Button, Textarea, Tooltip } from 'flowbite-react';
+import { produce } from 'immer';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { FaRobot } from 'react-icons/fa6';
@@ -48,26 +49,17 @@ const ChatBotWindow = (): JSX.Element | null => {
 
   const [, setChatBotResponses] = useAtom(chatBotResponsesAtom);
   const updateChatBotResponses = (newChatBotResponse: ChatBotResponse) => {
-    setChatBotResponses(prev => {
-      if (utility) {
-        const updatedResponses: ChatBotResponse[] = [];
-
-        if (prev[utility]) {
-          const existingResponses = { ...prev }[utility];
-          updatedResponses.push(...existingResponses);
-          updatedResponses.push(newChatBotResponse);
-        } else {
-          updatedResponses.push(newChatBotResponse);
+    setChatBotResponses(
+      produce(existingResponses => {
+        if (utility) {
+          if (existingResponses[utility]) {
+            existingResponses[utility].push(newChatBotResponse);
+          } else {
+            existingResponses[utility] = [newChatBotResponse];
+          }
         }
-
-        return {
-          ...prev,
-          [utility]: updatedResponses,
-        };
-      }
-
-      return prev;
-    });
+      })
+    );
   };
 
   const [chatQuery, setChatQuery] = useState('');
